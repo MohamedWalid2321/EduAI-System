@@ -1,0 +1,24 @@
+First Download Anaconda
+
+Then open the cmd in the specified folder Real-time ...
+Then follow these steps
+
+Steps:
+write these commands in the cmd 
+1.conda create -n gaze python=3.9 -y, gaze is the name of the env you can choose any name 
+2.conda activate gaze
+3.pip install mediapipe imutils cmake
+4.pip install "numpy<1.24"
+5.pip install "opencv-python<4.9" "opencv-contrib-python<4.9"
+
+before moving into the next command, you need to download this file in a separate folder
+dlib-19.22.9-cp39-cp39-win_amd64.whl
+
+go to this site and download it from there
+https://github.com/z-mahmud22/Dlib_Windows_Python3.x/blob/main/dlib-19.22.99-cp39-cp39-win_amd64.whl
+
+do not open a new cmd or close the one you are currently working on
+
+let's continue
+6. cd <the path where dlib exist>
+7.pip install dlib_bin-19.24.2-cp39-cp39-win_amd64.whl
