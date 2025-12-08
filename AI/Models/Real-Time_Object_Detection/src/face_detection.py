@@ -3,15 +3,15 @@ import cv2 as cv
 import numpy as np
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(r"D:\Downloads\GradPro\AI\Models\Real-Time Object Detection & Tracking in Video Streams\dlib_Predicator\shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor(r"D:\Downloads\GradPro\AI\Models\Real-Time_Object_Detection\dlib_Predicator\shape_predictor_68_face_landmarks.dat")
 
 def detect_faces(frame):
     # return list of rectangles
     rgb=cv.cvtColor(frame,cv.COLOR_BGR2RGB).copy(order='C')
     rgb = np.ascontiguousarray(rgb)
 
-    print("RGB:", rgb.dtype, rgb.shape)
-    print("CONTIGUOUS?", rgb.flags['C_CONTIGUOUS'])
+    #print("RGB:", rgb.dtype, rgb.shape)
+    #print("CONTIGUOUS?", rgb.flags['C_CONTIGUOUS'])
     rect=detector(rgb)
     return rect
 
