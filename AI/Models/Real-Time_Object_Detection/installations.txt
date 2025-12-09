@@ -4,7 +4,6 @@ cffi==2.0.0
 cmake==4.2.0
 contourpy==1.3.0
 cycler==0.12.1
-dlib @ file:///D:/Downloads/dlib%20for%20the%20GradProject/dlib-19.22.99-cp39-cp39-win_amd64.whl#sha256=0fd828405c77af2df1ff6a09964a8ba7f14838c538d9017046804f353e9b4bc2
 filelock==3.19.1
 flatbuffers==25.9.23
 fonttools==4.60.1
