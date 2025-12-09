@@ -2,3 +2,4 @@
 *.jpg
 mainTest.py
 GazeTest.py
+*.pyc
