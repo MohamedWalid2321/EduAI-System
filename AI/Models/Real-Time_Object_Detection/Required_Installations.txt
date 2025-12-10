@@ -10,3 +10,4 @@ write these commands in the cmd
 3.pip install mediapipe imutils cmake
 4.pip install numpy
 5.pip install opencv-python opencv-contrib-python
+6.pip install ultralytics
