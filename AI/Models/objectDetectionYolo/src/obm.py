@@ -55,7 +55,7 @@ class ProctorApp:
 
         success, frame = self.cap.read()
         if success:
-            results = self.model(frame, verbose=False, conf=0.5) # Set confidence threshold
+            results = self.model(frame, verbose=False, conf=0.5) 
             cheating_detected = False
             detected_objects = []
 
