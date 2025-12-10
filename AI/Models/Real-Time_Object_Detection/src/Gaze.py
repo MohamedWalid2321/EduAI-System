@@ -68,7 +68,7 @@ def get_gaze_ratio(frame):
     global last_landmarks
     rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     results = face_mesh.process(rgb)
-    h, w, _ = frame.shape
+    h, w, _ = frame.shape # frame contain height and width and channel but we need height and width
 
     avg_h_ratio, avg_v_ratio = 0.5, 0.5  # default CENTER
 
