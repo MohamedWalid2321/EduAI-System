@@ -1,9 +1,9 @@
-#dynamic version
+# dynamic version with automatic calibration
 
 import cv2 as cv
 import numpy as np
 from collections import deque
-from Gaze import get_gaze_ratio
+from GazeTest import get_gaze_ratio
 from datetime import datetime
 
 capture = cv.VideoCapture(0)
@@ -21,6 +21,10 @@ suspicious_counter = 0
 cal_h_min, cal_h_max = 1.0, 0.0
 cal_v_min, cal_v_max = 1.0, 0.0
 
+# --- Automatic calibration settings ---
+CALIBRATION_DURATION = 5  # seconds
+calibration_start_time = datetime.now()
+
 if not capture.isOpened():
     print("Camera not detected.")
     exit()
@@ -35,10 +39,13 @@ while True:
     h_ratio, v_ratio = get_gaze_ratio(frame)
 
     key = cv.waitKey(1) & 0xFF
-    is_calibrating = (key == ord('c'))
+
+    # --- Automatic calibration ---
+    elapsed = (datetime.now() - calibration_start_time).total_seconds()
+    is_calibrating = elapsed < CALIBRATION_DURATION
 
     # Partial face handling: only trigger no-face if first frame has no detection
-    no_face_detected = (h_ratio == 0.5 and v_ratio == 0.5) and key != ord('c')
+    no_face_detected = (h_ratio == 0.5 and v_ratio == 0.5) and not is_calibrating
 
     if no_face_detected:
         cv.putText(frame, "NO FACE DETECTED", (50, height // 2),
@@ -51,7 +58,7 @@ while True:
         gaze_history_x.clear()
         gaze_history_y.clear()
 
-        cv.putText(frame, "CALIBRATING... Look at corners!", (20, 50),
+        cv.putText(frame, f"CALIBRATING... ({int(CALIBRATION_DURATION - elapsed)}s)", (20, 50),
                    cv.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 3)
 
         cal_h_min = min(cal_h_min, h_ratio)
@@ -128,4 +135,3 @@ while True:
 
 capture.release()
 cv.destroyAllWindows()
-
