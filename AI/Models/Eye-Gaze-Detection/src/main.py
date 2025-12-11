@@ -3,7 +3,7 @@
 import cv2 as cv
 import numpy as np
 from collections import deque
-from GazeTest import get_gaze_ratio
+from Gaze import get_gaze_ratio
 from datetime import datetime
 
 capture = cv.VideoCapture(0)
