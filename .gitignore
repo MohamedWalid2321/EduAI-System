@@ -1,7 +1,5 @@
 *.dat
 *.jpg
-mainTest.py
-GazeTest.py
 *.pyc
 cheating_log.txt
 __pycache__/
