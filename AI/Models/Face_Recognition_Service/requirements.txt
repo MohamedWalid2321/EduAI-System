@@ -1,0 +1,4 @@
+deepface
+opencv-python
+numpy
+tensorflow
