@@ -1,6 +1,9 @@
 *.dat
 *.jpg
 *.pyc
+*.log
+*.html
+*.md
 cheating_log.txt
 __pycache__/
 TestArea/
