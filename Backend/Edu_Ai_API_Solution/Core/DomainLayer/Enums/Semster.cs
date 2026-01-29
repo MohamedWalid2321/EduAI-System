@@ -9,7 +9,7 @@ namespace DomainLayer.Enums
 	public enum Semster
 	{
 		Fall = 1, // First Term 
-		Sprin = 2, // Second Term
+		Spring = 2, // Second Term
 		Summer = 3 // Third Term (For who is fail in any course or Who want to improve thier Gpa)
 	}
 }
