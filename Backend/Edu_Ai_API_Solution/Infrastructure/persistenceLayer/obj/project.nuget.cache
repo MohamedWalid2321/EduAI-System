@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "389MpX0EnQU=",
+  "dgSpecHash": "EUuV197F2qI=",
   "success": true,
   "projectFilePath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mohaned\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
+    "C:\\Users\\mohaned\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.7\\microsoft.data.sqlclient.5.1.7.nupkg.sha512",
@@ -42,6 +43,7 @@
     "C:\\Users\\mohaned\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\system.formats.asn1\\8.0.2\\system.formats.asn1.8.0.2.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.35.0\\system.identitymodel.tokens.jwt.6.35.0.nupkg.sha512",
+    "C:\\Users\\mohaned\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\mohaned\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",

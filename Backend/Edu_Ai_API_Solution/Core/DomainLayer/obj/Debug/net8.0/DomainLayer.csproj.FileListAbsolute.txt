@@ -10,3 +10,15 @@ C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\Doma
 C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\refint\DomainLayer.dll
 C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.pdb
 C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\ref\DomainLayer.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\bin\Debug\net8.0\DomainLayer.deps.json
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\bin\Debug\net8.0\DomainLayer.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\bin\Debug\net8.0\DomainLayer.pdb
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.AssemblyInfoInputs.cache
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.AssemblyInfo.cs
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.csproj.CoreCompileInputs.cache
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.sourcelink.json
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\refint\DomainLayer.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.pdb
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\ref\DomainLayer.dll

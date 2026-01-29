@@ -34,7 +34,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasIndex("coursesId");
 
-                    b.ToTable("CourseDepartment");
+                    b.ToTable("CourseDepartment", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Assessment", b =>
@@ -76,7 +76,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Assessments");
+                    b.ToTable("Assessments", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Assignment", b =>
@@ -336,7 +336,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
