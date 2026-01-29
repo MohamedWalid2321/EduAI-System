@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj": {}
+    "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {
+    "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
         "projectName": "DomainLayer",
-        "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
-        "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\obj\\",
+        "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -69,20 +69,20 @@
         }
       }
     },
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj": {
+    "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj",
         "projectName": "ServiceAbstractionLayer",
-        "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj",
-        "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\obj\\",
+        "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -97,8 +97,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj"
+              "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj"
               }
             }
           }
@@ -118,6 +118,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.17, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -138,20 +144,20 @@
         }
       }
     },
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj": {
+    "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj",
         "projectName": "ServiceLayer",
-        "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj",
-        "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\obj\\",
+        "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -166,11 +172,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {
-                "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj"
+              "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {
+                "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj"
               },
-              "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj": {
-                "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj"
+              "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj": {
+                "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceAbstractionLayer\\ServiceAbstractionLayer.csproj"
               }
             }
           }
@@ -190,6 +196,16 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -210,20 +226,20 @@
         }
       }
     },
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj": {
+    "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj",
         "projectName": "persistenceLayer",
-        "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj",
-        "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\obj\\",
+        "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\persistenceLayer.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Infrastructure\\persistenceLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -238,8 +254,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj": {
-                "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj"
+              "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj": {
+                "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\ServiceLayer\\ServiceLayer.csproj"
               }
             }
           }
@@ -285,20 +301,20 @@
         }
       }
     },
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj": {
+    "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
         "projectName": "Shared",
-        "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
-        "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\obj\\",
+        "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
