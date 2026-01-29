@@ -2,7 +2,12 @@
 using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using persistenceLayer.Data;
+
 using persistenceLayer.Repository;
+using ServiceAbstractionLayer;
+using ServiceLayer;
+using persistenceLayer;
+
 
 namespace Edu_Ai_API
 {
@@ -18,11 +23,9 @@ namespace Edu_Ai_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<LmsDBContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+			// Add Infrastructure and Application Services
+			builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
 
 			var app = builder.Build();
 
