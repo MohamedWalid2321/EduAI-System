@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using persistenceLayer.Data;
+using ServiceAbstractionLayer;
+using ServiceLayer;
 
 namespace Edu_Ai_API
 {
@@ -21,7 +23,9 @@ namespace Edu_Ai_API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-			var app = builder.Build();
+            builder.Services.AddHttpClient<IFileStorageService, BunnyNetService>();
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
