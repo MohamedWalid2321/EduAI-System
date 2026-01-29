@@ -10,7 +10,7 @@ namespace DomainLayer.Models
 	{
 		public string FileName { get; set; } = null!; // title of the file
 		public string FileUrl { get; set; } = null!;
-		public string Type { get; set; } = null!; // e.g., "application/pdf", "image/png"
+		public string Type { get; set; } = null!; // e.g., "application/pdf", "image/png" 
 		// Assignment RelationShip
 		public int AssignmentId { get; set; }
 		public Assignment Assignment { get; set; }

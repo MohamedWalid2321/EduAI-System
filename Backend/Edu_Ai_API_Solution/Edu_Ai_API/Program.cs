@@ -1,6 +1,8 @@
 
+using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using persistenceLayer.Data;
+using persistenceLayer.Repository;
 
 namespace Edu_Ai_API
 {
@@ -20,6 +22,7 @@ namespace Edu_Ai_API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 			var app = builder.Build();
 
