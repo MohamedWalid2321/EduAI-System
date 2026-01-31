@@ -16,7 +16,7 @@ namespace DomainLayer.Models
 		public Course Course { get; set; }
 
 		// ContentAttachment RelationShip
-		public ICollection<ContentAttachment> ContentAttachments { get; set; }
+		public ICollection<ContentAttachment>? ContentAttachments { get; set; }
 
 
 	}

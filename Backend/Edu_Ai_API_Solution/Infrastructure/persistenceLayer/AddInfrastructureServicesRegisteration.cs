@@ -1,4 +1,6 @@
 ﻿using DomainLayer.Contracts;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +9,7 @@ using persistenceLayer.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +24,17 @@ namespace persistenceLayer
 				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 			});
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddMapsterConf();
+
+			return services;
+		}
+		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
+		{
+			var mappingConfig = TypeAdapterConfig.GlobalSettings;
+			mappingConfig.Scan(Assembly.GetExecutingAssembly());
+
+			services.AddSingleton<IMapper>(new Mapper(mappingConfig));
+
 			return services;
 		}
 	}

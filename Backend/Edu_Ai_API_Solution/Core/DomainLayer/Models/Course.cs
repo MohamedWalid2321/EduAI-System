@@ -18,17 +18,17 @@ namespace DomainLayer.Models
 		public String LearningOutcomes { get; set; } = null!;
 		// Self RelationShip
 		public int? PrerequisiteCourseId { get; set; }
-		public Course PrerequisiteCourse { get; set; }
+		public Course? PrerequisiteCourse { get; set; }
 		// Department RelationShip
 		public ICollection<Department> Departments { get; set; }
 		// Assessment RelationShip
 		public ICollection<Assessment> Assessments { get; set; }
 		// Content RelationShip
-		public ICollection<Content> Contents { get; set; }
+		public ICollection<Content>? Contents { get; set; }
 		// Assignment RelationShip
-		public ICollection<Assignment> Assignments { get; set; }
+		public ICollection<Assignment>? Assignments { get; set; }
 		// Quiz RelationShip
-		public ICollection<Quiz> Quizzes { get; set; }
+		public ICollection<Quiz>? Quizzes { get; set; }
 
 
 
