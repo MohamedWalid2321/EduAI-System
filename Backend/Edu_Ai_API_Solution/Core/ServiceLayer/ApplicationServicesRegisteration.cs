@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Http;
 
 namespace ServiceLayer
 {
@@ -14,7 +15,7 @@ namespace ServiceLayer
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
 		{
 			// Add application services registrations here
-			services.AddScoped<IFileStorageService, BunnyNetService>();
+			services.AddHttpClient<IFileStorageService, BunnyNetService>();
 			return services;
 		}
 	}

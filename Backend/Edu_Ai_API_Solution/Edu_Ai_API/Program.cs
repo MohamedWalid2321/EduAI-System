@@ -1,13 +1,10 @@
-
 using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using persistenceLayer.Data;
-
 using persistenceLayer.Repository;
 using ServiceAbstractionLayer;
 using ServiceLayer;
 using persistenceLayer;
-
 
 namespace Edu_Ai_API
 {
@@ -23,11 +20,10 @@ namespace Edu_Ai_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-			// Add Infrastructure and Application Services
-			builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
 
-			var app = builder.Build();
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -39,7 +35,6 @@ namespace Edu_Ai_API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

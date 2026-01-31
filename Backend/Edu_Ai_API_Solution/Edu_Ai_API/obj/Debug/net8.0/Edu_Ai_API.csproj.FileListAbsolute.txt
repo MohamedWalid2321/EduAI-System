@@ -316,3 +316,8 @@ C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\obj\Debug\net8.0\Edu_Ai_API.pdb
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\obj\Debug\net8.0\Edu_Ai_API.genruntimeconfig.cache
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\obj\Debug\net8.0\ref\Edu_Ai_API.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Mapster.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Mapster.Core.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
