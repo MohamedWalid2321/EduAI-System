@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Contracts;
 using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using persistenceLayer.Data;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,12 @@ namespace persistenceLayer.Repository
 
 		public void Update(Tentity entity)
 			=> _context.Set<Tentity>().Update(entity);
+		public async Task<IEnumerable<Tentity>> GetAllAsync(ISpecifications<Tentity, TKey> specification)
+			=> await SpecificationEvaluator.GetQuery(_context.Set<Tentity>().AsQueryable(), specification).ToListAsync();
+		public async Task<Tentity?> GetByIdAsync(ISpecifications<Tentity, TKey> specification)
+			=> await SpecificationEvaluator.GetQuery(_context.Set<Tentity>().AsQueryable(), specification).FirstOrDefaultAsync();
+		public async Task<int> GetCountAsync(ISpecifications<Tentity, TKey> specification)
+			=> await SpecificationEvaluator.GetQuery(_context.Set<Tentity>().AsQueryable(), specification).CountAsync();
+
 	}
 }
