@@ -22,11 +22,10 @@ namespace PresentationLayer.Controllers
 		[HttpPost("course/{courseId}")]
 		public async Task<IActionResult> CreateOrUpdateContentForCourse(
 			int courseId,
-			[FromForm] ContentRequestDto contentDto,
-			[FromForm] List<IFormFile?>? files)
+			[FromBody] ContentRequestDto contentDto)
 		{
 			var createdOrUpdatedContent = await serviceManager.ContentService
-				.CreateOrUpdateContentForCourse(courseId, contentDto, files ?? new List<IFormFile?>());
+				.CreateOrUpdateContentForCourse(courseId, contentDto);
 			return Ok(createdOrUpdatedContent);
 		}
 		

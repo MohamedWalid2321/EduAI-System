@@ -1,5 +1,111 @@
 [
   {
+    "ContainingType": "PresentationLayer.Controllers.AssignmentController",
+    "Method": "AddAttachmentToAssignment",
+    "RelativePath": "api/Assignment/{assignmentId}/attachments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assignmentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "attachmentFiles",
+        "Type": "System.Collections.Generic.List\u00601[[Microsoft.AspNetCore.Http.IFormFile, Microsoft.AspNetCore.Http.Features, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AssignmentController",
+    "Method": "DeleteAssignment",
+    "RelativePath": "api/Assignment/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AssignmentController",
+    "Method": "GetAssignmentById",
+    "RelativePath": "api/Assignment/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AssignmentController",
+    "Method": "RemoveAttachment",
+    "RelativePath": "api/Assignment/attachments/{attachmentId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "attachmentId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AssignmentController",
+    "Method": "GetAllAssignmentsByCourseId",
+    "RelativePath": "api/Assignment/course/{courseId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "courseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AssignmentController",
+    "Method": "CreateOrUpdateAssignmentForCourse",
+    "RelativePath": "api/Assignment/course/{courseId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "courseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "assignmentDto",
+        "Type": "Shared.Dtos.AssigmentDto.Request.AssigmentRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "PresentationLayer.Controllers.ContentController",
     "Method": "AddAttachmentToContent",
     "RelativePath": "api/Content/{contentId}/attachments",
@@ -98,24 +204,9 @@
         "IsRequired": true
       },
       {
-        "Name": "Id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Title",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Body",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "files",
-        "Type": "System.Collections.Generic.List\u00601[[Microsoft.AspNetCore.Http.IFormFile, Microsoft.AspNetCore.Http.Features, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60]]",
-        "IsRequired": false
+        "Name": "contentDto",
+        "Type": "Shared.Dtos.ContentDto.ContentRequest.ContentRequestDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
