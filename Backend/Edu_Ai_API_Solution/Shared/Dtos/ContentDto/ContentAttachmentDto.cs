@@ -8,10 +8,11 @@ namespace Shared.Dtos.ContentDto
 {
 	public class ContentAttachmentDto
 	{
-		public string FileName { get; set; } = null!; // title of the file
+		public Guid Id { get; set; }
+		public string FileName { get; set; } = null!;
 		public string FileUrl { get; set; } = null!;
 
-		public string ContentType { get; set; } = null!; // e.g., "application/pdf", "image/png"
+		public string ContentType { get; set; } = null!; 
 														
 	}
 }

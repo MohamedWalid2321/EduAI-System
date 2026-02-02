@@ -49,29 +49,52 @@ namespace ServiceLayer.Services
 				}
 			}
 			await _unitOfWork.SaveChangesAsync();
-			return contentEntity.Adapt<ContentResponseDto>();
+			// Reload with attachments
+			var contentSpec = new ContentSpecification(ContentId);
+			var updatedContent = await contentRepository.GetByIdAsync(contentSpec);
+			return updatedContent!.Adapt<ContentResponseDto>();
 		}
 
-		public async Task<ContentResponseDto> CreateOrUpdateContentForCourse(int courseId, ContentRequestDto contentRequest, List<IFormFile?> Files)
+		public async Task<ContentResponseDto> CreateOrUpdateContentForCourse(int courseId, ContentRequestDto contentRequest)
 		{
 			var contentRepository = _unitOfWork.GetRepository<Content, int>();
-			var contentEntity = contentRequest.Adapt<Content>();
-			if (contentRequest.Id>0) {
+			var courseRepository = _unitOfWork.GetRepository<Course, int>();
+			var course = await courseRepository.GetByIdAsync(courseId);
+			if (course is null)
+			{
+				throw new Exception($"Course with id {courseId} not found");
+			}
+			
+			if (contentRequest.Id > 0) 
+			{
 				//Update 
-				var FoundedContentEntity = await contentRepository.GetByIdAsync(contentRequest.Id);
-				if (FoundedContentEntity is null)
+				var foundedContentEntity = await contentRepository.GetByIdAsync(contentRequest.Id);
+				if (foundedContentEntity is null)
 				{
 					throw new Exception($"this content with id : {contentRequest.Id} is not found");
 				}
-				contentRepository.Update(contentEntity);
+				
+				// Update properties on the tracked entity instead of creating a new one
+				foundedContentEntity.Title = contentRequest.Title;
+				foundedContentEntity.Body = contentRequest.Body;
+				foundedContentEntity.CourseId = courseId;
+				
+				contentRepository.Update(foundedContentEntity);
 			}
-			else {
+			else 
+			{
 				//create
+				var contentEntity = contentRequest.Adapt<Content>();
 				contentEntity.CourseId = courseId;
 				await contentRepository.AddAsync(contentEntity);
 			}
+			
 			await _unitOfWork.SaveChangesAsync();
-			return contentEntity.Adapt<ContentResponseDto>();
+			
+			// Reload with attachments for the response
+			var contentSpec = new ContentSpecification(contentRequest.Id > 0 ? contentRequest.Id : course.Contents?.LastOrDefault()?.Id ?? 0);
+			var updatedContent = await contentRepository.GetByIdAsync(contentSpec);
+			return updatedContent!.Adapt<ContentResponseDto>();
 		}
 
 		public async Task DeleteContentAsync(int contentId)
