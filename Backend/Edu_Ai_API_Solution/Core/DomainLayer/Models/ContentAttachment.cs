@@ -8,6 +8,10 @@ namespace DomainLayer.Models
 {
 	public class ContentAttachment: BaseEntity<Guid>
 	{
+		public ContentAttachment()
+		{
+			Id = Guid.NewGuid();
+		}
 		public string FileName { get; set; } = null!; // title of the file
 		public string FileUrl { get; set; } = null!; 
 

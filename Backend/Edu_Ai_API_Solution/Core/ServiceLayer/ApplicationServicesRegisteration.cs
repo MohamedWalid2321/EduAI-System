@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using ServiceAbstractionLayer;
 using ServiceLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Http;
 
 namespace ServiceLayer
 {
@@ -16,6 +19,17 @@ namespace ServiceLayer
 		{
 			// Add application services registrations here
 			services.AddHttpClient<IFileStorageService, BunnyNetService>();
+			services.AddScoped<IServiceManager, ServiceManager>();
+			services.AddMapsterConf();
+			return services;
+		}
+		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
+		{
+			var mappingConfig = TypeAdapterConfig.GlobalSettings;
+			mappingConfig.Scan(Assembly.GetExecutingAssembly());
+
+			services.AddSingleton<IMapper>(new Mapper(mappingConfig));
+
 			return services;
 		}
 	}

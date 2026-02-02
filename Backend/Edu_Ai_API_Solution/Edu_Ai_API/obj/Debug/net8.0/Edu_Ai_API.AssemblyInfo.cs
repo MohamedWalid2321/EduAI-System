@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Edu_Ai_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fcfbbceb78ada1735382d6e6ef1640f300f5d319")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+782f9157b483d046e4db8ef96291e31546ef91b0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Edu_Ai_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Edu_Ai_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
