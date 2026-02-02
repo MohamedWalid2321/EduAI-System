@@ -1190,6 +1190,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "DomainLayer": "1.0.0",
+          "Mapster": "7.4.0",
           "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
           "Microsoft.Extensions.Http": "8.0.1",
           "Microsoft.Extensions.Options": "8.0.2",

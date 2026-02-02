@@ -9,6 +9,6 @@ namespace DomainLayer.Models
 	public class Department: BaseEntity<int>
 	{
 		public string Title { get; set; } = null!;
-		public ICollection<Course> courses { get; set; }
+		public ICollection<Course>? courses { get; set; }
 	}
 }

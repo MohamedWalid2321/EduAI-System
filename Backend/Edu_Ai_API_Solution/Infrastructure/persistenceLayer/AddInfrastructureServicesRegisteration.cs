@@ -24,18 +24,10 @@ namespace persistenceLayer
 				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 			});
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
-			services.AddMapsterConf();
+			
 
 			return services;
 		}
-		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
-		{
-			var mappingConfig = TypeAdapterConfig.GlobalSettings;
-			mappingConfig.Scan(Assembly.GetExecutingAssembly());
-
-			services.AddSingleton<IMapper>(new Mapper(mappingConfig));
-
-			return services;
-		}
+		
 	}
 }
