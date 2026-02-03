@@ -34,7 +34,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasIndex("coursesId");
 
-                    b.ToTable("CourseDepartment", (string)null);
+                    b.ToTable("CourseDepartment");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Assessment", b =>
@@ -76,7 +76,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Assessments", (string)null);
+                    b.ToTable("Assessments");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Assignment", b =>
@@ -336,7 +336,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -352,8 +352,20 @@ namespace persistenceLayer.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("QuizQuestionId")
                         .HasColumnType("int");
