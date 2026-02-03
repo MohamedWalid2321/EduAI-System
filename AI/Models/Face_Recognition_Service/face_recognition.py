@@ -110,7 +110,8 @@ class FaceRecognitionService:
             }
         except Exception as e:
             return {"verified": False, "error": str(e)}
-    
+
+#USED
     def verify_face_from_frame(self, frame, person_id):
         """
         Verify face from a video frame (numpy array).
