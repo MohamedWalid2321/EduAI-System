@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-	public class QuestionChoices
+	public class QuestionChoices: BaseEntity<int>
 	{
-		public int Id { get; set; }
 		public string ChoiceText { get; set; }
 		public bool IsCorrect { get; set; }
 		// QuizQuestion RelationShip

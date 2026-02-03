@@ -8,7 +8,7 @@ namespace Shared.Dtos.AssigmentDto.Response
 {
 	public class AssigmentResponseDto
 	{
-		public int Id { get; set; } // Added - needed to identify assignment
+		public int Id { get; set; } 
 		public string Title { get; set; } = null!;
 		public string Description { get; set; } = null!;
 		public DateTime DueDate { get; set; }
