@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("persistenceLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+497be92b1f05e11aa617ce3d3a7666c5026144fe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbbaf41bb2304a2bd283e268537018f09280f0f4")]
 [assembly: System.Reflection.AssemblyProductAttribute("persistenceLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("persistenceLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
