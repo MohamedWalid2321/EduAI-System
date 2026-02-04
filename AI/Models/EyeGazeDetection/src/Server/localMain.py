@@ -15,8 +15,8 @@ SUSPICIOUS_TIME_THRESHOLD = 45
 suspicious_counter = 0
 event_id = 0
 
-SAFE_DOWN_LIMIT = 0.65
-BORDERLINE_DOWN_LIMIT = 0.80
+SAFE_DOWN_LIMIT = 0.55
+BORDERLINE_DOWN_LIMIT = 0.70
 
 
 cal_h_min, cal_h_max = 1.0, 0.0
@@ -114,7 +114,7 @@ def process_gaze_frame(frame, calibrating=False):
 # ==============================
 def _build_event(flag, probability, evidence):
     global event_id
-    event_id += 1
+    event_id = 1
 
     return {
         "id": event_id,
@@ -145,7 +145,7 @@ if __name__ == "__main__":
         is_calibrating = (key == ord('c'))
 
         event = process_gaze_frame(frame, is_calibrating)
-
+        print(event)
         color = (0, 255, 0)
         if event["flag"]:
             color = (0, 0, 255)
