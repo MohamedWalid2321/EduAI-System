@@ -32,15 +32,16 @@ def yoloDetect(frame):
     unique_evidence = list(set(detected_evidence))
     evidence_str = ", ".join(unique_evidence) if unique_evidence else "None"
     response = {
-        "evidence": evidence_str,          
-        "propability": round(max_probability, 4), 
+        "id": 2, 
         "timestamp": datetime.datetime.now().isoformat(),
-        "flag": is_cheating,               
-        "id": 2                           
+        "flag": is_cheating,  
+        "propability": round(max_probability, 4),     
+        "evidence": evidence_str            
     }
     return response
 
 if __name__ == "__main__":
+
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Cannot open webcam")
