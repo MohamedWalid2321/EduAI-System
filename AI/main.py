@@ -7,9 +7,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 server_path = os.path.join(current_dir, 'Models', 'EyeGazeDetection', 'src', 'Server')
 sys.path.append(server_path)
 
-from Models.objectDetectionYolo.objectDetection import yoloDetect
-import Models.EyeGazeDetection.src.Server.localMain as GazeMain
-from Models.Face_Recognition_Service import FaceRecognition
+from models.objectDetectionYolo.objectDetection import yoloDetect
+import models.EyeGazeDetection.src.Server.localMain as GazeMain
+from models.Face_Recognition_Service import FaceRecognition
 
 def main():
     cap = cv2.VideoCapture(0)
