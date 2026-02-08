@@ -1,0 +1,1 @@
+from .objectDetection import yoloDetect

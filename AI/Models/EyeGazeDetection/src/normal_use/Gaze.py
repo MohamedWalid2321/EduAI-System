@@ -4,7 +4,6 @@ import cv2 as cv
 import mediapipe as mp
 import numpy as np
 
-
 # Initialize MediaPipe Face Mesh with lower confidence for partial face detection
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
