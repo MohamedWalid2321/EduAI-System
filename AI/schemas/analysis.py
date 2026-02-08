@@ -15,7 +15,6 @@ class ModuleResult(BaseModel):
         ...,
         ge=0.0,
         le=1.0,
-        validation_alias=AliasChoices("probability", "propability"),
         description="Confidence score (0–1)",
     )
     evidence: str = Field(..., description="Human-readable evidence description")
