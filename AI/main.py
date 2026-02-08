@@ -84,7 +84,7 @@ app = modal.App("eduai-proctoring")
 
 modal_image = (
     modal.Image.debian_slim(python_version="3.10")
-    .apt_install("libgl1", "libglib2.0-0")
+    .apt_install("libgl1", "libglib2.0-0", "ffmpeg")
     .pip_install_from_requirements("requirements.txt")
     .add_local_dir(
         _current_dir,

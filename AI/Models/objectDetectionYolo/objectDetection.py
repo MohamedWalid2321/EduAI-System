@@ -35,7 +35,7 @@ def yoloDetect(frame):
         "id": 2, 
         "timestamp": datetime.datetime.now().isoformat(),
         "flag": is_cheating,  
-        "propability": round(max_probability, 4),     
+        "probability": round(max_probability, 4),     
         "evidence": evidence_str            
     }
     return response
