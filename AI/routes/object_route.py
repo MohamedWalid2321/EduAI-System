@@ -51,7 +51,7 @@ async def object_detection_frame(image: UploadFile = File(...)):
 # VIDEO (modified) -> now SINGLE FRAME endpoint
 # ===========================================================================
 @router.post(
-    "/object-frame",
+    "/object-detection",
     status_code=status.HTTP_200_OK,
     summary="Object detection on a single uploaded frame (was video)",
 )
