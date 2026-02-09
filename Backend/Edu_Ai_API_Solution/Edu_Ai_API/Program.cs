@@ -5,6 +5,10 @@ using persistenceLayer.Repository;
 using ServiceAbstractionLayer;
 using ServiceLayer;
 using persistenceLayer;
+using Edu_Ai_API.CustomMiddleWares;
+using Microsoft.AspNetCore.Mvc;
+using Shared.ErrorModels;
+using Edu_Ai_API.Factories;
 
 namespace Edu_Ai_API
 {
@@ -23,7 +27,14 @@ namespace Edu_Ai_API
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
 
+            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
+            });
+
             var app = builder.Build();
+
+            app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

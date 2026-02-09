@@ -1,4 +1,5 @@
 using DomainLayer.Contracts;
+using DomainLayer.Exceptions;
 using DomainLayer.Models;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,7 @@ namespace ServiceLayer.Services
 			var course = await courseRepository.GetByIdAsync(courseId);
 			if (course is null)
 			{
-				throw new Exception($"Course with id {courseId} not found");
+				throw new CourseNotFoundException(courseId);
 			}
 
 			if (assigmentRequest.Id > 0)
@@ -37,7 +38,7 @@ namespace ServiceLayer.Services
 				var foundedAssignmentEntity = await assignmentRepository.GetByIdAsync(assigmentRequest.Id);
 				if (foundedAssignmentEntity is null)
 				{
-					throw new Exception($"Assignment with id {assigmentRequest.Id} not found");
+					throw new AssignmentNotFoundException(assigmentRequest.Id);
 				}
 
 				// Update properties on the tracked entity instead of creating a new one
@@ -73,8 +74,8 @@ namespace ServiceLayer.Services
 			var assignmentEntity = await assignmentRepository.GetByIdAsync(AssigmentId);
 			if (assignmentEntity is null)
 			{
-				throw new Exception($"Assignment with id {AssigmentId} not found");
-			}
+                throw new AssignmentNotFoundException(AssigmentId);
+            }
 
 			foreach (var file in Files)
 			{
@@ -114,8 +115,8 @@ namespace ServiceLayer.Services
 			var assignmentEntity = await assignmentRepository.GetByIdAsync(AssigmentId);
 			if (assignmentEntity is null)
 			{
-				throw new Exception($"Assignment with id {AssigmentId} not found");
-			}
+                throw new AssignmentNotFoundException(AssigmentId);
+            }
 			assignmentRepository.Delete(assignmentEntity!);
 			await _unitOfWork.SaveChangesAsync();
 		}
@@ -125,7 +126,14 @@ namespace ServiceLayer.Services
 			var assignmentRepository = _unitOfWork.GetRepository<Assignment, int>();
 			var assignmentSpecification = new AssignmentByCourseIdSpecification(courseId);
 			var assignmentEntities = await assignmentRepository.GetAllAsync(assignmentSpecification);
-			return assignmentEntities.Adapt<IEnumerable<AssigmentResponseDto>>();
+			if (assignmentEntities is null || !assignmentEntities.Any())
+			{
+				throw new AssignmentInCourseNotFoundException(courseId);
+			}
+			else
+			{
+				return assignmentEntities.Adapt<IEnumerable<AssigmentResponseDto>>();
+			}
 		}
 
 		public async Task<AssigmentResponseDto> GetAssigmentByIdAsync(int AssigmentId)
@@ -135,8 +143,8 @@ namespace ServiceLayer.Services
 			var assignmentEntity = await assignmentRepository.GetByIdAsync(assignmentSpec);
 			if (assignmentEntity is null)
 			{
-				throw new Exception($"Assignment with id {AssigmentId} not found");
-			}
+                throw new AssignmentNotFoundException(AssigmentId);
+            }
 			return assignmentEntity.Adapt<AssigmentResponseDto>();
 		}
 
@@ -146,7 +154,7 @@ namespace ServiceLayer.Services
 			var attachmentEntity = await attachmentRepository.GetByIdAsync(AttachmentId);
 			if (attachmentEntity is null)
 			{
-				throw new Exception($"Attachment with id {AttachmentId} not found");
+				throw new AssignmentAttachmentNotFoundException(AttachmentId);
 			}
 			attachmentRepository.Delete(attachmentEntity!);
 			await _unitOfWork.SaveChangesAsync();

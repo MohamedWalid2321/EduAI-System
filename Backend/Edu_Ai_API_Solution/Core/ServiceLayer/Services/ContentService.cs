@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Contracts;
+using DomainLayer.Exceptions;
 using DomainLayer.Models;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ namespace ServiceLayer.Services
 			var contentEntity = await contentRepository.GetByIdAsync(ContentId);
 			if (contentEntity is null)
 			{
-				throw new Exception($"this content with id : {ContentId} is not found");
+				throw new ContentNotFoundException(ContentId);
 			}
 			foreach (var file in Files)
 			{
@@ -62,7 +63,7 @@ namespace ServiceLayer.Services
 			var course = await courseRepository.GetByIdAsync(courseId);
 			if (course is null)
 			{
-				throw new Exception($"Course with id {courseId} not found");
+				throw new CourseNotFoundException(courseId);
 			}
 			
 			if (contentRequest.Id > 0) 
@@ -71,7 +72,7 @@ namespace ServiceLayer.Services
 				var foundedContentEntity = await contentRepository.GetByIdAsync(contentRequest.Id);
 				if (foundedContentEntity is null)
 				{
-					throw new Exception($"this content with id : {contentRequest.Id} is not found");
+					throw new ContentNotFoundException(contentRequest.Id);
 				}
 				
 				// Update properties on the tracked entity instead of creating a new one
@@ -103,7 +104,7 @@ namespace ServiceLayer.Services
 			var contentEntity = await contentRepository.GetByIdAsync(contentId);
 			if (contentEntity is null)
 			{
-				throw new Exception($"this content with id : {contentId} is not found");
+				throw new ContentNotFoundException(contentId);
 			}
 			contentRepository.Delete(contentEntity!);
 			await _unitOfWork.SaveChangesAsync();	
@@ -114,7 +115,11 @@ namespace ServiceLayer.Services
 			var contentRepository = _unitOfWork.GetRepository<Content, int>();
 			var contentSpecification = new ContentByCourseIdSpecification(courseId);
 			var ContentEntities = await contentRepository.GetAllAsync(contentSpecification);
-			return ContentEntities.Adapt<IEnumerable<ContentResponseDto>>();
+			if (ContentEntities is null || !ContentEntities.Any())
+			{
+				throw new ContentsInCourseNotFoundException(courseId);
+            }
+            return ContentEntities.Adapt<IEnumerable<ContentResponseDto>>();
 		}
 
 		public async Task<ContentResponseDto> GetContentByIdAsync(int contentId)
@@ -124,7 +129,7 @@ namespace ServiceLayer.Services
 			var contentEntity = await contentRepository.GetByIdAsync(contentSpec);
 			if (contentEntity is null)
 			{
-				throw new Exception($"this content with id : {contentId} is not found");
+				throw new ContentNotFoundException(contentId);
 			}
 			return contentEntity.Adapt<ContentResponseDto>();
 		}
@@ -133,8 +138,9 @@ namespace ServiceLayer.Services
 		{
 			var attachmentRepository = _unitOfWork.GetRepository<ContentAttachment, Guid>();
 			 var attachmentEntity = await attachmentRepository.GetByIdAsync(AttachmentId);
-			if (attachmentEntity is null) {
-				throw new Exception($"this attachment with id : {AttachmentId} is not found");
+			if (attachmentEntity is null)
+			{
+				throw new ContentAttachmentNotFoundException(AttachmentId);
 			}
 			attachmentRepository.Delete(attachmentEntity!);
 			await _unitOfWork.SaveChangesAsync();

@@ -11,6 +11,7 @@ using Mapster;
 using ServiceLayer.Specifications.CourseSpecification;
 using Shared.Dtos.CourseDto.Request;
 using Shared.Dtos.CourseDto.Response;
+using DomainLayer.Exceptions;
 
 namespace ServiceLayer.Services
 {
@@ -28,7 +29,7 @@ namespace ServiceLayer.Services
 				var FoundedCourseEntity = await courseRepository.GetByIdAsync(CreatedcourseDto.Id);
 				if (FoundedCourseEntity is null)
 				{
-					throw new Exception($"this course with id : {CreatedcourseDto.Id} is not found");
+					throw new CourseNotFoundException(CreatedcourseDto.Id);
 				}
 				if (ImageFile is not null && ImageFile.Length > 0)
 				{
@@ -80,7 +81,7 @@ namespace ServiceLayer.Services
 			var courseEntity = await courseRepository.GetByIdAsync(courseId);
 			if (courseEntity is null)
 			{
-				throw new Exception($"this course with id : {courseId} is not found");
+				throw new CourseNotFoundException(courseId);
 			}
 			courseRepository.Delete(courseEntity!);
 			await _unitOfWork.SaveChangesAsync();
@@ -98,8 +99,9 @@ namespace ServiceLayer.Services
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseSpecificatioin = new CourseSpecification(courseId);
 			var course = await courseRepository.GetByIdAsync(courseSpecificatioin);
-			if (course is null) {
-				throw new Exception($"this course with id : {courseId} is not found");
+			if (course is null) 
+			{
+				throw new CourseNotFoundException(courseId);
 			}
 			var courseDto = course.Adapt<CourseResponseDto>();
 			return courseDto;

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mapster;
 using ServiceLayer.Specifications.QuizSpecifications;
+using DomainLayer.Exceptions;
 
 namespace ServiceLayer.Services
 {
@@ -28,7 +29,7 @@ namespace ServiceLayer.Services
 			var quizEntity = await quizRepository.GetByIdAsync(QuizId);
 			if (quizEntity is null)
 			{
-				throw new Exception($"Quiz with id {QuizId} not found.");
+				throw new QuizNotFoundException(QuizId);
 			}
 
 			foreach (var questionDto in Questions)
@@ -79,7 +80,7 @@ namespace ServiceLayer.Services
 			var course = await courseRepository.GetByIdAsync(CourseId);
 			if (course is null)
 			{
-				throw new Exception($"Course with id {CourseId} not found");
+				throw new CourseNotFoundException(CourseId);
 			}
 
 			if (quizRequest.Id.HasValue && quizRequest.Id > 0)
@@ -88,7 +89,7 @@ namespace ServiceLayer.Services
 				var existingQuiz = await quizRepository.GetByIdAsync(quizRequest.Id.Value);
 				if (existingQuiz == null)
 				{
-					throw new Exception($"Quiz with id {quizRequest.Id.Value} not found.");
+					throw new QuizNotFoundException(quizRequest.Id.Value);
 				}
 
 				// Update properties on tracked entity
@@ -124,7 +125,7 @@ namespace ServiceLayer.Services
 			var quizEntity = await quizRepository.GetByIdAsync(quizId);
 			if (quizEntity is null)
 			{
-				throw new Exception($"Quiz with id {quizId} not found.");
+				throw new QuizNotFoundException(quizId);
 			}
 			quizRepository.Delete(quizEntity);
 			await _unitOfWork.SaveChangesAsync();
@@ -135,7 +136,7 @@ namespace ServiceLayer.Services
 			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
 			var quizSpec = new QuizSpecification();
 			var quizEntities = await quizRepository.GetAllAsync(quizSpec);
-			return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
+            return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
 		}
 
 		public async Task<IEnumerable<QuizResponseDto>> GetAllQuizzesForCourse(int CourseId)
@@ -143,7 +144,11 @@ namespace ServiceLayer.Services
 			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
 			var quizSpec = new QuizByCourseIdSpecification(CourseId);
 			var quizEntities = await quizRepository.GetAllAsync(quizSpec);
-			return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
+			if (quizEntities is null || !quizEntities.Any())
+			{
+				throw new QuizzesInCourseNotFoundException(CourseId);
+            }
+            return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
 		}
 
 		public async Task<QuizResponseDto> GetQuizByIdAsync(int quizId)
@@ -153,7 +158,7 @@ namespace ServiceLayer.Services
 			var quizEntity = await quizRepository.GetByIdAsync(quizSpec);
 			if (quizEntity is null)
 			{
-				throw new Exception($"Quiz with id {quizId} not found.");
+				throw new QuizNotFoundException(quizId);
 			}
 			return quizEntity.Adapt<QuizResponseDto>();
 		}

@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Contracts;
+using DomainLayer.Exceptions;
 using DomainLayer.Models;
 using Mapster;
 using Microsoft.VisualBasic;
@@ -30,7 +31,7 @@ namespace ServiceLayer.Services
 				var FoundedDepartmentEntity = await departmentRepository.GetByIdAsync(createDepartmentDto.Id);
 				if (FoundedDepartmentEntity is null)
 				{
-					throw new Exception($"this department with id : {createDepartmentDto.Id} is not found");
+					throw new DepartmentNotFoundException(createDepartmentDto.Id);
 				}
 				departmentRepository.Update(DepartmentEntity);
 			}
@@ -48,7 +49,7 @@ namespace ServiceLayer.Services
 			var DepartmentEntity = await departmentRepository.GetByIdAsync(departmentId);
 			if (DepartmentEntity is null)
 			{
-				throw new Exception($"this department with id : {departmentId} is not found");
+				throw new DepartmentNotFoundException(departmentId);
 			}
 			departmentRepository.Delete(DepartmentEntity!);
 			await _unitOfWork.SaveChangesAsync();	
@@ -61,6 +62,10 @@ namespace ServiceLayer.Services
 			var departmentRepository = _unitOfWork.GetRepository<Department, int>();
 			var departmentSpecificatioin = new DepartmentSpecification(departmentId);
 			var DepartmentEntity = await departmentRepository.GetByIdAsync(departmentSpecificatioin);
+			if (DepartmentEntity is null)
+			{
+				throw new DepartmentNotFoundException(departmentId);
+            }
 			return DepartmentEntity.Adapt<DepartmentDto?>();
 		}
 
@@ -77,7 +82,11 @@ namespace ServiceLayer.Services
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseSpecification = new CourseByDepartmentSpecification(departmentId);
 			var courses = await CourseRepository.GetAllAsync(courseSpecification);
-			return courses.Adapt<IEnumerable<CourseRequestDto>>();
+			if (courses is null || !courses.Any())
+			{
+				throw new CoursesInDepartmentNotFoundException(departmentId);
+            }
+            return courses.Adapt<IEnumerable<CourseRequestDto>>();
 		}
 
 		public async Task<DepartmentDto> AssignCourseToDepartmentAsync(int departmentId, int CourseId)
@@ -87,17 +96,17 @@ namespace ServiceLayer.Services
 			var DepartmentEntity = await  departmentRepository.GetByIdAsync(departmentSpecificatioin);
 			if (DepartmentEntity is null)
 			{
-				throw new Exception($"this department with id : {departmentId} is not found");
+				throw new DepartmentNotFoundException(departmentId);
 			}
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseEntity = await CourseRepository.GetByIdAsync(CourseId);
 			if (courseEntity is null)
 			{
-				throw new Exception($"this course with id : {CourseId} is not found");
+				throw new CourseNotFoundException(CourseId);
 			}
 			if (DepartmentEntity.courses.Any(c => c.Id == CourseId))
 			{
-				throw new Exception($"this course with id : {CourseId} is already assigned to department with id : {departmentId}");
+				throw new CourseDepartmentNotFoundException(CourseId, departmentId);
 			}
 			DepartmentEntity.courses.Add(courseEntity);
 			departmentRepository.Update(DepartmentEntity);
@@ -112,14 +121,14 @@ namespace ServiceLayer.Services
 			var DepartmentEntity = await departmentRepository.GetByIdAsync(departmentSpecificatioin);
 			if (DepartmentEntity is null)
 			{
-				throw new Exception($"this department with id : {departmentId} is not found");
+				throw new DepartmentNotFoundException(departmentId);
 			}
 			if (DepartmentEntity.courses is null) {
-				throw new Exception($"this department with id : {departmentId} has no courses assigned");
+				throw new CoursesInDepartmentNotFoundException(departmentId);
 			}
 			if (!DepartmentEntity.courses.Any(c => c.Id == CourseId))
-			{
-				throw new Exception($"this course with id : {CourseId} is not assigned to department with id : {departmentId}");
+			{ 
+				throw new CourseDepartmentNotFoundException(CourseId, departmentId);
 			}
 			var courseEntity = DepartmentEntity.courses.FirstOrDefault(c => c.Id == CourseId);
 			DepartmentEntity.courses.Remove(courseEntity!);
