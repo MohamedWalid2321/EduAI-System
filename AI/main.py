@@ -65,9 +65,11 @@ def create_app():
         allow_headers=["*"],
     )
 
-    # Router import triggers AI model loading — only happens inside create_app()
-    from routes.modal_route import router as analysis_router
-    application.include_router(analysis_router)
+    # Register routers — each AI module has its own route file
+    from routes import object_router, gaze_router, face_router
+    application.include_router(object_router)
+    application.include_router(gaze_router)
+    application.include_router(face_router)
 
     @application.get("/health", tags=["Health"])
     async def health_check():
@@ -120,9 +122,11 @@ class Proctoring:
         import Models.EyeGazeDetection.src.Server.localMain  # noqa: F401
         log.info("✅ Eye Gaze loaded")
 
-        log.info("⏳ Loading Face Recognition model...")
+        log.info("⏳ Loading Face Recognition model (hybrid)...")
         from Models.Face_Recognition_Service import FaceRecognition  # noqa: F401
-        log.info("✅ Face Recognition loaded")
+        # Instantiate once to warm up both RetinaFace + ArcFace ONNX
+        FaceRecognition()
+        log.info("✅ Face Recognition loaded (RetinaFace + ArcFace ONNX)")
 
         log.info("🚀 All models preloaded — container is warm!")
 
