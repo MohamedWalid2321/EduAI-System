@@ -1,4 +1,9 @@
-"""Object detection routes (YOLO) — single frame & video."""
+"""
+Object detection routes (YOLO) — single frame & video (modified)
+
+Note: /object-video endpoint has been changed to accept a single image (frame)
+instead of a video. The original testing endpoint /object-frame is kept.
+"""
 
 from __future__ import annotations
 
@@ -36,53 +41,45 @@ async def object_detection_frame(image: UploadFile = File(...)):
     if frame is None:
         raise HTTPException(422, "Invalid image")
 
-    return yoloDetect(frame)
+    # run on executor to avoid blocking event loop if yoloDetect is CPU-bound
+    loop = asyncio.get_running_loop()
+    res = await loop.run_in_executor(executor, partial(yoloDetect, frame))
+    return res
 
 
 # ===========================================================================
-# VIDEO
+# VIDEO (modified) -> now SINGLE FRAME endpoint
 # ===========================================================================
 @router.post(
-    "/object-video",
+    "/object-frame",
     status_code=status.HTTP_200_OK,
-    summary="Optimised object detection on 7-second video",
+    summary="Object detection on a single uploaded frame (was video)",
 )
-async def object_detection_video(video: UploadFile = File(...)):
+async def object_detection_(image: UploadFile = File(...)):
     from Models.objectDetectionYolo.objectDetection import yoloDetect
 
-    YOLO_FPS = 12
-    YOLO_TARGET = 7 * YOLO_FPS
-    YOLO_STRIDE = 5            # run YOLO every 5th frame
-    EARLY_STOP_COUNT = 10
+    # Read and decode the uploaded image
+    img_bytes = await image.read()
+    img_np = np.frombuffer(img_bytes, np.uint8)
+    frame = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
 
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
-            tmp.write(await video.read())
-            video_path = tmp.name
-        frames = extract_frames(video_path)
-    except Exception as exc:
-        raise HTTPException(422, str(exc))
+    if frame is None:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Invalid image file")
 
+    # Run YOLO off the executor to avoid blocking
     loop = asyncio.get_running_loop()
-    results = []
-    evidence_counter: dict[str, int] = {}
+    try:
+        yolo_res = await loop.run_in_executor(executor, partial(yoloDetect, frame))
+    except Exception as exc:
+        logger.exception("YOLO inference failed")
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, f"YOLO failed: {exc}")
 
-    for idx, frame in enumerate(frames):
-        if idx % YOLO_STRIDE != 0:
-            continue
-
-        res = await loop.run_in_executor(executor, partial(yoloDetect, frame))
-        results.append(res)
-
-        ev = res.get("evidence")
-        if ev:
-            evidence_counter[ev] = evidence_counter.get(ev, 0) + 1
-            if evidence_counter[ev] >= EARLY_STOP_COUNT:
-                break
+    # Wrap the single-frame result into the same aggregated format your frontend expects
+    # aggregate expects a list of per-frame dicts, so pass [yolo_res]
+    agg = aggregate([yolo_res], module_id=2)
 
     return {
-        "object_detection": aggregate(results, module_id=2),
-        "frames_processed": len(results),
-        "duration_seconds": 7,
-        "early_stopped": True if results else False,
+        "object_detection": agg,
+        "frames_processed": 1,
+        "duration_seconds": 0,  # single frame, not a duration
     }
