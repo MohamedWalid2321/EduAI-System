@@ -8,23 +8,23 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Lenovo\\.nuget\\packages\\": {},
+    "C:\\Users\\mohaned\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
+      "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
       "projectName": "Shared",
-      "projectPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
-      "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lenovo\\Source\\Repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\obj\\",
+      "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\Shared.csproj",
+      "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Shared\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
