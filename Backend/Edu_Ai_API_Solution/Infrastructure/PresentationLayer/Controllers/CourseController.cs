@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PresentationLayer.Attributes;
 using ServiceAbstractionLayer;
 using Shared.Dtos.CourseDto.Request;
 using System;
@@ -19,6 +20,7 @@ namespace PresentationLayer.Controllers
 			return Ok(createdOrUpdatedCourse);
 		}
 		[HttpGet]
+		[Cache(300)]
 		public async Task<IActionResult> GetAllCourse()
 		{
 			var courses = await serviceManager.CourseService.GetAllCourseAsync();

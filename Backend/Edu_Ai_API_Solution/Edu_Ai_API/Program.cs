@@ -9,6 +9,8 @@ using Edu_Ai_API.CustomMiddleWares;
 using Microsoft.AspNetCore.Mvc;
 using Shared.ErrorModels;
 using Edu_Ai_API.Factories;
+using StackExchange.Redis;
+using ServiceLayer.Services;
 
 namespace Edu_Ai_API
 {
@@ -28,11 +30,27 @@ namespace Edu_Ai_API
             builder.Services.AddApplicationServices();
 
             builder.Services.Configure<ApiBehaviorOptions>((options) =>
-            {
+            { 
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
+           //builder.Services.AddScoped<ICasheRepository, CasheRepository>();
+
+
+
             var app = builder.Build();
+
+
+            
+
+            app.MapGet("/", async ([FromServices] ICacheService cache) =>
+            {
+                await cache.SetAsync("mykey", "Helloo", TimeSpan.FromMinutes(2));
+                return await cache.GetAsync("mykey");
+            });
+
+            
+
 
             app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 

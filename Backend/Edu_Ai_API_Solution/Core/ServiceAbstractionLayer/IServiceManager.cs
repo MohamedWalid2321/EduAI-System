@@ -12,5 +12,7 @@ namespace ServiceAbstractionLayer
 		ICourseService CourseService { get; }
 		IContentService ContentService { get; }
 		IAssigmentService AssignmentService { get; }
-	}
+
+		
+    }
 }

@@ -46,7 +46,7 @@ namespace ServiceLayer.Services
             // Prevents adding duplicate headers
             if (!_httpClient.DefaultRequestHeaders.Contains("AccessKey"))
             {
-                _httpClient.DefaultRequestHeaders.Add("AccessKey", apiKey);
+                _httpClient.DefaultRequestHeaders.Add("AccessKey",apiKey);
             }
         }
 

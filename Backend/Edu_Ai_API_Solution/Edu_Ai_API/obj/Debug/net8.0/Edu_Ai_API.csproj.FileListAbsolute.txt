@@ -326,3 +326,6 @@ C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.dll
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\StackExchange.Redis.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Edu_Ai_API\bin\Debug\net8.0\System.IO.Hashing.dll

@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using DomainLayer.Contracts;
+using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
@@ -21,7 +22,11 @@ namespace ServiceLayer
 			services.AddHttpClient<IFileStorageService, BunnyNetService>();
 			services.AddScoped<IServiceManager, ServiceManager>();
 			services.AddMapsterConf();
-			return services;
+
+            services.AddSingleton<IRedisService, RedisService>();
+            services.AddScoped<ICacheService, CacheService>();
+
+            return services;
 		}
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
 		{

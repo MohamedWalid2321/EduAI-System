@@ -25,5 +25,7 @@ namespace ServiceLayer
 		private readonly Lazy<IAssigmentService> _assignmentService =
 			new Lazy<IAssigmentService>(() => new Services.AssignmentService(_unitOfWork, _fileStorageService));
 		public IAssigmentService AssignmentService => _assignmentService.Value;
-	}
+
+		
+    }
 }

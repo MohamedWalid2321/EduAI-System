@@ -668,6 +668,25 @@
         }
       }
     },
+    "/": {
+      "get": {
+        "tags": [
+          "Edu_Ai_API"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
