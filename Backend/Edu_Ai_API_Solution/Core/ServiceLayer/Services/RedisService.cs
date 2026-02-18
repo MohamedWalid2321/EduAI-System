@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using ServiceAbstractionLayer;
-using System;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
     
     // RedisService implements IRedisService using Upstash REST API.

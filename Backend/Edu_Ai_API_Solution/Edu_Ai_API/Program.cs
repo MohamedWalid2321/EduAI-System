@@ -1,16 +1,18 @@
 using DomainLayer.Contracts;
+using DomainLayer.Models;
+using Edu_Ai_API.CustomMiddleWares;
+using Edu_Ai_API.Factories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using persistenceLayer;
 using persistenceLayer.Data;
 using persistenceLayer.Repository;
 using ServiceAbstractionLayer;
 using ServiceLayer;
-using persistenceLayer;
-using Edu_Ai_API.CustomMiddleWares;
-using Microsoft.AspNetCore.Mvc;
-using Shared.ErrorModels;
-using Edu_Ai_API.Factories;
-using StackExchange.Redis;
 using ServiceLayer.Services;
+using Shared.ErrorModels;
+using StackExchange.Redis;
 
 namespace Edu_Ai_API
 {
@@ -26,19 +28,32 @@ namespace Edu_Ai_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddInfrastructureServices(builder.Configuration);
+			builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+	        .AddEntityFrameworkStores<LmsDBContext>()
+	        .AddDefaultTokenProviders();
+			builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
 
-            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+
+			builder.Services.Configure<ApiBehaviorOptions>((options) =>
             { 
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
-           //builder.Services.AddScoped<ICasheRepository, CasheRepository>();
+			//builder.Services.AddScoped<ICasheRepository, CasheRepository>();
+			builder.Services.AddCors(options =>
+			{
+				options.AddDefaultPolicy(builder =>
+				{
+					builder.AllowAnyOrigin()
+						   .AllowAnyMethod()
+						   .AllowAnyHeader();
+				});
+			});
 
 
 
-            var app = builder.Build();
+			var app = builder.Build();
 
 
             
@@ -62,8 +77,11 @@ namespace Edu_Ai_API
             }
 
             app.UseHttpsRedirection();
+			app.UseCors();
 
-            app.UseAuthorization();
+			app.UseAuthentication();
+
+			app.UseAuthorization();
 
             app.MapControllers();
 

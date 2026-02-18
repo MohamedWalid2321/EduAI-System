@@ -1,14 +1,10 @@
-﻿using DomainLayer.Contracts;
-using ServiceAbstractionLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceLayer
+﻿namespace ServiceLayer
 {
-	public class ServiceManager(IUnitOfWork _unitOfWork,IFileStorageService _fileStorageService) : IServiceManager
+	public class ServiceManager(IUnitOfWork _unitOfWork,
+		IFileStorageService _fileStorageService ,
+		UserManager<ApplicationUser> _userManager,
+		SignInManager<ApplicationUser> _signInManager,
+		IJwtProvider _jwtProvider) : IServiceManager
 	{
 		private readonly Lazy<IDepartmentService> _departmentService =
 			new Lazy<IDepartmentService>(() => new Services.DepartmentService(_unitOfWork));
@@ -26,6 +22,10 @@ namespace ServiceLayer
 			new Lazy<IAssigmentService>(() => new Services.AssignmentService(_unitOfWork, _fileStorageService));
 		public IAssigmentService AssignmentService => _assignmentService.Value;
 
-		
-    }
+		private readonly Lazy<IAuthunticationService> _authunticationService =
+			new Lazy<IAuthunticationService>(() => new Services.AuthService(_userManager, _signInManager, _jwtProvider, _fileStorageService));
+		public IAuthunticationService AuthunticationService => _authunticationService.Value;
+
+
+	}
 }

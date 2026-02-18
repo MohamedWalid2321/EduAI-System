@@ -1,18 +1,4 @@
-﻿using DomainLayer.Contracts;
-using DomainLayer.Models;
-using ServiceAbstractionLayer;
-using Shared.Dtos.QuizDto;
-using Shared.Dtos.QuizDto.Request;
-using Shared.Dtos.QuizDto.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mapster;
-using ServiceLayer.Specifications.QuizSpecifications;
-using DomainLayer.Exceptions;
-
+﻿
 namespace ServiceLayer.Services
 {
 	public class QuizService(IUnitOfWork unitOfWork) : IQuizService

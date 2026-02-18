@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceAbstractionLayer
+﻿namespace ServiceAbstractionLayer
 {
 	public interface IServiceManager
 	{
@@ -12,7 +6,8 @@ namespace ServiceAbstractionLayer
 		ICourseService CourseService { get; }
 		IContentService ContentService { get; }
 		IAssigmentService AssignmentService { get; }
+		IAuthunticationService AuthunticationService { get; }
 
-		
-    }
+
+	}
 }

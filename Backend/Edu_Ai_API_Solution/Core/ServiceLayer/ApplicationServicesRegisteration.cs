@@ -1,18 +1,4 @@
-﻿using DomainLayer.Contracts;
-using Mapster;
-using MapsterMapper;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Http;
-using ServiceAbstractionLayer;
-using ServiceLayer.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceLayer
+﻿namespace ServiceLayer
 {
 	public static class ApplicationServicesRegisteration
 	{
@@ -25,8 +11,9 @@ namespace ServiceLayer
 
             services.AddSingleton<IRedisService, RedisService>();
             services.AddScoped<ICacheService, CacheService>();
+			services.AddScoped<IAuthunticationService, AuthService>();
 
-            return services;
+			return services;
 		}
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
 		{

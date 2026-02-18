@@ -1,7 +1,3 @@
-using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace persistenceLayer.Data.Configurations
 {
 	public class ContentAttachmentConfiguration : IEntityTypeConfiguration<ContentAttachment>

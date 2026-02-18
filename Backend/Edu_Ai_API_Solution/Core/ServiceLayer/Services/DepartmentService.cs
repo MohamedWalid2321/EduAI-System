@@ -1,20 +1,4 @@
-﻿using DomainLayer.Contracts;
-using DomainLayer.Exceptions;
-using DomainLayer.Models;
-using Mapster;
-using Microsoft.VisualBasic;
-using ServiceAbstractionLayer;
-using ServiceLayer.Specifications.CourseSpecification;
-using ServiceLayer.Specifications.DepartmentSpecification;
-using Shared.Dtos;
-using Shared.Dtos.CourseDto.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
 	{

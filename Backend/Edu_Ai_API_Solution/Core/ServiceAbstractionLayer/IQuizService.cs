@@ -1,13 +1,4 @@
-﻿using Shared.Dtos.QuizDto;
-using Shared.Dtos.QuizDto.Request;
-using Shared.Dtos.QuizDto.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceAbstractionLayer
+﻿namespace ServiceAbstractionLayer
 {
 	public interface IQuizService
 	{
