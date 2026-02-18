@@ -1,13 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Shared.Dtos.CourseDto.Request;
-using Shared.Dtos.CourseDto.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceAbstractionLayer
+﻿namespace ServiceAbstractionLayer
 {
 	public interface ICourseService
 	{

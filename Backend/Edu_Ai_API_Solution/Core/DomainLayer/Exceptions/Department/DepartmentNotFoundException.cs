@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DomainLayer.Exceptions.Department
+{
+    public sealed class DepartmentNotFoundException(int id ) : NotFoundException($"Department with this Id : {id} is Not Found ")
+    {
+    }
+}

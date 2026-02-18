@@ -22,3 +22,4 @@ C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\Domai
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\refint\DomainLayer.dll
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.pdb
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\ref\DomainLayer.dll
+C:\Users\mohaned\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\DomainLayer\obj\Debug\net8.0\DomainLayer.csproj.AssemblyReference.cache

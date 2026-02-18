@@ -1,17 +1,5 @@
-﻿using DomainLayer.Contracts;
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Http;
-using ServiceAbstractionLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mapster;
-using ServiceLayer.Specifications.CourseSpecification;
-using Shared.Dtos.CourseDto.Request;
-using Shared.Dtos.CourseDto.Response;
-using DomainLayer.Exceptions;
+﻿
+
 
 namespace ServiceLayer.Services
 {

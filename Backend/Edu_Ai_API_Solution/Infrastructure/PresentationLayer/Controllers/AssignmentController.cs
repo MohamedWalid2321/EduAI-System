@@ -1,13 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ServiceAbstractionLayer;
-using Shared.Dtos.AssigmentDto.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace PresentationLayer.Controllers
 {
 	public class AssignmentController(IServiceManager serviceManager) : ApiControllerBase

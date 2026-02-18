@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using ServiceAbstractionLayer;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿
+
 
 namespace ServiceLayer.Services
 {
