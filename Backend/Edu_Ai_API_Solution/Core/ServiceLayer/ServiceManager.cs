@@ -1,10 +1,17 @@
-﻿namespace ServiceLayer
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Logging;
+
+namespace ServiceLayer
 {
 	public class ServiceManager(IUnitOfWork _unitOfWork,
 		IFileStorageService _fileStorageService ,
 		UserManager<ApplicationUser> _userManager,
 		SignInManager<ApplicationUser> _signInManager,
-		IJwtProvider _jwtProvider) : IServiceManager
+		IJwtProvider _jwtProvider,
+		IEmailSender _emailSender,
+		IHttpContextAccessor _httpContextAccessor,
+		IEmailBodyBuilder _emailBodyBuilder,
+		ILogger<AuthService> _AuthLogger) : IServiceManager // <-- FIXED TYPE HERE
 	{
 		private readonly Lazy<IDepartmentService> _departmentService =
 			new Lazy<IDepartmentService>(() => new Services.DepartmentService(_unitOfWork));
@@ -23,9 +30,10 @@
 		public IAssigmentService AssignmentService => _assignmentService.Value;
 
 		private readonly Lazy<IAuthunticationService> _authunticationService =
-			new Lazy<IAuthunticationService>(() => new Services.AuthService(_userManager, _signInManager, _jwtProvider, _fileStorageService));
+			new Lazy<IAuthunticationService>(() => new Services.AuthService(_userManager, _signInManager, _jwtProvider, _fileStorageService, _httpContextAccessor,_emailSender, _emailBodyBuilder,_AuthLogger));
 		public IAuthunticationService AuthunticationService => _authunticationService.Value;
-
-
+		private readonly Lazy<IUserService> _userService =
+			new Lazy<IUserService>(() => new Services.UserService(_userManager));
+		public IUserService UserService => _userService.Value;
 	}
 }

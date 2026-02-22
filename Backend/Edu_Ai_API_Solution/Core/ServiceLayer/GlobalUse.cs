@@ -41,3 +41,13 @@ global using Microsoft.Extensions.DependencyInjection;
 global using ServiceLayer.Services;
 global using System.Reflection;
 
+global using DomainLayer.Exceptions.User;
+global using Microsoft.AspNetCore.Identity.UI.Services;
+global using Microsoft.AspNetCore.WebUtilities;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
+global using Shared.Dtos.AuthDto.Request;
+global using Shared.Dtos.AuthDto.Response;
+
+global using Shared.Dtos.UserDto.Request;
+global using Shared.Dtos.UserDto.Response;

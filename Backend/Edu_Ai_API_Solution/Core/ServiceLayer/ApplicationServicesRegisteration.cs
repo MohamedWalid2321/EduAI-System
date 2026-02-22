@@ -11,8 +11,9 @@
 
             services.AddSingleton<IRedisService, RedisService>();
             services.AddScoped<ICacheService, CacheService>();
+			services.AddHttpContextAccessor();
 			services.AddScoped<IAuthunticationService, AuthService>();
-
+			services.AddScoped<IUserService, UserService>();
 			return services;
 		}
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)

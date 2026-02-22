@@ -24,3 +24,8 @@ global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Options;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
+
+global using MailKit.Net.Smtp;
+global using MailKit.Security;
+global using Microsoft.AspNetCore.Identity.UI.Services;
+global using MimeKit;

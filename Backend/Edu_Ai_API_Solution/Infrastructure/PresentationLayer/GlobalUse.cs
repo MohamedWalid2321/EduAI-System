@@ -17,3 +17,6 @@ global using Shared.Dtos.AssigmentDto.Request;
 
 global using Microsoft.AspNetCore.Mvc.Filters;
 global using Microsoft.Extensions.DependencyInjection;
+
+global using PresentationLayer.Extensions;
+global using Shared.Dtos.UserDto.Request;
