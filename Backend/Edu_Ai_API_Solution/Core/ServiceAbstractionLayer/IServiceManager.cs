@@ -7,6 +7,7 @@
 		IContentService ContentService { get; }
 		IAssigmentService AssignmentService { get; }
 		IAuthunticationService AuthunticationService { get; }
+		IUserService UserService { get; }
 
 
 	}

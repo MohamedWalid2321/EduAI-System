@@ -17,3 +17,5 @@ global using DomainLayer.Models;
 global using Shared.Dtos.QuizDto;
 global using Shared.Dtos.QuizDto.Request;
 global using Shared.Dtos.QuizDto.Response;
+
+global using Shared.Dtos.UserDto.Response;

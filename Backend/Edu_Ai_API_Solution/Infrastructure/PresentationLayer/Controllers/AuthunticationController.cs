@@ -28,6 +28,32 @@
 			await _serviceManager.AuthunticationService.RevokeRefreshTokenAsync(request.token,request.refreshToken);
 			return Ok() ;
 		}
+		[HttpPost("confirm_email")]
+		public async Task<IActionResult> ConfirmEmailAync(ConfirmEmailRequest request)
+		{
+			
+			await _serviceManager.AuthunticationService.ConfirmEmailAsync(request);
+			return Ok();
+		}
+		[HttpPost("resend_confirm_email")]
+		public async Task<IActionResult> ResendConfirmEmailAync(ResendConfirmEmailRequest request)
+		{
+			
+			await _serviceManager.AuthunticationService.ResendConfirmEmailAsync(request);
+			return Ok();
+		}
+		[HttpPost("forget-password")]
+		public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordRequest request)
+		{
+			await _serviceManager.AuthunticationService.SendResetPasswordCodeAsync(request.Email);
+			return Ok();
+		}
+		[HttpPost("reset-password")]
+		public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+		{
+			await _serviceManager.AuthunticationService.ResetPasswordAsync(request);
+			return Ok();
+		}
 
 	}
 }

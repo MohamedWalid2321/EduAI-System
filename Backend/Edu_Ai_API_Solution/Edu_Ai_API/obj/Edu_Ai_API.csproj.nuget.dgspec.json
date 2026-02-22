@@ -218,6 +218,10 @@
               "target": "Package",
               "version": "[2.3.9, )"
             },
+            "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[8.0.24, )"
+            },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[8.0.0, )"
@@ -392,6 +396,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.15.0, )"
+            },
             "Mapster": {
               "target": "Package",
               "version": "[7.4.0, )"

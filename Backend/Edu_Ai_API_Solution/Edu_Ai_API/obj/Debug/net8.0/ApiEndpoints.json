@@ -125,6 +125,38 @@
   },
   {
     "ContainingType": "PresentationLayer.Controllers.AuthunticationController",
+    "Method": "ConfirmEmailAync",
+    "RelativePath": "api/Authuntication/confirm_email",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Shared.Dtos.AuthDto.Request.ConfirmEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AuthunticationController",
+    "Method": "ForgetPassword",
+    "RelativePath": "api/Authuntication/forget-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Shared.Dtos.AuthDto.Request.ForgetPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AuthunticationController",
     "Method": "LoginAsync",
     "RelativePath": "api/Authuntication/login",
     "HttpMethod": "POST",
@@ -192,6 +224,38 @@
         "Name": "file",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AuthunticationController",
+    "Method": "ResendConfirmEmailAync",
+    "RelativePath": "api/Authuntication/resend_confirm_email",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Shared.Dtos.AuthDto.Request.ResendConfirmEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AuthunticationController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/Authuntication/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Shared.Dtos.AuthDto.Request.ResetPasswordRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -527,6 +591,48 @@
       {
         "Name": "departmetnId",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AccountController",
+    "Method": "Info",
+    "RelativePath": "me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AccountController",
+    "Method": "ChangePassword",
+    "RelativePath": "me/change-password",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Shared.Dtos.UserDto.Request.ChangePasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PresentationLayer.Controllers.AccountController",
+    "Method": "Info",
+    "RelativePath": "me/info",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Shared.Dtos.UserDto.Request.UpdateUserRequest",
         "IsRequired": true
       }
     ],

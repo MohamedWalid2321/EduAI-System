@@ -1,4 +1,7 @@
-﻿namespace persistenceLayer
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using persistenceLayer.Email;
+
+namespace persistenceLayer
 {
 	public static class AddInfrastructureServicesRegisteration
 	{
@@ -8,6 +11,9 @@
 			{
 				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 			});
+			services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
+			services.AddScoped<IEmailSender, EmailService>();
+			services.AddScoped<IEmailBodyBuilder, EmailBodyBuilder>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddAuthConf(configuration);
 
