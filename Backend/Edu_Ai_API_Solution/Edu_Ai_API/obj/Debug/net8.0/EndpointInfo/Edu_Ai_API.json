@@ -1022,7 +1022,7 @@
         }
       }
     },
-    "/": {
+    "/set": {
       "get": {
         "tags": [
           "Edu_Ai_API"
@@ -1037,6 +1037,18 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/del": {
+      "get": {
+        "tags": [
+          "Edu_Ai_API"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

@@ -40,7 +40,7 @@ namespace Edu_Ai_API
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
-			//builder.Services.AddScoped<ICasheRepository, CasheRepository>();
+			
 			builder.Services.AddCors(options =>
 			{
 				options.AddDefaultPolicy(builder =>
@@ -58,13 +58,19 @@ namespace Edu_Ai_API
 
             
 
-            app.MapGet("/", async ([FromServices] ICacheService cache) =>
+            app.MapGet("/set/", async ([FromServices] ICacheService cache) =>
             {
                 await cache.SetAsync("mykey", "Helloo", TimeSpan.FromMinutes(2));
                 return await cache.GetAsync("mykey");
             });
 
-            
+            app.MapGet("/del/", async ([FromServices] ICacheService cache) =>
+            {
+                await cache.RemoveAsync("mykey");
+                
+            });
+
+
 
 
             app.UseMiddleware<CustomExceptionHandlerMiddleWare>();

@@ -65,6 +65,29 @@
             }
         }
 
+        public async Task RemoveKeyAsync(string key)
+        {
+            try
+            {
+                // URL encode key to handle special characters
+                var encodedKey = Uri.EscapeDataString(key);
+
+                // Upstash REST endpoint for deleting a key
+                var url = $"{_baseUrl}/del/{encodedKey}";
+
+                // Send POST request to delete the key
+                var response = await _client.PostAsync(url, null);
+
+                // Throw exception if request failed
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Redis DEL exception: {ex.Message}");
+                throw;
+            }
+        }
+
         /// Stores a value in Redis with an optional expiration time (TTL).
 
         public async Task SetKeyAsync(string cacheKey, object cacheValue, TimeSpan? ttl = null)

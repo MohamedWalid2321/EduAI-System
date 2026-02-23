@@ -1,23 +1,5 @@
 [
   {
-    "ContainingType": "Edu_Ai_API.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CMain\u003Eb__0_2",
-    "RelativePath": "",
-    "HttpMethod": "GET",
-    "IsController": false,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "PresentationLayer.Controllers.AssignmentController",
     "Method": "AddAttachmentToAssignment",
     "RelativePath": "api/Assignment/{assignmentId}/attachments",
@@ -597,6 +579,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Edu_Ai_API.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CMain\u003Eb__0_3",
+    "RelativePath": "del/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "PresentationLayer.Controllers.AccountController",
     "Method": "Info",
     "RelativePath": "me",
@@ -637,6 +635,24 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Edu_Ai_API.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CMain\u003Eb__0_2",
+    "RelativePath": "set/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "Edu_Ai_API.Controllers.WeatherForecastController",
