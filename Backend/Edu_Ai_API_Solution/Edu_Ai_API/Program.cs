@@ -28,7 +28,7 @@ namespace Edu_Ai_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-			builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+			builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 	        .AddEntityFrameworkStores<LmsDBContext>()
 	        .AddDefaultTokenProviders();
 			builder.Services.AddInfrastructureServices(builder.Configuration);

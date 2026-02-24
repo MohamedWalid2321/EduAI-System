@@ -1,7 +1,8 @@
 ﻿
 
+using Microsoft.AspNetCore.Identity;
 using ServiceAbstractionLayer;
-
+using Shared.Constants;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServiceLayer.Services
@@ -13,6 +14,7 @@ namespace ServiceLayer.Services
 		IHttpContextAccessor httpContextAccessor,
 		IEmailSender emailSender,
 		IEmailBodyBuilder EmailBodyBuilder,
+		RoleManager<ApplicationRole> roleManager,
 		ILogger<AuthService> logger) : IAuthunticationService
 	{
 		private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -23,6 +25,7 @@ namespace ServiceLayer.Services
 		private readonly ILogger<AuthService> _logger = logger;
 		private readonly IEmailSender _emailSender = emailSender;
 		private readonly IEmailBodyBuilder _emailBodyBuilder = EmailBodyBuilder;
+		private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
 		private readonly int _RefreshTokenExpirationDays = 14;
 
 
@@ -43,7 +46,8 @@ namespace ServiceLayer.Services
 			if (result.Succeeded)
 			{
 				// Here you would typically generate a JWT token or similar
-				var (token, ExpireIn) = _jwtProvider.GenerateToken(user);
+				var (UserRoles, UserPermissions) = await GetRolesAndPermissionAsync(user);
+				var (token, ExpireIn) = _jwtProvider.GenerateToken(user, UserRoles, UserPermissions);
 				var refreshToken = GenerateRefreshToken();
 				var refreshTokenExpiration = DateTime.UtcNow.AddDays(_RefreshTokenExpirationDays);
 				user.RefreshTokens.Add(new RefreshToken
@@ -134,8 +138,8 @@ namespace ServiceLayer.Services
 				throw new InvalidJwtToken();
 			}
 			storedRefreshToken.RevokedOn = DateTime.UtcNow; // Invalidate the old refresh token
-
-			var (newToken, expiresIn) = _jwtProvider.GenerateToken(user);
+			var (UserRoles, UserPermissions) = await GetRolesAndPermissionAsync(user);
+			var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, UserRoles, UserPermissions);
 			var newRefreshToken = GenerateRefreshToken();
 			var refreshTokenExpiration = DateTime.UtcNow.AddDays(_RefreshTokenExpirationDays);
 
@@ -211,6 +215,7 @@ namespace ServiceLayer.Services
 				//return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
 				throw new Exception(error != null ? error.Description : "Email confirmation failed");
 			}
+			await _userManager.AddToRoleAsync(user, DefaultRoles.Student);
 		}
 
 		public async Task ResendConfirmEmailAsync(ResendConfirmEmailRequest request)
@@ -315,6 +320,22 @@ namespace ServiceLayer.Services
 			await Task.CompletedTask;
 		}
 
+		private async Task<(IEnumerable<string> UserRoles, IEnumerable<string> UserPermissions)> GetRolesAndPermissionAsync(ApplicationUser user)
+		{
+			var userRoles = await _userManager.GetRolesAsync(user);
+			var permissions = new List<string>();
 
+			foreach (var roleName in userRoles)
+			{
+				var role = await _roleManager.FindByNameAsync(roleName);
+				if (role != null)
+				{
+					var claims = await _roleManager.GetClaimsAsync(role);
+					permissions.AddRange(claims.Select(c => c.Value!));
+				}
+			}
+
+			return (userRoles, permissions.Distinct());
+		}
 	}
 }
