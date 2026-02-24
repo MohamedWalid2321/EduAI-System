@@ -7,6 +7,7 @@ namespace ServiceLayer
 		IFileStorageService _fileStorageService ,
 		UserManager<ApplicationUser> _userManager,
 		SignInManager<ApplicationUser> _signInManager,
+		RoleManager<ApplicationRole> _roleManager,
 		IJwtProvider _jwtProvider,
 		IEmailSender _emailSender,
 		IHttpContextAccessor _httpContextAccessor,
@@ -30,7 +31,7 @@ namespace ServiceLayer
 		public IAssigmentService AssignmentService => _assignmentService.Value;
 
 		private readonly Lazy<IAuthunticationService> _authunticationService =
-			new Lazy<IAuthunticationService>(() => new Services.AuthService(_userManager, _signInManager, _jwtProvider, _fileStorageService, _httpContextAccessor,_emailSender, _emailBodyBuilder,_AuthLogger));
+			new Lazy<IAuthunticationService>(() => new Services.AuthService(_userManager, _signInManager, _jwtProvider, _fileStorageService, _httpContextAccessor,_emailSender, _emailBodyBuilder,_roleManager,_AuthLogger));
 		public IAuthunticationService AuthunticationService => _authunticationService.Value;
 		private readonly Lazy<IUserService> _userService =
 			new Lazy<IUserService>(() => new Services.UserService(_userManager));

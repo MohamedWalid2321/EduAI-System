@@ -1,16 +1,20 @@
-﻿namespace persistenceLayer.Auth
+﻿using System.Text.Json;
+
+namespace persistenceLayer.Auth
 {
 	public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
 	{
 		private readonly JwtOptions _jwtOptions = options.Value;
-		public (string Token, int ExpireIn) GenerateToken(ApplicationUser user)
+		public (string Token, int ExpireIn) GenerateToken(ApplicationUser user, IEnumerable<String> Roles, IEnumerable<string> Permissions)
 		{
 			Claim[] claims = [
 				new Claim(JwtRegisteredClaimNames.Sub, user.Id),
 				new Claim(JwtRegisteredClaimNames.Email, user.Email!),
 				new Claim(JwtRegisteredClaimNames.GivenName,user.FirstName !),
 				new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName !),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(nameof(Roles),JsonSerializer.Serialize(Roles),JsonClaimValueTypes.JsonArray),
+				new Claim(nameof(Permissions),JsonSerializer.Serialize(Permissions),JsonClaimValueTypes.JsonArray)
 			];
 			var SymmtricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
 			var signingCredentials = new SigningCredentials(SymmtricSecurityKey, SecurityAlgorithms.HmacSha256);
