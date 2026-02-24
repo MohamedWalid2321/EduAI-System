@@ -7,5 +7,17 @@
 cheating_log.txt
 __pycache__/
 TestArea/
+# Visual Studio / Visual Studio Code
 .vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results 
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
 assets/
