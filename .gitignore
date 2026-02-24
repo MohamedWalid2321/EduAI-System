@@ -9,3 +9,5 @@ __pycache__/
 TestArea/
 .vs/
 assets/
+[Bb]in/
+[Oo]bj/
