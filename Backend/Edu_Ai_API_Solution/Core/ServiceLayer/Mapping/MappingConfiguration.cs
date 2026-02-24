@@ -1,15 +1,4 @@
-﻿using DomainLayer.Enums;
-using DomainLayer.Models;
-using Mapster;
-using Shared.Dtos;
-using Shared.Dtos.CourseDto.Request;
-using Shared.Dtos.CourseDto.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ServiceLayer.Mapping
 {
 	public class MappingConfiguration : IRegister

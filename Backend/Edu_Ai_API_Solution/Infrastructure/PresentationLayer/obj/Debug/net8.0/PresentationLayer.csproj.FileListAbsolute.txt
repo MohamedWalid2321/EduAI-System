@@ -34,3 +34,7 @@ C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastruc
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\obj\Debug\net8.0\refint\PresentationLayer.dll
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\obj\Debug\net8.0\PresentationLayer.pdb
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\obj\Debug\net8.0\ref\PresentationLayer.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\bin\Debug\net8.0\DomainLayer.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\bin\Debug\net8.0\DomainLayer.pdb
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\bin\Debug\net8.0\DomainLayer.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Infrastructure\PresentationLayer\bin\Debug\net8.0\DomainLayer.pdb

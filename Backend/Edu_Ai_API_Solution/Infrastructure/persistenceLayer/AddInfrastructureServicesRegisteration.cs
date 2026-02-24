@@ -1,17 +1,5 @@
-﻿using DomainLayer.Contracts;
-using Mapster;
-using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using persistenceLayer.Data;
-using persistenceLayer.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using persistenceLayer.Email;
 
 namespace persistenceLayer
 {
@@ -23,11 +11,57 @@ namespace persistenceLayer
 			{
 				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 			});
+			services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
+			services.AddScoped<IEmailSender, EmailService>();
+			services.AddScoped<IEmailBodyBuilder, EmailBodyBuilder>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
-			
+			services.AddAuthConf(configuration);
+
+
 
 			return services;
 		}
-		
+		public static IServiceCollection AddAuthConf(this IServiceCollection services, IConfiguration configuration)
+		{
+
+			services.AddScoped<IJwtProvider, JwtProvider>();
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.Password.RequiredLength = 6;
+				//options.SignIn.RequireConfirmedEmail = true;
+				options.User.RequireUniqueEmail = true;
+			});
+			services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+			// This approach allows for validation of the options using data annotations and ensures that the configuration is valid at startup.
+			services.AddOptions<JwtOptions>()
+				.BindConfiguration(JwtOptions.SectionName)
+				.ValidateDataAnnotations()
+				.ValidateOnStart();
+			//Retrieve the JWT options from the configuration to use in the authentication setup
+		   var jwtSettings = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? throw new InvalidOperationException("JWT options not found in configuration.");
+
+			services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}
+			).AddJwtBearer(services =>
+			{
+				services.SaveToken = true;
+				services.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidIssuer = jwtSettings.Issuer,
+					ValidateAudience = true,
+					ValidAudience = jwtSettings.Audience,
+					ValidateLifetime = true,
+					IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSettings.Key)),
+					ValidateIssuerSigningKey = true
+				};
+			});
+
+			return services;
+		}
+
 	}
 }

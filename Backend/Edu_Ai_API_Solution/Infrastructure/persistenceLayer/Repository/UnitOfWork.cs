@@ -1,13 +1,4 @@
-﻿using DomainLayer.Contracts;
-using DomainLayer.Models;
-using persistenceLayer.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace persistenceLayer.Repository
+﻿namespace persistenceLayer.Repository
 {
 	public class UnitOfWork(LmsDBContext _context) : IUnitOfWork
 	{

@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ServiceAbstractionLayer;
-using Shared.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PresentationLayer.Controllers
+﻿namespace PresentationLayer.Controllers
 {
+	//[Authorize]
 	public class DepartmentController(IServiceManager serviceManager):ApiControllerBase
 	{
+		[Authorize]
 		[HttpGet]
 		public async Task<IActionResult> GetDepartments()
 		{

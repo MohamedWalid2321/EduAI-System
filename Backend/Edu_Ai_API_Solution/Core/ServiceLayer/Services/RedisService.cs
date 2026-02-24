@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using ServiceAbstractionLayer;
-using System;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
     
     // RedisService implements IRedisService using Upstash REST API.
@@ -69,6 +62,29 @@ namespace ServiceLayer.Services
             {
                 Console.WriteLine($"Redis GET exception: {ex.Message}");
                 return null; // fail-safe
+            }
+        }
+
+        public async Task RemoveKeyAsync(string key)
+        {
+            try
+            {
+                // URL encode key to handle special characters
+                var encodedKey = Uri.EscapeDataString(key);
+
+                // Upstash REST endpoint for deleting a key
+                var url = $"{_baseUrl}/del/{encodedKey}";
+
+                // Send POST request to delete the key
+                var response = await _client.PostAsync(url, null);
+
+                // Throw exception if request failed
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Redis DEL exception: {ex.Message}");
+                throw;
             }
         }
 

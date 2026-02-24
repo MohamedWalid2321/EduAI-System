@@ -7,7 +7,7 @@ namespace Edu_Ai_API.CustomMiddleWares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
-        public CustomExceptionHandlerMiddleWare(RequestDelegate Next , ILogger<CustomExceptionHandlerMiddleWare> logger)
+        public CustomExceptionHandlerMiddleWare(RequestDelegate Next, ILogger<CustomExceptionHandlerMiddleWare> logger)
         {
             _next = Next;
             _logger = logger;
@@ -18,12 +18,21 @@ namespace Edu_Ai_API.CustomMiddleWares
             try
             {
                 await _next.Invoke(httpContext);
-                await HandleNotFoundEndPointAsync(httpContext);
+                
+                // Only handle error responses if the response hasn't started writing
+                if (!httpContext.Response.HasStarted)
+                {
+                    await HandleErrorResponseAsync(httpContext);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unhandled exception occurred while processing the request.");
-                await HandleExceptionAsync(httpContext, ex);
+                
+                if (!httpContext.Response.HasStarted)
+                {
+                    await HandleExceptionAsync(httpContext, ex);
+                }
             }
         }
 
@@ -32,6 +41,8 @@ namespace Edu_Ai_API.CustomMiddleWares
             httpContext.Response.StatusCode = ex switch
             {
                 NotFoundException => StatusCodes.Status404NotFound,
+                UnAuthorizedException => StatusCodes.Status401Unauthorized,
+                ConflictException => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError
             };
             httpContext.Response.ContentType = "application/json";
@@ -44,15 +55,28 @@ namespace Edu_Ai_API.CustomMiddleWares
             await httpContext.Response.WriteAsJsonAsync(response);
         }
 
-        private static async Task HandleNotFoundEndPointAsync(HttpContext httpContext)
+        private static async Task HandleErrorResponseAsync(HttpContext httpContext)
         {
-            if (httpContext.Response.StatusCode == StatusCodes.Status404NotFound)
+            var statusCode = httpContext.Response.StatusCode;
+            
+            // Only process error status codes (4xx and 5xx)
+            if (statusCode >= 400)
             {
+                var errorMessage = statusCode switch
+                {
+                    StatusCodes.Status401Unauthorized => "Unauthorized. Please provide a valid token.",
+                    StatusCodes.Status403Forbidden => "Forbidden. You don't have permission to access this resource.",
+                    StatusCodes.Status404NotFound => $"End Point {httpContext.Request.Path} is Not Found",
+                    _ => $"An error occurred with status code {statusCode}"
+                };
+
+                httpContext.Response.ContentType = "application/json";
                 var response = new ErrorToReturn()
                 {
-                    StatusCode = StatusCodes.Status404NotFound,
-                    ErrorMessage = $"End Point {httpContext.Request} is Not Found"
+                    StatusCode = statusCode,
+                    ErrorMessage = errorMessage
                 };
+
                 await httpContext.Response.WriteAsJsonAsync(response);
             }
         }

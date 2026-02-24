@@ -30,3 +30,7 @@ C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\Servi
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\obj\Debug\net8.0\refint\ServiceAbstractionLayer.dll
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\obj\Debug\net8.0\ServiceAbstractionLayer.pdb
 C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\obj\Debug\net8.0\ref\ServiceAbstractionLayer.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\bin\Debug\net8.0\DomainLayer.dll
+C:\Users\mohaned\source\repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\bin\Debug\net8.0\DomainLayer.pdb
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\bin\Debug\net8.0\DomainLayer.dll
+C:\Users\Lenovo\Source\Repos\EduAI-System\Backend\Edu_Ai_API_Solution\Core\ServiceAbstractionLayer\bin\Debug\net8.0\DomainLayer.pdb

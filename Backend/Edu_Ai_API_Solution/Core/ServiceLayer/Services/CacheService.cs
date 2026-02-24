@@ -1,10 +1,4 @@
-﻿using DomainLayer.Contracts;
-using ServiceAbstractionLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace ServiceLayer.Services
 {
@@ -19,6 +13,9 @@ namespace ServiceLayer.Services
 
         public Task<string?> GetAsync(string key)
             => _redis.GetKeyAsync(key);
+
+        public Task RemoveAsync(string key)
+            => _redis.RemoveKeyAsync(key);
 
         public Task SetAsync(string key, object value, TimeSpan ttl)
             => _redis.SetKeyAsync(key, value, ttl);
