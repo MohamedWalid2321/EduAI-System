@@ -12,7 +12,7 @@ namespace ServiceLayer
 		IEmailSender _emailSender,
 		IHttpContextAccessor _httpContextAccessor,
 		IEmailBodyBuilder _emailBodyBuilder,
-		ILogger<AuthService> _AuthLogger) : IServiceManager // <-- FIXED TYPE HERE
+		ILogger<AuthService> _AuthLogger) : IServiceManager 
 	{
 		private readonly Lazy<IDepartmentService> _departmentService =
 			new Lazy<IDepartmentService>(() => new Services.DepartmentService(_unitOfWork));
@@ -36,5 +36,8 @@ namespace ServiceLayer
 		private readonly Lazy<IUserService> _userService =
 			new Lazy<IUserService>(() => new Services.UserService(_userManager));
 		public IUserService UserService => _userService.Value;
+		private readonly Lazy<IRoleService> _roleService =
+			new Lazy<IRoleService>(() => new Services.RoleService(_roleManager));
+		public IRoleService RoleService => _roleService.Value;
 	}
 }

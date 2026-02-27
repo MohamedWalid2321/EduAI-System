@@ -37,11 +37,6 @@ namespace ServiceLayer.Services
 			{
 				throw new InvalidCredentials();
 			}
-			var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
-			if (!isPasswordValid)
-			{
-				throw new InvalidCredentials();
-			}
 			var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 			if (result.Succeeded)
 			{
