@@ -31,8 +31,9 @@ namespace ServiceLayer.Mapping
 			// Configure Assessment to AssesmentDto mapping with enum to string conversion
 			config.NewConfig<Assessment, AssesmentDto>()
 				.Map(dest => dest.AssType, src => src.AssType.ToString());
-
-
+			// Mapping Email To UserName in ApplicationUser
+			config.NewConfig<RegisterRequest, ApplicationUser>()
+			.Map(dest => dest.UserName, src => src.Email);
 
 		}
 	}

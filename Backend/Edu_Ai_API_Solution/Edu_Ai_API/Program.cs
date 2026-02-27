@@ -2,12 +2,14 @@ using DomainLayer.Contracts;
 using DomainLayer.Models;
 using Edu_Ai_API.CustomMiddleWares;
 using Edu_Ai_API.Factories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using persistenceLayer;
 using persistenceLayer.Data;
 using persistenceLayer.Repository;
+using PresentationLayer.Authorization;
 using ServiceAbstractionLayer;
 using ServiceLayer;
 using ServiceLayer.Services;
@@ -33,6 +35,9 @@ namespace Edu_Ai_API
 	        .AddDefaultTokenProviders();
 			builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
+            // Adding Authorization Service
+			builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+			builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 
 			builder.Services.Configure<ApiBehaviorOptions>((options) =>
@@ -54,24 +59,6 @@ namespace Edu_Ai_API
 
 
 			var app = builder.Build();
-
-
-            
-
-            app.MapGet("/set/", async ([FromServices] ICacheService cache) =>
-            {
-                await cache.SetAsync("mykey", "Helloo", TimeSpan.FromMinutes(2));
-                return await cache.GetAsync("mykey");
-            });
-
-            app.MapGet("/del/", async ([FromServices] ICacheService cache) =>
-            {
-                await cache.RemoveAsync("mykey");
-                
-            });
-
-
-
 
             app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
