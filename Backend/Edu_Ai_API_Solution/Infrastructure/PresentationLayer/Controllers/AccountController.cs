@@ -13,9 +13,9 @@
 			return Ok(user);
 		}
 		[HttpPut("info")]
-		public async Task<IActionResult> Info([FromBody] UpdateUserRequest request)
+		public async Task<IActionResult> Info([FromBody] UpdateUserProfileRequest request, [FromForm] IFormFile file)
 		{
-			await _serviceManager.UserService.UpdateUserProfileAsync(User.GetUserId()!, request);
+			await _serviceManager.UserService.UpdateUserProfileAsync(User.GetUserId()!, request,file);
 			return NoContent();
 		}
 		[HttpPut("change-password")]

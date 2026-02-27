@@ -37,7 +37,10 @@ namespace ServiceLayer.Services
 			{
 				throw new InvalidCredentials();
 			}
-			var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+			if (user.IsDisabled)
+				throw new DisabledUser(email);
+
+			var result = await _signInManager.PasswordSignInAsync(user, password, false, true);
 			if (result.Succeeded)
 			{
 				// Here you would typically generate a JWT token or similar
@@ -68,6 +71,10 @@ namespace ServiceLayer.Services
 			if(result.IsNotAllowed)
 			{
 				throw new EmailNotConfirmed(email);
+			}
+			else if(result.IsLockedOut)
+			{
+				throw new UserLockedOut(email);
 			}
 			else
 			{
@@ -127,6 +134,11 @@ namespace ServiceLayer.Services
 			{
 				throw new InvalidJwtToken();
 			}
+			if (user.IsDisabled)
+				throw new DisabledUser(user.Email!);
+
+			if (user.LockoutEnd > DateTime.UtcNow)
+				throw new UserLockedOut(user.Email!);
 			var storedRefreshToken = user.RefreshTokens.SingleOrDefault(u => u.Token == RefreshToken && u.IsActive);
 			if (storedRefreshToken is null)
 			{
