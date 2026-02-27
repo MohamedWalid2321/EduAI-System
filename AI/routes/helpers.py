@@ -66,7 +66,7 @@ def aggregate(results: list[dict], module_id: int) -> dict:
     for r in results:
         prob = r.get("propability") or r.get("probability") or 0.0
         probabilities.append(prob)
-        flags.append(bool(r.get("flag", False)))
+        # flags.append(bool(r.get("flag", False)))
 
         ev = r.get("evidence")
         if ev:
@@ -78,8 +78,8 @@ def aggregate(results: list[dict], module_id: int) -> dict:
     return {
         "id": module_id,
         "timestamp": datetime.now().isoformat(),
-        "flag": any(flags),
-        "propability": round(max(probabilities), 4),
+        # "flag": any(flags),
+        "Confidence": round(max(probabilities), 4),
         "evidence": ", ".join(sorted(evidence_set))
         if evidence_set
         else "No suspicious activity detected",
