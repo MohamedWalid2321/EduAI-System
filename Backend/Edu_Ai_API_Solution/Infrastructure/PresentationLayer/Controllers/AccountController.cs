@@ -13,7 +13,7 @@
 			return Ok(user);
 		}
 		[HttpPut("info")]
-		public async Task<IActionResult> Info([FromBody] UpdateUserProfileRequest request, [FromForm] IFormFile file)
+		public async Task<IActionResult> Info([FromForm]  UpdateUserProfileRequest request, IFormFile file)
 		{
 			await _serviceManager.UserService.UpdateUserProfileAsync(User.GetUserId()!, request,file);
 			return NoContent();

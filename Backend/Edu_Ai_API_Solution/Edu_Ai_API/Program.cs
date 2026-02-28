@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using persistenceLayer;
 using persistenceLayer.Data;
 using persistenceLayer.Repository;
@@ -25,40 +26,77 @@ namespace Edu_Ai_API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-			builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-	        .AddEntityFrameworkStores<LmsDBContext>()
-	        .AddDefaultTokenProviders();
-			builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Lumino API",
+                    Version = "v1",
+                    Description = "Learning Management System API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Lumino Team",
+                        Email = "support@lumino.com"
+                    }
+                });
+
+                // JWT Authentication
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<LmsDBContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
-            // Adding Authorization Service
-			builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-			builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
+            // Authorization Services
+            builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+            builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
-			builder.Services.Configure<ApiBehaviorOptions>((options) =>
-            { 
+            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+            {
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
-			
-			builder.Services.AddCors(options =>
-			{
-				options.AddDefaultPolicy(builder =>
-				{
-					builder.AllowAnyOrigin()
-						   .AllowAnyMethod()
-						   .AllowAnyHeader();
-				});
-			});
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(corsBuilder =>
+                {
+                    corsBuilder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                });
+            });
 
-
-
-			var app = builder.Build();
+            var app = builder.Build();
 
             app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
@@ -66,16 +104,18 @@ namespace Edu_Ai_API
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Lumino API V1");
+                    
+                    // c.RoutePrefix = string.Empty;
+                });
             }
 
             app.UseHttpsRedirection();
-			app.UseCors();
-
-			app.UseAuthentication();
-
-			app.UseAuthorization();
-
+            app.UseCors();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.MapControllers();
 
             app.Run();
