@@ -43,7 +43,8 @@ namespace Edu_Ai_API.CustomMiddleWares
                 NotFoundException => StatusCodes.Status404NotFound,
                 UnAuthorizedException => StatusCodes.Status401Unauthorized,
                 ConflictException => StatusCodes.Status409Conflict,
-                _ => StatusCodes.Status500InternalServerError
+                BadRequestException => StatusCodes.Status400BadRequest,
+				_ => StatusCodes.Status500InternalServerError
             };
             httpContext.Response.ContentType = "application/json";
             var response = new ErrorToReturn()

@@ -20,3 +20,6 @@ global using Microsoft.Extensions.DependencyInjection;
 
 global using PresentationLayer.Extensions;
 global using Shared.Dtos.UserDto.Request;
+global using Shared.Constants;
+global using Microsoft.Extensions.Options;
+global using System.Security.Claims;

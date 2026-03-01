@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DomainLayer.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,13 @@ namespace DomainLayer.Models
 		public string? ProfilePictureUrl { get; set; } = string.Empty;
 		public string? ProfilePictureBase64 { get; set; } = string.Empty;
 		public DateOnly DateOfBirth { get; set; }
+		public bool IsDisabled { get; set; }
 		public List<RefreshToken> RefreshTokens { get; set; } = [];
 
+		public int? DepartmentId { get; set; }
+		public Department? Department { get; set; }
+		public AcademicYear? AcademicYear { get; set; }
+		public bool IsEnrolled { get; set; } = false;
+		public DateTime? EnrolledAt { get; set; }
 	}
 }

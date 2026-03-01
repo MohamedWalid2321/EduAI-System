@@ -8,6 +8,7 @@
 		IAssigmentService AssignmentService { get; }
 		IAuthunticationService AuthunticationService { get; }
 		IUserService UserService { get; }
+		IRoleService RoleService { get; }
 
 
 	}
