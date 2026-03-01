@@ -1,6 +1,6 @@
 ﻿namespace persistenceLayer.Data
 {
-	public class LmsDBContext(DbContextOptions<LmsDBContext> options) : IdentityDbContext<ApplicationUser>(options)
+	public class LmsDBContext(DbContextOptions<LmsDBContext> options) : IdentityDbContext<ApplicationUser,ApplicationRole,string>(options)
 	{
 		public DbSet<Department> Departments { get; set; }
 		public DbSet<Course> Courses { get; set; }

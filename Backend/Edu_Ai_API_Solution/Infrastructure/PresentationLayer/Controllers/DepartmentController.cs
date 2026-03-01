@@ -3,7 +3,6 @@
 	//[Authorize]
 	public class DepartmentController(IServiceManager serviceManager):ApiControllerBase
 	{
-		[Authorize]
 		[HttpGet]
 		public async Task<IActionResult> GetDepartments()
 		{
