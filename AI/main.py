@@ -66,11 +66,11 @@ def create_app():
     )
 
     # Register routers — each AI module has its own route file
-    from routes import object_router, gaze_router, face_router
+    from routes import object_router, gaze_router, face_router, new_object_route
     application.include_router(object_router)
     application.include_router(gaze_router)
     application.include_router(face_router)
-
+    application.include_router(new_object_route) 
     @application.get("/health", tags=["Health"])
     async def health_check():
         """Simple liveness probe."""

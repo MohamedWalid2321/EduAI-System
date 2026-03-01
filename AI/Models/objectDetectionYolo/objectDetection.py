@@ -36,7 +36,6 @@ def yoloDetect(frame):
     response = {
         "id": 2, 
         "timestamp": datetime.datetime.now().isoformat(),
-        # The 'flag' key has been removed
         "probability": round(max_probability, 4),  # confidence   
         "evidence": evidence_str            
     }
