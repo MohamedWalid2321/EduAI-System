@@ -86,17 +86,18 @@ namespace Edu_Ai_API
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(corsBuilder =>
-                {
-                    corsBuilder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                });
-            });
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAngular", corsBuilder =>
+				{
+					corsBuilder.WithOrigins("http://localhost:4200", "http://localhost:4201") 
+							   .AllowAnyMethod()
+							   .AllowAnyHeader()
+							   .AllowCredentials(); 
+				});
+			});
 
-            var app = builder.Build();
+			var app = builder.Build();
 
             app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
@@ -113,8 +114,8 @@ namespace Edu_Ai_API
             }
 
             app.UseHttpsRedirection();
-            app.UseCors();
-            app.UseAuthentication();
+			app.UseCors("AllowAngular");
+			app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 
