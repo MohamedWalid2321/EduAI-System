@@ -25,6 +25,12 @@
 
 			return  NoContent() ;
 		}
+		[HttpPut("LevelUp/{id}")]
+		public async Task<IActionResult> LevelUp([FromRoute]string id)
+		{
+			await _serviceManager.UserService.LevelUp(id);
+			return NoContent();
+		}
 
 	}
 }
