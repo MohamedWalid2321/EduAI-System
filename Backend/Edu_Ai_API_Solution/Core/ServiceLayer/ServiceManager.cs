@@ -48,7 +48,8 @@ namespace ServiceLayer
                 _emailSender, 
                 _emailBodyBuilder,
                 _roleManager,
-                _authLogger));
+                _unitOfWork,
+				_authLogger));
         public IAuthunticationService AuthunticationService => _authunticationService.Value;
 
         public IRoleService RoleService => _roleService;
