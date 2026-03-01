@@ -9,3 +9,5 @@ __pycache__/
 TestArea/
 .vs/
 assets/
+Test/
+.vscode/
