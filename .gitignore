@@ -9,6 +9,9 @@ __pycache__/
 TestArea/
 # Visual Studio / Visual Studio Code
 .vs/
+assets/
+Test/
+.vscode/
 .vscode/
 *.user
 *.userosscache
