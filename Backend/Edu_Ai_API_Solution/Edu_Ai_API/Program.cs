@@ -90,16 +90,25 @@ namespace Edu_Ai_API
 			{
 				options.AddPolicy("AllowAngular", corsBuilder =>
 				{
-					corsBuilder.WithOrigins("http://localhost:4200", "http://localhost:4201") 
-							   .AllowAnyMethod()
-							   .AllowAnyHeader()
-							   .AllowCredentials(); 
+					corsBuilder.WithOrigins(
+                     "http://localhost:4200", 
+                     "https://localhost:4200",  
+                     "http://localhost:4201",
+                     "https://localhost:4201"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials(); 
 				});
 			});
 
 			var app = builder.Build();
 
-            app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
+			// CORS must be FIRST to handle preflight requests
+			app.UseCors("AllowAngular");
+
+			// Then exception handler
+			app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -114,8 +123,7 @@ namespace Edu_Ai_API
             }
 
             app.UseHttpsRedirection();
-			app.UseCors("AllowAngular");
-			app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 
