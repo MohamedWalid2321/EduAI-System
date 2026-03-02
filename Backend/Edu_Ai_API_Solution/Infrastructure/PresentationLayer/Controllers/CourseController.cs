@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstractionLayer;
@@ -8,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+=======
+﻿
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 namespace PresentationLayer.Controllers
 {
 	public class CourseController(IServiceManager serviceManager): ApiControllerBase
@@ -19,6 +23,10 @@ namespace PresentationLayer.Controllers
 			return Ok(createdOrUpdatedCourse);
 		}
 		[HttpGet]
+<<<<<<< HEAD
+=======
+		[Cache(300)]
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 		public async Task<IActionResult> GetAllCourse()
 		{
 			var courses = await serviceManager.CourseService.GetAllCourseAsync();

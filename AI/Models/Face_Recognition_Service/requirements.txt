@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ============================================
 # Face Recognition — Hybrid Approach
 # ============================================
@@ -11,10 +12,51 @@
 insightface==0.7.3
 
 # ONNX Runtime — runs the ArcFace .onnx model directly
+=======
+# Requirements for Face Recognition Pipeline (FR_V2.py, FR_main.py)
+# Compatible with Python 3.9.x
+# Install with: pip install -r requirements_fr.txt
+
+# ============================================
+# Face Recognition Dependencies
+# ============================================
+# InsightFace - provides RetinaFace (detection) and ArcFace (recognition)
+insightface==0.7.3
+
+# ONNX Runtime - for running InsightFace models
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 onnxruntime==1.16.3
 # For GPU support, use instead:
 # onnxruntime-gpu==1.16.3
 
+<<<<<<< HEAD
 # Core dependencies
 numpy>=1.23.5,<1.25
 opencv-python==4.8.1.78
+=======
+# ============================================
+# Shared Dependencies (compatible with your existing stack)
+# ============================================
+numpy==1.23.5
+opencv-python==4.8.1.78
+opencv-contrib-python==4.8.1.78
+
+# ============================================
+# Additional Dependencies for Full Proctoring System
+# ============================================
+mediapipe==0.10.14
+imutils==0.5.4
+cmake==4.2.0
+protobuf==4.25.8
+tensorflow==2.12.0
+
+# ============================================
+# InsightFace sub-dependencies (auto-installed but pinned for compatibility)
+# ============================================
+Cython>=0.29.32
+scikit-learn>=1.0.0
+scikit-image>=0.19.0
+albumentations>=1.3.0
+prettytable>=3.0.0
+easydict>=1.9
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9

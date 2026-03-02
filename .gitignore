@@ -10,3 +10,18 @@ TestArea/
 .vs/
 assets/
 test/
+# Visual Studio / Visual Studio Code
+.vs/
+Test/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results 
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+assets/

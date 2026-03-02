@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 Quick local test for the hybrid FaceRecognition module.
 
@@ -35,3 +36,18 @@ if result["flag"]:
     print("CHEATING DETECTED")
 else:
     print("IDENTITY VERIFIED — No cheating")
+=======
+from face_recognition import FaceRecognition
+import cv2
+
+# Initialize
+fr = FaceRecognition()
+
+# Load images
+reference = cv2.imread("ronaldo1.jpg")  # Authorized person's photo
+frame = cv2.imread("ronaldo2.jpg")          # Current frame to check
+
+# Compare
+result = fr.compare_faces(frame, reference)
+print(result)
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9

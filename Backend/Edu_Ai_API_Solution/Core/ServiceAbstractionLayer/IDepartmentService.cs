@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Shared.Dtos;
 using Shared.Dtos.CourseDto.Request;
 using System;
@@ -5,6 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+=======
+﻿
+
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 
 namespace ServiceAbstractionLayer
 {

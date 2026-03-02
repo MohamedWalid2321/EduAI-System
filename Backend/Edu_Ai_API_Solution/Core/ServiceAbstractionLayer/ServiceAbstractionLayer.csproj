@@ -8,10 +8,18 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+<<<<<<< HEAD
+=======
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.csproj" />
+<<<<<<< HEAD
+=======
+    <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
   </ItemGroup>
 
 </Project>

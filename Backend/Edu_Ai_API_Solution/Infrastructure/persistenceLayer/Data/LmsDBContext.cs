@@ -1,14 +1,6 @@
-﻿using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace persistenceLayer.Data
 {
-	public class LmsDBContext :DbContext
+	public class LmsDBContext(DbContextOptions<LmsDBContext> options) : IdentityDbContext<ApplicationUser,ApplicationRole,string>(options)
 	{
 		public DbSet<Department> Departments { get; set; }
 		public DbSet<Course> Courses { get; set; }
@@ -23,11 +15,6 @@ namespace persistenceLayer.Data
 		public DbSet<QuizQuestion> QuizQuestions { get; set; }
 		public DbSet<QuestionChoices> QuestionChoices { get; set; }
 
-
-		public LmsDBContext(DbContextOptions<LmsDBContext> options):base(options)	
-		{
-			
-		}
 		override protected void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Microsoft.AspNetCore.Http;
 using Shared.Dtos.ContentDto.ContentRequest;
 using Shared.Dtos.ContentDto.ContentResponse;
@@ -6,6 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+=======
+﻿
+
+>>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 
 namespace ServiceAbstractionLayer
 {

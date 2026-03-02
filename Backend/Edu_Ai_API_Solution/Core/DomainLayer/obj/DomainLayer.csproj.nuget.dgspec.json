@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {}
+    "c:\\Youssif Mohamed\\Graduation Project\\edu_ai\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {
+    "c:\\Youssif Mohamed\\Graduation Project\\edu_ai\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
+        "projectUniqueName": "c:\\Youssif Mohamed\\Graduation Project\\edu_ai\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
         "projectName": "DomainLayer",
-        "projectPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
-        "packagesPath": "C:\\Users\\mohaned\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mohaned\\source\\repos\\EduAI-System\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\obj\\",
+        "projectPath": "c:\\Youssif Mohamed\\Graduation Project\\edu_ai\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\DomainLayer.csproj",
+        "packagesPath": "C:\\Users\\yoyo1\\.nuget\\packages\\",
+        "outputPath": "c:\\Youssif Mohamed\\Graduation Project\\edu_ai\\Backend\\Edu_Ai_API_Solution\\Core\\DomainLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mohaned\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\yoyo1\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,11 +44,17 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.24, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -65,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
