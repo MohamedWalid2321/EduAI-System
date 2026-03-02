@@ -1,4 +1,4 @@
-﻿namespace ServiceLayer
+namespace ServiceLayer
 {
 	public static class ApplicationServicesRegisteration
 	{

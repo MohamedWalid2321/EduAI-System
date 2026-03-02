@@ -1,4 +1,4 @@
-﻿namespace persistenceLayer.Data
+namespace persistenceLayer.Data
 {
 	public class LmsDBContext(DbContextOptions<LmsDBContext> options) : IdentityDbContext<ApplicationUser,ApplicationRole,string>(options)
 	{

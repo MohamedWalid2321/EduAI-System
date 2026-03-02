@@ -7,6 +7,9 @@
 cheating_log.txt
 __pycache__/
 TestArea/
+.vs/
+assets/
+test/
 # Visual Studio / Visual Studio Code
 .vs/
 Test/

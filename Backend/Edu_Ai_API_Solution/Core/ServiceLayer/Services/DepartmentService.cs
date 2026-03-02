@@ -1,4 +1,4 @@
-﻿namespace ServiceLayer.Services
+namespace ServiceLayer.Services
 {
 	public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
 	{
