@@ -1,4 +1,4 @@
-namespace persistenceLayer.Repository
+﻿namespace persistenceLayer.Repository
 {
 	public class GenericRepository<Tentity, TKey>(LmsDBContext _context) : IGenericRepository<Tentity, TKey> where Tentity : BaseEntity<TKey>
 	{

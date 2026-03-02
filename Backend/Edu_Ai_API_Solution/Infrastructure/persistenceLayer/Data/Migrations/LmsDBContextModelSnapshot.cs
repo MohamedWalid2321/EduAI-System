@@ -17,11 +17,7 @@ namespace persistenceLayer.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-<<<<<<< HEAD
-                .HasAnnotation("ProductVersion", "8.0.23")
-=======
                 .HasAnnotation("ProductVersion", "8.0.24")
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -41,8 +37,6 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("CourseDepartment");
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("DomainLayer.Models.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -262,7 +256,6 @@ namespace persistenceLayer.Data.Migrations
                         });
                 });
 
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
             modelBuilder.Entity("DomainLayer.Models.Assessment", b =>
                 {
                     b.Property<int>("Id")
@@ -563,8 +556,6 @@ namespace persistenceLayer.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-<<<<<<< HEAD
-=======
 
                     b.HasData(
                         new
@@ -597,7 +588,6 @@ namespace persistenceLayer.Data.Migrations
                             CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1457),
                             Title = "MechanicalEngineering"
                         });
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -728,8 +718,6 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("QuizQuestions", (string)null);
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -1347,7 +1335,6 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
             modelBuilder.Entity("CourseDepartment", b =>
                 {
                     b.HasOne("DomainLayer.Models.Department", null)
@@ -1363,8 +1350,6 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired();
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("DomainLayer.Models.ApplicationUser", b =>
                 {
                     b.HasOne("DomainLayer.Models.Department", "Department")
@@ -1409,7 +1394,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
             modelBuilder.Entity("DomainLayer.Models.Assessment", b =>
                 {
                     b.HasOne("DomainLayer.Models.Course", "Course")
@@ -1508,8 +1492,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Quiz");
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("DomainLayer.Models.ApplicationRole", null)
@@ -1561,7 +1543,6 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired();
                 });
 
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
             modelBuilder.Entity("DomainLayer.Models.Assignment", b =>
                 {
                     b.Navigation("AssignmentAttachments");
@@ -1583,14 +1564,11 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Quizzes");
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("DomainLayer.Models.Department", b =>
                 {
                     b.Navigation("Users");
                 });
 
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
             modelBuilder.Entity("DomainLayer.Models.Quiz", b =>
                 {
                     b.Navigation("QuizQuestions");

@@ -1,146 +1,71 @@
-"""
-EduAI Proctoring API — FastAPI + Modal entrypoint.
-
-Run locally  (from eye_gaze conda env):
-    conda activate eye_gaze
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
-Deploy to Modal:
-    conda activate eye_gaze
-    python -m modal deploy main.py
-
-Dev-serve on Modal (temporary URL, hot-reload):
-    conda activate eye_gaze
-    python -m modal serve main.py
-"""
-
-import os
 import sys
-import logging
+import os
+import cv2
+import msvcrt  # For keyboard input on Windows
 
-import modal
+current_dir = os.path.dirname(os.path.abspath(__file__))
+server_path = os.path.join(current_dir, 'Models', 'EyeGazeDetection', 'src', 'Server')
+sys.path.append(server_path)
 
-# ---------------------------------------------------------------------------
-# Path setup — ensure sub-packages can be imported
-# ---------------------------------------------------------------------------
-_current_dir = os.path.dirname(os.path.abspath(__file__))
-_server_path = os.path.join(
-    _current_dir, "Models", "EyeGazeDetection", "src", "Server"
-)
-if _server_path not in sys.path:
-    sys.path.insert(0, _server_path)
-if _current_dir not in sys.path:
-    sys.path.insert(0, _current_dir)
+from models.objectDetectionYolo.objectDetection import yoloDetect
+import models.EyeGazeDetection.src.Server.localMain as GazeMain
+from models.Face_Recognition_Service import FaceRecognition
 
+def main():
+    cap = cv2.VideoCapture(0)
 
-# ---------------------------------------------------------------------------
-# Factory: builds the FastAPI app (heavy imports happen HERE, not at parse time)
-# ---------------------------------------------------------------------------
-def create_app():
-    """Build and return the FastAPI application.
+    if not cap.isOpened():
+        print("Error: Could not open video stream.")
+        return
 
-    All AI-model imports are deferred into this function so that
-    `modal serve / deploy` can parse this file without needing
-    TensorFlow, mediapipe, etc. on the local machine.
-    """
-    from fastapi import FastAPI
-    from fastapi.middleware.cors import CORSMiddleware
+    print("Press 'q' to quit.")
+    
+    fr = FaceRecognition()
+    reference = cv2.imread("ronaldo1.jpg")
+    
+    if reference is None:
+        print("Error: Could not load reference image 'ronaldo1.jpg'. Check if file exists.")
+        cap.release()
+        return
+    
+    while True:
+        try:
+            ret, frame = cap.read()
+            if not ret:
+                print("Failed to grab frame.")
+                break
+            
+            # Validate frame is not empty
+            if frame is None or frame.size == 0:
+                print("Empty frame, skipping...")
+                continue
+                
+            results1 = yoloDetect(frame)
+            results2 = GazeMain.process_gaze_frame(frame, False)
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)-8s | %(name)s — %(message)s",
-    )
+            result3 = fr.compare_faces(frame, reference)
 
-    application = FastAPI(
-        title="EduAI Proctoring API",
-        description="Unified AI proctoring — gaze, object detection & face recognition.",
-        version="1.0.0",
-    )
+            # print(f"YOLO: {results1} \n GAZE: {results2}")
+            print(results1)
+            print(results2)
+            print(result3)
+            # cv2.imshow('Main System', frame)
 
-    application.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],          # tighten in production
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+            # Check for 'q' key press without blocking
+            if msvcrt.kbhit():
+                if msvcrt.getch().decode('utf-8', errors='ignore').lower() == 'q':
+                    print("Quitting...")
+                    break
+        except cv2.error as e:
+            print(f"OpenCV error (skipping frame): {e}")
+            continue
+        except Exception as e:
+            print(f"Error in loop: {e}")
+            import traceback
+            traceback.print_exc()
+            break
 
-    # Register routers — each AI module has its own route file
-    from routes import object_router, gaze_router, face_router
-    application.include_router(object_router)
-    application.include_router(gaze_router)
-    application.include_router(face_router)
+    cap.release()
 
-    @application.get("/health", tags=["Health"])
-    async def health_check():
-        """Simple liveness probe."""
-        return {"status": "ok"}
-
-    return application
-
-
-# ---------------------------------------------------------------------------
-# Modal deployment
-# ---------------------------------------------------------------------------
-app = modal.App("eduai-proctoring")
-
-modal_image = (
-    modal.Image.debian_slim(python_version="3.10")
-    .apt_install("libgl1", "libglib2.0-0", "ffmpeg")
-    .pip_install_from_requirements("requirements.txt")
-    .add_local_dir(
-        _current_dir,
-        remote_path="/root/app",
-        ignore=["__pycache__", ".git", ".venv"],
-    )
-)
-
-
-@app.cls(image=modal_image, gpu="any", container_idle_timeout=600)
-class Proctoring:
-    """Modal class that keeps models warm in memory between requests."""
-
-    @modal.enter()
-    def preload(self):
-        """Runs ONCE when the container starts — loads all AI models."""
-        import sys as _sys
-
-        if "/root/app" not in _sys.path:
-            _sys.path.insert(0, "/root/app")
-        _gaze_server = "/root/app/Models/EyeGazeDetection/src/Server"
-        if _gaze_server not in _sys.path:
-            _sys.path.insert(0, _gaze_server)
-
-        log = logging.getLogger("preload")
-        logging.basicConfig(level=logging.INFO)
-
-        log.info("⏳ Loading YOLO model...")
-        from Models.objectDetectionYolo.objectDetection import yoloDetect  # noqa: F401
-        log.info("✅ YOLO loaded")
-
-        log.info("⏳ Loading Eye Gaze model...")
-        import Models.EyeGazeDetection.src.Server.localMain  # noqa: F401
-        log.info("✅ Eye Gaze loaded")
-
-        log.info("⏳ Loading Face Recognition model (hybrid)...")
-        from Models.Face_Recognition_Service import FaceRecognition  # noqa: F401
-        # Instantiate once to warm up both RetinaFace + ArcFace ONNX
-        FaceRecognition()
-        log.info("✅ Face Recognition loaded (RetinaFace + ArcFace ONNX)")
-
-        log.info("🚀 All models preloaded — container is warm!")
-
-    @modal.asgi_app() #asgi: "ASGI" stands for Asynchronous Server Gateway Interface, which is a specification for building asynchronous web applications in Python. By using @modal.asgi_app(), we can create an ASGI-compatible application that can handle asynchronous requests and responses, making it suitable for high-performance web applications.
-    def serve(self):
-        """Return the FastAPI app — models are already in memory from preload()."""
-        return create_app()
-
-
-# ---------------------------------------------------------------------------
-# Local development
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    import uvicorn
-
-    fastapi_app = create_app()
-    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
+    main()

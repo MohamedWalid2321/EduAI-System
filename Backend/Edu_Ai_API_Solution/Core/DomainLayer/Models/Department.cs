@@ -10,9 +10,6 @@ namespace DomainLayer.Models
 	{
 		public string Title { get; set; } = null!;
 		public ICollection<Course>? courses { get; set; }
-<<<<<<< HEAD
-=======
         public ICollection<ApplicationUser>? Users { get; set; }
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 	}
 }

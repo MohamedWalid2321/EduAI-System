@@ -1,4 +1,4 @@
-namespace persistenceLayer.Data.Configurations
+﻿namespace persistenceLayer.Data.Configurations
 {
 	public class CourseConfiguration : IEntityTypeConfiguration<Course>
 	{

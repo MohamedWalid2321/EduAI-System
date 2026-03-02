@@ -11,11 +11,7 @@ SMOOTHING_BUFFER_SIZE = 3
 gaze_history_x = deque(maxlen=SMOOTHING_BUFFER_SIZE)
 gaze_history_y = deque(maxlen=SMOOTHING_BUFFER_SIZE)
 
-<<<<<<< HEAD
-SUSPICIOUS_TIME_THRESHOLD = 30
-=======
 SUSPICIOUS_TIME_THRESHOLD = 45
->>>>>>> f283ebec1b7f11684dfeff6e9246326d74ada2d9
 suspicious_counter = 0
 event_id = 0
 

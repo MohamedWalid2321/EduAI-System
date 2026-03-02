@@ -1,4 +1,4 @@
-namespace persistenceLayer
+﻿namespace persistenceLayer
 {
 	internal static class SpecificationEvaluator
 	{
