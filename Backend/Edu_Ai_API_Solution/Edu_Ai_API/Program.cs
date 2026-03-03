@@ -16,6 +16,7 @@ using ServiceLayer;
 using ServiceLayer.Services;
 using Shared.ErrorModels;
 using StackExchange.Redis;
+using Serilog;
 
 namespace Edu_Ai_API
 {
@@ -24,6 +25,10 @@ namespace Edu_Ai_API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Configure Serilog
+            builder.Host.UseSerilog((context, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration));
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -38,7 +43,7 @@ namespace Edu_Ai_API
                     Description = "Learning Management System API",
                     Contact = new OpenApiContact
                     {
-                        Name = "Lumino Team",
+                        Name = "Lumina Team",
                         Email = "support@lumino.com"
                     }
                 });
@@ -106,6 +111,9 @@ namespace Edu_Ai_API
 
 			// CORS must be FIRST to handle preflight requests
 			app.UseCors("AllowAngular");
+
+			// Add Serilog request logging
+			app.UseSerilogRequestLogging();
 
 			// Then exception handler
 			app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
