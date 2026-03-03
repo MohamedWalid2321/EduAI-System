@@ -1,4 +1,6 @@
-﻿namespace PresentationLayer.Controllers
+﻿using Shared.Dtos.DepartmentDto.Request;
+
+namespace PresentationLayer.Controllers
 {
 	//[Authorize]
 	public class DepartmentController(IServiceManager serviceManager):ApiControllerBase
@@ -13,17 +15,19 @@
 		public async Task<IActionResult> GetDepartmentById(int id)
 		{
 			var department = await serviceManager.DepartmentService.GetDepartmentByIdAsync(id);
-			if (department is null)
-			{
-				return NotFound();
-			}
 			return Ok(department);
 		}
 		[HttpPost]
-		public async Task<IActionResult> CreateOrUpdateDepartment([FromBody] DepartmentDto departmentDto)
+		public async Task<IActionResult> AddDepartment([FromBody] DepartmentRequest request)
 		{
-			var createdOrUpdatedDepartment = await serviceManager.DepartmentService.CreateOrUpdateDepartmentAsync(departmentDto);
-			return Ok(createdOrUpdatedDepartment);
+			var createdDepartment = await serviceManager.DepartmentService.AddDepartmentAsync(request);
+			return CreatedAtAction(nameof(GetDepartmentById), new { id = createdDepartment.Id }, createdDepartment);
+		}
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateDepartment(int id, [FromBody] DepartmentRequest request)
+		{
+			await serviceManager.DepartmentService.UpdateDepartmentAsync(id, request);
+			return Ok();
 		}
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteDepartment(int id)
