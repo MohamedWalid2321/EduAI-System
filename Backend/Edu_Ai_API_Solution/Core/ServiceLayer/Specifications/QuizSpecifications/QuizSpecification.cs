@@ -11,12 +11,18 @@ namespace ServiceLayer.Specifications.QuizSpecifications
 	{
 		public QuizSpecification(int id) : base(q => q.Id == id)
 		{
-			AddInclude(q => q.QuizQuestions);
-		}
+            
+            AddInclude_2(query => query
+                        .Include(q => q.QuizQuestions)
+                        .ThenInclude(qq => qq.QuestionChoices));
+
+        }
 
 		public QuizSpecification() : base(null)
 		{
-			AddInclude(q => q.QuizQuestions);
-		}
+            AddInclude_2(query => query
+                        .Include(q => q.QuizQuestions)
+                        .ThenInclude(qq => qq.QuestionChoices));
+        }
 	}
 }
