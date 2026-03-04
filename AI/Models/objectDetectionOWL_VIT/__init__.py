@@ -1,0 +1,1 @@
+from .main_detect import analyze_proctoring_frame
