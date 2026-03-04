@@ -22,6 +22,6 @@
 			=> await SpecificationEvaluator.GetQuery(_context.Set<Tentity>().AsQueryable(), specification).FirstOrDefaultAsync();
 		public async Task<int> GetCountAsync(ISpecifications<Tentity, TKey> specification)
 			=> await SpecificationEvaluator.GetQuery(_context.Set<Tentity>().AsQueryable(), specification).CountAsync();
-
-	}
+        
+    }
 }

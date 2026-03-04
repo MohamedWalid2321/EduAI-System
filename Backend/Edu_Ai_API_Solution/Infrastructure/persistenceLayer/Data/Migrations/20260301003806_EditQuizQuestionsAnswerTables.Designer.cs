@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260301003806_EditQuizQuestionsAnswerTables")]
+    partial class EditQuizQuestionsAnswerTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,9 +116,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AcademicYear")
-                        .HasColumnType("int");
-
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
@@ -126,9 +126,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -136,17 +133,11 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("EnrolledAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FirstName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsDisabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEnrolled")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -195,8 +186,6 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -218,12 +207,11 @@ namespace persistenceLayer.Data.Migrations
                             EmailConfirmed = true,
                             FirstName = "Lumino",
                             IsDisabled = false,
-                            IsEnrolled = false,
                             LastName = "SuperAdmin",
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGe3aeN4lenqDfX1shgVnAEMcZqC4qnJ9caQkc5Mna9jcuQF7K9Q54rkCdNGDoDXQQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI8lL+1b8QQssH/g8bPb1WzbXknIp14CxyCoL7OQK6946VU9c8uAxUgLsQ7LQ9sTYg==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -241,12 +229,11 @@ namespace persistenceLayer.Data.Migrations
                             EmailConfirmed = true,
                             FirstName = "Lumino",
                             IsDisabled = false,
-                            IsEnrolled = false,
                             LastName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGmbmdjEHCLoPblShOhhHEPaFRq9OZBjWKqCb2xyKSo7ZU6gtdV9YFTY7wJ1lqdMuQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC2KYt4ecW0x5EMAgZAbJtRR4COk4OxUVwyfl/eiQya0x/Ajx41WYMKcamAyV/P27w==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -556,38 +543,6 @@ namespace persistenceLayer.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1000,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1385),
-                            Title = "CommunicationEngineering"
-                        },
-                        new
-                        {
-                            Id = 1001,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1449),
-                            Title = "ElectricalEngineering"
-                        },
-                        new
-                        {
-                            Id = 1003,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1452),
-                            Title = "CommunicationEngineering"
-                        },
-                        new
-                        {
-                            Id = 1004,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1455),
-                            Title = "BiomedicalEngineering"
-                        },
-                        new
-                        {
-                            Id = 1002,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1457),
-                            Title = "MechanicalEngineering"
-                        });
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -663,9 +618,8 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QuizCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("QuizCode")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ScheduledDate")
                         .HasColumnType("datetime2");
@@ -1367,11 +1321,6 @@ namespace persistenceLayer.Data.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("DomainLayer.Models.Department", "Department")
-                        .WithMany("Users")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.OwnsMany("DomainLayer.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UserId")
@@ -1403,8 +1352,6 @@ namespace persistenceLayer.Data.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
-
-                    b.Navigation("Department");
 
                     b.Navigation("RefreshTokens");
                 });
@@ -1577,11 +1524,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Contents");
 
                     b.Navigation("Quizzes");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Department", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Quiz", b =>

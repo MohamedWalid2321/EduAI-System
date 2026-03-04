@@ -21,7 +21,11 @@
 			{
 				query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 			}
-			return query;
+            if (spec.IncludeExpressions is not null && spec.IncludeExpressions.Count > 0)
+            {
+                query = spec.IncludeExpressions.Aggregate(query, (current, include) => include(current));
+            }
+            return query;
 		}
 	}
 }

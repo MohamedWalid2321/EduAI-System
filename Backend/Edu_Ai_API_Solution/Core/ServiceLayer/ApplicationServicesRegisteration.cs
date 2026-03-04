@@ -15,7 +15,7 @@
 			services.AddScoped<IAuthunticationService, AuthService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
-			return services;
+            return services;
 		}
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
 		{

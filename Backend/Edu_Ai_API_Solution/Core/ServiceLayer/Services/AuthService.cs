@@ -58,6 +58,7 @@ namespace ServiceLayer.Services
 				await _userManager.UpdateAsync(user);
 				var response = new AuthResponse
 				{
+					id=user.Id,
 					FirstName = user.FirstName!,
 					LastName = user.LastName!,
 					ProfilePictureUrl = user.ProfilePictureUrl,
@@ -174,6 +175,7 @@ namespace ServiceLayer.Services
 			await _userManager.UpdateAsync(user);
 
 			var response = new AuthResponse {
+				id= user.Id,
 				FirstName = user.FirstName!,
 				LastName = user.LastName!,
 				ProfilePictureUrl = user.ProfilePictureUrl,

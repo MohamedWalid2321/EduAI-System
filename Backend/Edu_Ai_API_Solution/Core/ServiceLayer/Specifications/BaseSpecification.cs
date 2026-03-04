@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Contracts;
 using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,10 @@ namespace ServiceLayer.Specifications
 		public List<Expression<Func<Tentity, object>>> Includes { get; } = [];
 		public Expression<Func<Tentity, object>> OrderBy { get; protected set; }
 		public Expression<Func<Tentity, object>> OrderByDescending { get; protected set; }
-		protected void AddInclude(Expression<Func<Tentity, object>> includeExpression)
+
+        public List<Func<IQueryable<Tentity>, IIncludableQueryable<Tentity, object>>> IncludeExpressions { get; } = new();
+
+        protected void AddInclude(Expression<Func<Tentity, object>> includeExpression)
 		{
 			Includes.Add(includeExpression);
 		}
@@ -32,5 +36,14 @@ namespace ServiceLayer.Specifications
 			OrderByDescending = orderByDescExpression;
 		}
 
-	}
+
+        
+
+        protected void AddInclude_2(
+            Func<IQueryable<Tentity>, IIncludableQueryable<Tentity, object>> includeExpression)
+        {
+            IncludeExpressions.Add(includeExpression);
+        }
+
+    }
 }

@@ -9,7 +9,9 @@
 		IAuthunticationService AuthunticationService { get; }
 		IUserService UserService { get; }
 		IRoleService RoleService { get; }
+		IQuizService QuizService { get; }
+		IQuestionService QuestionService { get; }
 
 
-	}
+    }
 }

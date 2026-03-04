@@ -50,6 +50,15 @@ namespace ServiceLayer.Mapping
 				.Map(dest => dest.UserName, src => src.Email)
 				.Map(dest => dest.NormalizedUserName, src => src.Email.ToUpper());
 
-		}
+            config.NewConfig<QuestionRequestDto, QuizQuestion>()
+				.Map(dest => dest.QuestionChoices, src => src.QuestionChoices
+                    .Select((answer, index) => new QuestionChoices
+					{
+						ChoiceText = answer,
+						IsCorrect = index == src.CorrectAnswerIndex
+					}).ToList()
+    );
+
+        }
 	}
 }
