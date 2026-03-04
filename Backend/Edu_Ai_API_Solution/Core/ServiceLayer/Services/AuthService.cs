@@ -15,6 +15,7 @@ namespace ServiceLayer.Services
 		IEmailSender emailSender,
 		IEmailBodyBuilder EmailBodyBuilder,
 		RoleManager<ApplicationRole> roleManager,
+		IUnitOfWork unitOfWork,
 		ILogger<AuthService> logger) : IAuthunticationService
 	{
 		private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -26,6 +27,7 @@ namespace ServiceLayer.Services
 		private readonly IEmailSender _emailSender = emailSender;
 		private readonly IEmailBodyBuilder _emailBodyBuilder = EmailBodyBuilder;
 		private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
+		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly int _RefreshTokenExpirationDays = 14;
 
 
@@ -88,13 +90,26 @@ namespace ServiceLayer.Services
 			{
 				throw new DuplicatedEmail(request.Email);
 			}
+			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			{
+				throw new InvalidAcademicYear();
+			}
+			var DepartmentRepository = _unitOfWork.GetRepository<Department,int>();
+			if (await DepartmentRepository.GetByIdAsync(request.DepartmentId) is not { }) {
+				throw new DepartmentNotFoundException(request.DepartmentId);
+			}
+
 			var user = new ApplicationUser
 			{
 				UserName = request.Email,
 				Email = request.Email,
 				FirstName = request.FirstName,
 				LastName = request.LastName,
-				DateOfBirth = request.DateOfBirth
+				DateOfBirth = request.DateOfBirth,
+				DepartmentId = request.DepartmentId,
+				AcademicYear = academicYear,
+				IsEnrolled = true,
+				EnrolledAt = DateTime.UtcNow
 			};
 			if (file is not null && file.Length > 0)
 			{

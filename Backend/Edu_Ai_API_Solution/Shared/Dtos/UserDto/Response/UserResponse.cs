@@ -13,6 +13,8 @@ namespace Shared.Dtos.UserDto.Response
 		public string LastName { get; set; } = string.Empty;
 		public string Email { get; set; } = string.Empty;
 		public bool IsDisabled { get; set; }
+		public string AcademicYear { get; set; } = string.Empty;
+		public int DepartmentId { get; set; }
 		public IEnumerable<string> Roles { get; set; } = [];
 	}
 }

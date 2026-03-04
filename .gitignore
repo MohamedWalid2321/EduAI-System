@@ -2,13 +2,12 @@
 *.jpg
 *.pyc
 *.log
-*.html
-*.md
 cheating_log.txt
 __pycache__/
 TestArea/
 # Visual Studio / Visual Studio Code
 .vs/
+Test/
 .vscode/
 *.user
 *.userosscache

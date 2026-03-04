@@ -16,6 +16,7 @@ using ServiceLayer;
 using ServiceLayer.Services;
 using Shared.ErrorModels;
 using StackExchange.Redis;
+using Serilog;
 
 namespace Edu_Ai_API
 {
@@ -24,6 +25,10 @@ namespace Edu_Ai_API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Configure Serilog
+            builder.Host.UseSerilog((context, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration));
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -38,7 +43,7 @@ namespace Edu_Ai_API
                     Description = "Learning Management System API",
                     Contact = new OpenApiContact
                     {
-                        Name = "Lumino Team",
+                        Name = "Lumina Team",
                         Email = "support@lumino.com"
                     }
                 });
@@ -86,19 +91,32 @@ namespace Edu_Ai_API
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(corsBuilder =>
-                {
-                    corsBuilder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                });
-            });
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAngular", corsBuilder =>
+				{
+					corsBuilder.WithOrigins(
+                     "http://localhost:4200", 
+                     "https://localhost:4200",  
+                     "http://localhost:4201",
+                     "https://localhost:4201"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials(); 
+				});
+			});
 
-            var app = builder.Build();
+			var app = builder.Build();
 
-            app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
+			// CORS must be FIRST to handle preflight requests
+			app.UseCors("AllowAngular");
+
+			// Add Serilog request logging
+			app.UseSerilogRequestLogging();
+
+			// Then exception handler
+			app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -113,7 +131,6 @@ namespace Edu_Ai_API
             }
 
             app.UseHttpsRedirection();
-            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

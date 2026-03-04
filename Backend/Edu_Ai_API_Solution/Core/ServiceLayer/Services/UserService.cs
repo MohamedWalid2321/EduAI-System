@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DomainLayer.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using ServiceAbstractionLayer;
 using Shared.Constants;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServiceLayer.Services
 {
-	public class UserService(UserManager<ApplicationUser> userManager,IRoleService roleService,IFileStorageService fileStorageService):IUserService
+	public class UserService(UserManager<ApplicationUser> userManager,
+		IRoleService roleService,
+		IUnitOfWork unitOfWork,
+		IFileStorageService fileStorageService):IUserService
 	{
 		private readonly UserManager<ApplicationUser>
 			_userManager = userManager;
 		private readonly IRoleService _roleService = roleService;
+		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
 
 		public async Task<IEnumerable<UserResponse>> GetAllAsync() {
@@ -29,6 +34,8 @@ namespace ServiceLayer.Services
 						LastName = user.LastName!,
 						Email = user.Email!,
 						IsDisabled = user.IsDisabled,
+						AcademicYear = user.AcademicYear.ToString()!,
+						DepartmentId = user.DepartmentId ?? 0,
 						Roles = roles
 					});
 				
@@ -55,6 +62,7 @@ namespace ServiceLayer.Services
 
 			if (emailIsExists)
 				throw new DuplicatedEmail(request.Email);
+			
 
 			var allowedRoles = await _roleService.GetAllAsync();
 
@@ -85,6 +93,15 @@ namespace ServiceLayer.Services
 
 			if (emailIsExists)
 				throw new DuplicatedEmail(request.Email);
+			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			{
+				throw new InvalidAcademicYear();
+			}
+			var DepartmentRepository = _unitOfWork.GetRepository<Department, int>();
+			if (await DepartmentRepository.GetByIdAsync(request.DepartmentId) is not { })
+			{
+				throw new DepartmentNotFoundException(request.DepartmentId);
+			}
 
 			var allowedRoles = await _roleService.GetAllAsync();
 
@@ -95,6 +112,7 @@ namespace ServiceLayer.Services
 				throw new UserNotFound(id);
 
 			user = request.Adapt(user);
+			user.AcademicYear = academicYear;
 
 			var result = await _userManager.UpdateAsync(user);
 
@@ -146,6 +164,19 @@ namespace ServiceLayer.Services
 
 			throw new IdentityResultError(error.Description);
 		}
+		public async Task LevelUp(string id)
+		{
+			if (await _userManager.FindByIdAsync(id) is not { } user)
+				throw new UserNotFound(id);
+			if (user.AcademicYear == AcademicYear.Fifth)
+				throw new MaxAcademicYearReached();
+			user.AcademicYear += 1;
+			var result = await _userManager.UpdateAsync(user);
+			if (result.Succeeded)
+				return;
+			var error = result.Errors.First();
+			throw new IdentityResultError(error.Description);
+		}
 		public async Task<UserProfileResponse> GetUserProfileAsync(string userId)
 		{
 			var user = await _userManager.Users
@@ -157,7 +188,12 @@ namespace ServiceLayer.Services
 		public async Task UpdateUserProfileAsync(string userId, UpdateUserProfileRequest request, IFormFile? file)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
+			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			{
+				throw new InvalidAcademicYear();
+			}
 			user = request.Adapt(user);
+			user!.AcademicYear = academicYear;
 			if (file is not null && file.Length > 0)
 			{
 				using var stream = file.OpenReadStream();

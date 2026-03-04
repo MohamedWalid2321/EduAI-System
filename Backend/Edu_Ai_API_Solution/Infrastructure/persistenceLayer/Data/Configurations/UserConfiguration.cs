@@ -23,7 +23,10 @@ namespace persistenceLayer.Data.Configurations
 			builder.Property(u => u.ProfilePictureBase64)
 				.HasColumnType("NVARCHAR(MAX)")
 				.IsRequired(false);
-
+			builder.HasOne(u => u.Department)
+				.WithMany(d => d.Users)
+				.HasForeignKey(u => u.DepartmentId)
+				.OnDelete(DeleteBehavior.SetNull);
 			//Default Data
 
 			var passwordHasher = new PasswordHasher<ApplicationUser>();

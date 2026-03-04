@@ -37,10 +37,14 @@ namespace ServiceLayer.Mapping
 
 			config.NewConfig<(ApplicationUser user, IList<string> roles), UserResponse>()
 			.Map(dest => dest, src => src.user)
-			.Map(dest => dest.Roles, src => src.roles);
+			.Map(dest => dest.Roles, src => src.roles)
+			.Map(dest => dest.AcademicYear, src => src.user.AcademicYear.HasValue ? src.user.AcademicYear.Value.ToString() : null)
+			.Map(dest => dest.DepartmentId , src => src.user.DepartmentId ?? 0);
+
 			config.NewConfig<CreateUserRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email)
-			.Map(dest => dest.EmailConfirmed, src => true);
+			.Map(dest => dest.EmailConfirmed, src => true)
+			;
 
 			config.NewConfig<UpdateUserRequest, ApplicationUser>()
 				.Map(dest => dest.UserName, src => src.Email)

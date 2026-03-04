@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260301103840_AddingUserDepartmentRelationShipAndSeedingDepartment")]
+    partial class AddingUserDepartmentRelationShipAndSeedingDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -623,8 +626,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizQuestionId", "ChoiceText")
-                        .IsUnique();
+                    b.HasIndex("QuizQuestionId");
 
                     b.ToTable("QuestionChoices", (string)null);
                 });
@@ -654,18 +656,11 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuizCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ScheduledDate")
                         .HasColumnType("datetime2");
@@ -681,9 +676,6 @@ namespace persistenceLayer.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("QuizCode")
-                        .IsUnique();
 
                     b.ToTable("Quizzes", (string)null);
                 });
@@ -701,9 +693,6 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -727,8 +716,7 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizId", "QuestionText")
-                        .IsUnique();
+                    b.HasIndex("QuizId");
 
                     b.ToTable("QuizQuestions", (string)null);
                 });

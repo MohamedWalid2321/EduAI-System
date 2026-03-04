@@ -28,7 +28,7 @@ namespace persistenceLayer
 			services.Configure<IdentityOptions>(options =>
 			{
 				options.Password.RequiredLength = 6;
-				//options.SignIn.RequireConfirmedEmail = true;
+				options.SignIn.RequireConfirmedEmail = true;
 				options.User.RequireUniqueEmail = true;
 			});
 			services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
