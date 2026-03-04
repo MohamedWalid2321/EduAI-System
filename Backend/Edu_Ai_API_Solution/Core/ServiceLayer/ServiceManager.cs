@@ -38,6 +38,14 @@ namespace ServiceLayer
             new Lazy<IAssigmentService>(() => new Services.AssignmentService(_unitOfWork, _fileStorageService));
         public IAssigmentService AssignmentService => _assignmentService.Value;
 
+        private readonly Lazy<IQuizService> _quizService =
+            new Lazy<IQuizService>(() => new Services.QuizService(_unitOfWork));
+        public IQuizService QuizService => _quizService.Value;
+
+        private readonly Lazy<IQuestionService> _questionService =
+            new Lazy<IQuestionService>(() => new Services.QuestionService(_unitOfWork));
+        public IQuestionService QuestionService => _questionService.Value;
+
         private readonly Lazy<IAuthunticationService> _authunticationService =
             new Lazy<IAuthunticationService>(() => new Services.AuthService(
                 _userManager, 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260301003806_EditQuizQuestionsAnswerTables")]
+    partial class EditQuizQuestionsAnswerTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,7 +211,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ1Qwo4srpKLyZSxh+GAecQzdxOruj2BS7JlB/usLTuN86+ndanaJljejVg5WXZCrw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI8lL+1b8QQssH/g8bPb1WzbXknIp14CxyCoL7OQK6946VU9c8uAxUgLsQ7LQ9sTYg==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -230,7 +233,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBXPmv6rfHJDgDTYmaTbTRTsIS+Adcz5WZmQb+SO4XPjkuKgesjuq/geoUavEkKSqQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC2KYt4ecW0x5EMAgZAbJtRR4COk4OxUVwyfl/eiQya0x/Ajx41WYMKcamAyV/P27w==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -615,9 +618,8 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QuizCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("QuizCode")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ScheduledDate")
                         .HasColumnType("datetime2");

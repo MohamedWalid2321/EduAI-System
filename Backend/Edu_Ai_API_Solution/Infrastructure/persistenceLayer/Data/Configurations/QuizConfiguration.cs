@@ -8,9 +8,11 @@ namespace persistenceLayer.Data.Configurations
 			
 			builder.Property(q => q.Title).HasMaxLength(200).IsRequired();
 			builder.Property(q => q.Description).HasMaxLength(1000).IsRequired();
-			
-			// Relationships
-			builder.HasOne(q => q.Course)
+
+			builder.HasIndex(q => q.QuizCode).IsUnique(); // Ensure QuizCode is unique
+
+            // Relationships
+            builder.HasOne(q => q.Course)
 				   .WithMany(c => c.Quizzes)
 				   .HasForeignKey(q => q.CourseId)
 				   .OnDelete(DeleteBehavior.Cascade);

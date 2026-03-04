@@ -7,9 +7,11 @@ namespace persistenceLayer.Data.Configurations
 			builder.ToTable("QuizQuestions");
 			
 			builder.Property(qq => qq.QuestionText).HasMaxLength(500).IsRequired();
-			
-			// Relationships
-			builder.HasOne(qq => qq.Quiz)
+
+			builder.HasIndex(qq => new { qq.QuizId, qq.QuestionText }).IsUnique(); // Ensure unique question text within the same quiz
+
+            // Relationships
+            builder.HasOne(qq => qq.Quiz)
 				   .WithMany(q => q.QuizQuestions)
 				   .HasForeignKey(qq => qq.QuizId)
 				   .OnDelete(DeleteBehavior.Cascade);
