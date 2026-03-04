@@ -8,7 +8,7 @@ namespace Shared.Dtos
 {
 	public class AssesmentDto
 	{
-		public string AssType { get; set; }
+		public int AssType { get; set; }
 		public double PercentageWeight { get; set; }
 		public bool IsMandatory { get; set; }  
 		public int Hours { get; set; }

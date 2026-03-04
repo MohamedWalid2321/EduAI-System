@@ -8,6 +8,7 @@ namespace Shared.Dtos.CourseDto.Response
 {
 	public class CourseResponseDto
 	{
+		public int Id { get; set; }
 		public string Title { get; set; } = null!;
 		public string Description { get; set; } = null!;
 		public string ImageUrl { get; set; } = null!;
@@ -15,6 +16,5 @@ namespace Shared.Dtos.CourseDto.Response
 		public int Credit_Hour { get; set; }
 		public string CourseStatus { get; set; } = null!;
 		public string LearningOutcomes { get; set; } = null!;
-		public AssesmentDto Assesment { get; set; } = null!;
 	}
 }
