@@ -24,13 +24,14 @@ namespace ServiceLayer.Mapping
 				.Map(dest => dest.semster, src => src.semster.ToString())
 				.Map(dest => dest.CourseStatus, src => src.CourseStatus.ToString());
 
+			TypeAdapterConfig<Course, FullCourseResponse>
+			.NewConfig()
+			.Map(dest => dest.Assesment, src => src.Assessments);
+
+
 			// Configure AssesmentDto to Assessment mapping with enum conversion
 			config.NewConfig<AssesmentDto, Assessment>()
-				.Map(dest => dest.AssType, src => Enum.Parse<AssTypes>(src.AssType, true));
-
-			// Configure Assessment to AssesmentDto mapping with enum to string conversion
-			config.NewConfig<Assessment, AssesmentDto>()
-				.Map(dest => dest.AssType, src => src.AssType.ToString());
+				.Map(dest => dest.AssType, src => src.AssType);
 			// Mapping Email To UserName in ApplicationUser
 			config.NewConfig<RegisterRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email);
@@ -57,6 +58,7 @@ namespace ServiceLayer.Mapping
 						ChoiceText = answer,
 						IsCorrect = index == src.CorrectAnswerIndex
 					}).ToList()
+
     );
 
         }
