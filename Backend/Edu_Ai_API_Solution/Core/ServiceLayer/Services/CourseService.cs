@@ -56,7 +56,7 @@ namespace ServiceLayer.Services
 				var imagePath = await _fileStorageService.UploadFileAsync(
 					stream,
 					ImageFile.FileName,
-					"Courses/images",
+					$"Courses/{request.Title}/images",
 					ImageFile.ContentType);
 				courseEntity.ImageUrl = imagePath;
 			}
@@ -95,7 +95,7 @@ namespace ServiceLayer.Services
 				var imagePath = await _fileStorageService.UploadFileAsync(
 					stream,
 					ImageFile.FileName,
-					"Courses/images",
+					$"Courses/{request.Title}/images",
 					ImageFile.ContentType);
 				courseEntity.ImageUrl = imagePath;
 			}
