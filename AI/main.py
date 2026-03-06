@@ -89,6 +89,7 @@ modal_image = (
     modal.Image.debian_slim(python_version="3.10")
     .apt_install("libgl1", "libglib2.0-0", "ffmpeg")
     .pip_install_from_requirements("requirements.txt")
+    .pip_install("redis") 
     .add_local_dir(
         _current_dir,
         remote_path="/root/app",
@@ -96,16 +97,6 @@ modal_image = (
         "__pycache__",
         ".git",
         ".venv",
-        "*.pt",        # YOLO weights
-        "*.onnx",      # ONNX models
-        "*.h5",        # Keras/TF models
-        "*.pkl",       # pickled models
-        "*.bin",       # binary weights
-        "*.pth",       # PyTorch weights
-        "node_modules",
-        "*.mp4",
-        "*.jpg",
-        "*.png",
     ],
     )
 )
