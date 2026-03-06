@@ -12,7 +12,7 @@ namespace ServiceLayer.Specifications.DepartmentSpecification
 	{
 		public DepartmentSpecification(int id) : base(p=> p.Id==id)
 		{
-			//AddInclude(p => p.courses);
+			AddInclude(p => p.courses);
 		}
 		public DepartmentSpecification(): base(null)
 		{

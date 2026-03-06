@@ -6,7 +6,7 @@ namespace ServiceLayer.Services
 	{
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
-		public async Task<IEnumerable<FullCourseResponse>> GetAllCourseAsync(int departmentId)
+		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseforDepartmentAsync(int departmentId)
 		{
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseSpecification = new CourseByDepartmentSpecification(departmentId);
@@ -15,9 +15,15 @@ namespace ServiceLayer.Services
 			{
 				throw new CoursesInDepartmentNotFoundException(departmentId);
 			}
-			return courses.Adapt<IEnumerable<FullCourseResponse>>();
+			return courses.Adapt<IEnumerable<CourseResponseDto>>();
 		}
-		public async Task<CourseResponseDto> GetCourseByIdAsync(int departmentId, int courseId)
+		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseAsync()
+		{
+			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
+			var courses = await CourseRepository.GetAllAsync();
+			return courses.Adapt<IEnumerable<CourseResponseDto>>();
+		}
+		public async Task<FullCourseResponse> GetCourseByIdAsync(int departmentId, int courseId)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseExists = await courseRepository.GetByIdAsync(courseId);
@@ -32,7 +38,7 @@ namespace ServiceLayer.Services
 				throw new CourseDepartmentNotFoundException(courseId, departmentId);
 			}
 			
-			return course.Adapt<CourseResponseDto>();
+			return course.Adapt<FullCourseResponse>();
 		}
 		public async Task<CourseResponseDto> AddCourseAsync(int departmentId,CourseRequestDto request, IFormFile? ImageFile)
 		{
@@ -76,10 +82,10 @@ namespace ServiceLayer.Services
 				// Course exists but not in this department
 				throw new CourseDepartmentNotFoundException(courseId, departmentId);
 			}
-			//if (!string.IsNullOrEmpty(courseEntity.ImageUrl))
-			//{
-			//	await _fileStorageService.DeleteFileAsync(courseEntity.ImageUrl);
-			//}
+			if (!string.IsNullOrEmpty(courseEntity.ImageUrl))
+			{
+				await _fileStorageService.DeleteFileAsync(courseEntity.ImageUrl);
+			}
 
 			courseEntity = request.Adapt(courseEntity);
 
@@ -93,6 +99,18 @@ namespace ServiceLayer.Services
 					ImageFile.ContentType);
 				courseEntity.ImageUrl = imagePath;
 			}
+			courseRepository.Update(courseEntity);
+			await _unitOfWork.SaveChangesAsync();
+		}
+		public async Task ToggleCouresStatus(int CourseId)
+		{
+			var courseRepository = _unitOfWork.GetRepository<Course, int>();
+			var courseEntity = await courseRepository.GetByIdAsync(CourseId);
+			if (courseEntity is null)
+			{
+				throw new CourseNotFoundException(CourseId);
+			}
+			courseEntity.IsPublished = !courseEntity.IsPublished;
 			courseRepository.Update(courseEntity);
 			await _unitOfWork.SaveChangesAsync();
 		}

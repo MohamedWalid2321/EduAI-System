@@ -69,24 +69,8 @@ namespace ServiceLayer.Services
 			await _unitOfWork.SaveChangesAsync();	
 		}
 
-		
 
-		
-
-		
-		public async Task<IEnumerable<CourseRequestDto>> GetAllCourseBydepartmentIdAsync(int departmentId)
-		{
-			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseSpecification = new CourseByDepartmentSpecification(departmentId);
-			var courses = await CourseRepository.GetAllAsync(courseSpecification);
-			if (courses is null || !courses.Any())
-			{
-				throw new CoursesInDepartmentNotFoundException(departmentId);
-            }
-            return courses.Adapt<IEnumerable<CourseRequestDto>>();
-		}
-
-		public async Task<DepartmentRequest> AssignCourseToDepartmentAsync(int departmentId, int CourseId)
+		public async Task AssignCourseToDepartmentAsync(int departmentId, int CourseId)
 		{
 			var departmentRepository = _unitOfWork.GetRepository<Department, int>();
 			var departmentSpecificatioin = new DepartmentSpecification(departmentId);
@@ -108,10 +92,9 @@ namespace ServiceLayer.Services
 			DepartmentEntity.courses.Add(courseEntity);
 			departmentRepository.Update(DepartmentEntity);
 			await _unitOfWork.SaveChangesAsync();
-			return DepartmentEntity.Adapt<DepartmentRequest>();
 		}
 
-		public async Task<DepartmentRequest> RemoveCourseFromDepartmentAsync(int departmentId, int CourseId)
+		public async Task RemoveCourseFromDepartmentAsync(int departmentId, int CourseId)
 		{
 			var departmentRepository = _unitOfWork.GetRepository<Department, int>();
 			var departmentSpecificatioin = new DepartmentSpecification(departmentId);
@@ -131,7 +114,6 @@ namespace ServiceLayer.Services
 			DepartmentEntity.courses.Remove(courseEntity!);
 			departmentRepository.Update(DepartmentEntity);
 			await _unitOfWork.SaveChangesAsync();
-			return DepartmentEntity.Adapt<DepartmentRequest>();
 		}
 
 		

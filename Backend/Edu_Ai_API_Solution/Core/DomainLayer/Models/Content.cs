@@ -13,10 +13,10 @@ namespace DomainLayer.Models
 
 		// Course RelationShip
 		public int CourseId { get; set; }
-		public Course Course { get; set; }
+		public Course Course { get; set; }= null!;
 
 		// ContentAttachment RelationShip
-		public ICollection<ContentAttachment>? ContentAttachments { get; set; }
+		public ICollection<ContentAttachment> ContentAttachments { get; set; } = [];
 
 
 	}

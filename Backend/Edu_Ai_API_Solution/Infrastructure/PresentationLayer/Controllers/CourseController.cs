@@ -9,22 +9,27 @@ namespace PresentationLayer.Controllers
 		//[Cache(300)]
 		public async Task<IActionResult> GetAllCourse(int departmentId)
 		{
-			var courses = await serviceManager.CourseService.GetAllCourseAsync(departmentId);
+			var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(departmentId);
 			return Ok(courses);
 
 		}
-		//[HttpGet("{id}")]
-		//public async Task<IActionResult> GetCourseById(int id)
-		//{
-		//	var course = await serviceManager.CourseService.GetCourseByIdAsync(id);
-		//	return Ok(course);
-		//}
+		[HttpGet("All")]
+		public async Task<IActionResult> GetAllCourse()
+		{
+			var courses = await serviceManager.CourseService.GetAllCourseAsync();
+			return Ok(courses);
+		}
+		[HttpGet("{Courseid}/FromDepartment/{departmentId}")]
+		public async Task<IActionResult> GetCourseById(int departmentId, int Courseid)
+		{
+			var course = await serviceManager.CourseService.GetCourseByIdAsync(departmentId, Courseid);
+			return Ok(course);
+		}
 		[HttpPost("{departmentId}")]
 		public async Task<IActionResult> AddCourse(int departmentId, [FromForm] CourseRequestDto courseDto,IFormFile ImageFile)
 		{
 			var createdCourse = await serviceManager.CourseService.AddCourseAsync(departmentId, courseDto,ImageFile);
-			//return CreatedAtAction(nameof(GetCourseById), new { departmentId = departmentId, id = createdCourse.Id }, createdCourse);
-			return Ok(createdCourse);
+			return CreatedAtAction(nameof(GetCourseById), new { departmentId = departmentId, Courseid = createdCourse.Id }, createdCourse);
 		}
 		
 		[HttpPut("{departmentId}/{id}")]
@@ -35,6 +40,12 @@ namespace PresentationLayer.Controllers
 			IFormFile? ImageFile)
 		{
 			await serviceManager.CourseService.UpdateCourseAsync(departmentId,id, courseDto, ImageFile);
+			return Ok();
+		}
+		[HttpPut("{CourseId}/Toggle_Status")]
+		public async Task<IActionResult> ToggleCourseStatus(int CourseId)
+		{
+			await serviceManager.CourseService.ToggleCouresStatus(CourseId);
 			return Ok();
 		}
 		[HttpPost("{CourseId}/AddAssesment")]
