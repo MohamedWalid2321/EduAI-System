@@ -20,3 +20,8 @@ Test/
 [Dd]ebug/
 [Rr]elease/
 assets/
+
+capture_frame.py
+capture_frame1.py
+.env
+postman_payload.json
