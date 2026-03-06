@@ -5,7 +5,11 @@
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
 		{
 			// Add application services registrations here
-			services.AddHttpClient<IFileStorageService, BunnyNetService>();
+			services.AddHttpClient<IFileStorageService, BunnyNetService>(client =>
+			{
+				// Set timeout for large file uploads (40 minutes)
+				client.Timeout = TimeSpan.FromMinutes(40);
+			});
 			services.AddScoped<IServiceManager, ServiceManager>();
 			services.AddMapsterConf();
 

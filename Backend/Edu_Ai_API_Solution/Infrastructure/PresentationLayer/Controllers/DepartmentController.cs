@@ -35,23 +35,17 @@ namespace PresentationLayer.Controllers
 			await serviceManager.DepartmentService.DeleteDepartmentAsync(id);
 			return Ok();
 		}
-		[HttpGet("Course/{departmetnId}")]
-		public async Task<IActionResult> GetAllCourseBydepartmentId(int departmetnId)
-		{
-			var courses = await serviceManager.DepartmentService.GetAllCourseBydepartmentIdAsync(departmetnId);
-			return Ok(courses);
-		}
 		[HttpPost("{departmentId}/AssignCourse/{courseId}")]
 		public async Task<IActionResult> AssignCourseToDepartment(int departmentId, int courseId)
 		{
-			var updatedDepartment = await serviceManager.DepartmentService.AssignCourseToDepartmentAsync(departmentId, courseId);
-			return Ok(updatedDepartment);
+			 await serviceManager.DepartmentService.AssignCourseToDepartmentAsync(departmentId, courseId);
+			return Ok();
 		}
 		[HttpPost("{departmentId}/RemoveCourse/{courseId}")]
 		public async Task<IActionResult> RemoveCourseFromDepartment(int departmentId, int courseId)
 		{
-			var updatedDepartment = await serviceManager.DepartmentService.RemoveCourseFromDepartmentAsync(departmentId, courseId);
-			return Ok(updatedDepartment);
+			await serviceManager.DepartmentService.RemoveCourseFromDepartmentAsync(departmentId, courseId);
+			return Ok();
 		}
 
 	}

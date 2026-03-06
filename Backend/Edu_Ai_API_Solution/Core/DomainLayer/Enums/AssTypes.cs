@@ -13,6 +13,6 @@ namespace DomainLayer.Enums
 		Lab = 2,
 		Project = 3,
 		Quiz = 4,
-		midterm = 5
+		Midterm = 5
 	}
 }

@@ -9,7 +9,12 @@ namespace ServiceLayer.Specifications.CourseSpecification
 {
 	public class CourseSpecification: BaseSpecification<Course,int>
 	{
-		public CourseSpecification(int id) : base(c => c.Id == id)
+		public CourseSpecification(int departmentId, int id) : base(c => c.Id == id && c.Departments.Any(d=>d.Id==departmentId))
+		{
+			AddInclude(c => c.Assessments);
+			AddInclude(c => c.Departments);
+		}
+		public CourseSpecification( int id) : base(c => c.Id == id)
 		{
 			AddInclude(c => c.Assessments);
 			AddInclude(c => c.Departments);

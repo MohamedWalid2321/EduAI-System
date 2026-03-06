@@ -1,7 +1,4 @@
-﻿
-
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
     // This service is responsible for uploading files to Bunny.net
     public class BunnyNetService : IFileStorageService
@@ -44,7 +41,7 @@ namespace ServiceLayer.Services
             // Prevents adding duplicate headers
             if (!_httpClient.DefaultRequestHeaders.Contains("AccessKey"))
             {
-                _httpClient.DefaultRequestHeaders.Add("AccessKey",apiKey);
+                _httpClient.DefaultRequestHeaders.Add("AccessKey", apiKey);
             }
         }
 
@@ -106,6 +103,41 @@ namespace ServiceLayer.Services
 
             // Return the public CDN URL of the uploaded file
             return $"{_cdnBaseUrl.TrimEnd('/')}/{path}";
+        }
+
+        // Deletes a file from Bunny Storage using its CDN URL
+        public async Task DeleteFileAsync(string fileUrl)
+        {
+            // Validate file URL
+            if (string.IsNullOrWhiteSpace(fileUrl))
+                throw new ArgumentException("File URL cannot be empty", nameof(fileUrl));
+
+            // Extract the relative path from the full CDN URL
+            // Example: https://lms-videos-h.b-cdn.net/Courses/images/photo.png
+            // Becomes: Courses/images/photo.png
+            var cdnBaseUrlTrimmed = _cdnBaseUrl.TrimEnd('/');
+            
+            if (!fileUrl.StartsWith(cdnBaseUrlTrimmed, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("File URL does not belong to the configured CDN", nameof(fileUrl));
+
+            var relativePath = fileUrl
+                .Substring(cdnBaseUrlTrimmed.Length)
+                .TrimStart('/');
+
+            if (string.IsNullOrWhiteSpace(relativePath))
+                throw new ArgumentException("Could not extract file path from URL", nameof(fileUrl));
+
+            // Send DELETE request to Bunny Storage
+            var response = await _httpClient.DeleteAsync(relativePath);
+
+            // If deletion fails, read the error response
+            // Note: 404 is acceptable (file already deleted)
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(
+                    $"Bunny.net Delete Error: {response.StatusCode} - {error}");
+            }
         }
     }
 }

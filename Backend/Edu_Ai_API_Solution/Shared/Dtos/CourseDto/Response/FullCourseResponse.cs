@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Dtos.CourseDto.Response
 {
-	public class CourseResponseDto
+	public class FullCourseResponse
 	{
 		public int Id { get; set; }
 		public string Title { get; set; } = null!;
@@ -16,5 +16,6 @@ namespace Shared.Dtos.CourseDto.Response
 		public int Credit_Hour { get; set; }
 		public bool IsPublished { get; set; }
 		public string LearningOutcomes { get; set; } = null!;
+		public List<AssesmentDto> Assesment { get; set; } = [];
 	}
 }
