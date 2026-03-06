@@ -5,7 +5,8 @@ namespace ServiceAbstractionLayer
 {
 	public interface IContentService
 	{
-		Task<ContentResponseDto> CreateOrUpdateContentForCourse(int courseId, ContentRequestDto contentRequest);
+		Task<ContentResponseDto> AddContentForCourse(int courseId, ContentRequestDto contentRequest);
+		Task UpdateContentForCourse(int contentId, ContentRequestDto contentRequest);
 		Task<IEnumerable<ContentResponseDto>> GetAllContentsByCourseIdAsync(int courseId);
 		Task<ContentResponseDto> GetContentByIdAsync(int contentId);
 		Task DeleteContentAsync(int contentId);
