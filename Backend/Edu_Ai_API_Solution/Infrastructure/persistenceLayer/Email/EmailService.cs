@@ -1,8 +1,17 @@
-﻿namespace persistenceLayer.Email
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using MimeKit;
+
+namespace persistenceLayer.Email
 {
-	public class EmailService(IOptions<MailSettings> MailSettings) : IEmailSender
+	public class EmailService(IOptions<MailSettings> mailSettings, IHostEnvironment environment) : IEmailSender
 	{
-		private readonly MailSettings _mailSettings = MailSettings.Value;
+		private readonly MailSettings _mailSettings = mailSettings.Value;
+		private readonly IHostEnvironment _environment = environment;
+
 		public async Task SendEmailAsync(string email, string subject, string htmlMessage)
 		{
 			// Define the email message
@@ -13,7 +22,7 @@
 			};
 			// this is for multiple email addresses
 			message.To.Add(MailboxAddress.Parse(email));
-			// This email body
+			
 			var builder = new BodyBuilder
 			{
 				HtmlBody = htmlMessage
@@ -21,10 +30,18 @@
 			message.Body = builder.ToMessageBody();
 			// Send the email using SMTP
 			using var smtp = new SmtpClient();
-			smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-			smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+			
+			// Only bypass SSL validation in development
+			if (_environment.IsDevelopment())
+			{
+				smtp.CheckCertificateRevocation = false;
+				smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
+			}
+			
+			await smtp.ConnectAsync(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+			await smtp.AuthenticateAsync(_mailSettings.Mail, _mailSettings.Password);
 			await smtp.SendAsync(message);
-			smtp.Disconnect(true);
+			await smtp.DisconnectAsync(true);
 		}
 	}
 }
