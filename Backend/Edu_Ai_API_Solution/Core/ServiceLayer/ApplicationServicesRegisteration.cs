@@ -15,10 +15,11 @@ namespace ServiceLayer
 			{
 				var handler = new HttpClientHandler();
 				
-				// Only disable revocation check in development
+				// Only disable SSL validation in development
 				if (environment.IsDevelopment())
 				{
 					handler.CheckCertificateRevocationList = false;
+					handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 				}
 				
 				return handler;
