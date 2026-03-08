@@ -12,6 +12,7 @@ namespace ServiceLayer.Specifications.ContentSpecifications
 		public ContentSpecification(int id) : base(p => p.Id == id)
 		{
 			AddInclude(p => p.ContentAttachments);
+			AddInclude(p => p.Course);
 		}
 		public ContentSpecification() : base(null)
 		{

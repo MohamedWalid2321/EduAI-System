@@ -13,9 +13,8 @@ namespace ServiceAbstractionLayer
 		Task<DepartmentResponse> AddDepartmentAsync(DepartmentRequest request);
 		Task UpdateDepartmentAsync(int departmentId, DepartmentRequest request);
 		Task DeleteDepartmentAsync(int departmentId);
-		Task<IEnumerable<CourseRequestDto>> GetAllCourseBydepartmentIdAsync(int departmetnId);
-		Task<DepartmentRequest> AssignCourseToDepartmentAsync(int departmentId, int CourseId);
-		Task<DepartmentRequest> RemoveCourseFromDepartmentAsync(int departmentId, int CourseId);
+		Task AssignCourseToDepartmentAsync(int departmentId, int CourseId);
+		Task RemoveCourseFromDepartmentAsync(int departmentId, int CourseId);
 
 	}
 }

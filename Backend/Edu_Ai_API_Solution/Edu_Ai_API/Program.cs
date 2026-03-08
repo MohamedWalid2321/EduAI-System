@@ -3,6 +3,7 @@ using DomainLayer.Models;
 using Edu_Ai_API.CustomMiddleWares;
 using Edu_Ai_API.Factories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,12 @@ using persistenceLayer;
 using persistenceLayer.Data;
 using persistenceLayer.Repository;
 using PresentationLayer.Authorization;
+using Serilog;
 using ServiceAbstractionLayer;
 using ServiceLayer;
 using ServiceLayer.Services;
 using Shared.ErrorModels;
 using StackExchange.Redis;
-using Serilog;
 
 namespace Edu_Ai_API
 {
@@ -80,7 +81,7 @@ namespace Edu_Ai_API
                 .AddDefaultTokenProviders();
 
             builder.Services.AddInfrastructureServices(builder.Configuration);
-            builder.Services.AddApplicationServices();
+            builder.Services.AddApplicationServices(builder.Environment);
 
             // Authorization Services
             builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
@@ -105,6 +106,13 @@ namespace Edu_Ai_API
         .AllowAnyHeader()
         .AllowCredentials(); 
 				});
+			});
+			// Configure form options
+			builder.Services.Configure<FormOptions>(options =>
+			{
+				options.MultipartBodyLengthLimit = 524288000; // 500 MB
+				options.ValueLengthLimit = int.MaxValue;
+				options.MultipartHeadersLengthLimit = int.MaxValue;
 			});
 
 			var app = builder.Build();
