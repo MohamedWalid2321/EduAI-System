@@ -146,7 +146,19 @@ namespace ServiceLayer.Services
                 throw new InvalidCorrectAnswerIndexException();
             }
 
-            var questionEntityToUpdate = questionRequest.Adapt<QuizQuestion>();
+            var questionEntityToUpdate = await QuestionRepository.GetByIdAsync(questionSpecifications);
+            questionEntityToUpdate.QuestionText = questionRequest.QuestionText;
+            questionEntityToUpdate.QuestionType = Enum.Parse<DomainLayer.Enums.QuestionTypes>(questionRequest.QuestionType);
+            questionEntityToUpdate.Marks = questionRequest.Marks;
+
+            questionEntity.QuestionChoices.Clear();
+            questionEntity.QuestionChoices = questionRequest.QuestionChoices
+                .Select((choiceText, index) => new DomainLayer.Models.QuestionChoices
+                {
+                    ChoiceText = choiceText,
+                    IsCorrect = index == questionRequest.CorrectAnswerIndex
+                }).ToList();
+
             QuestionRepository.Update(questionEntityToUpdate);
             await _unitOfWork.SaveChangesAsync();
             return questionEntity.Adapt<QuestionResponseDto>();
