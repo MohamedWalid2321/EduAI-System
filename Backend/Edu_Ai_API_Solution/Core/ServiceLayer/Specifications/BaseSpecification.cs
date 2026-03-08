@@ -35,10 +35,6 @@ namespace ServiceLayer.Specifications
 		{
 			OrderByDescending = orderByDescExpression;
 		}
-
-
-        
-
         protected void AddInclude_2(
             Func<IQueryable<Tentity>, IIncludableQueryable<Tentity, object>> includeExpression)
         {
