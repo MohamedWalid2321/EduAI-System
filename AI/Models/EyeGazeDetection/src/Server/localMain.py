@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 import base64
 import logging
 import threading
+import time
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Optional
 from dotenv import load_dotenv
 from pathlib import Path
 from collections import deque
@@ -17,12 +22,15 @@ _env_path = Path(__file__).resolve().parents[4] / ".env"
 load_dotenv(dotenv_path=_env_path)
 
 MODAL_ENDPOINT        = os.getenv("MODAL_GAZE_ENDPOINT")
-MODAL_CLEAR_ENDPOINT  = os.getenv("MODAL_GAZE_CLEAR_ENDPOINT")  # DELETE endpoint URL
+MODAL_CLEAR_ENDPOINT  = os.getenv("MODAL_GAZE_CLEAR_ENDPOINT")
 
 SMOOTHING_BUFFER_SIZE = 3
 ENVELOPE_WINDOW       = 90
 AWAY_SHORT_SECONDS    = 3.0
 AWAY_LONG_SECONDS     = 5.0
+
+# Max concurrent Modal calls
+MAX_WORKERS = 30
 
 _sessions:      dict[str, "GazeSession"] = {}
 _session_locks: dict[str, threading.Lock] = {}
@@ -43,7 +51,6 @@ def clear_session(session_id: str) -> None:
         _sessions.pop(session_id, None)
         _session_locks.pop(session_id, None)
 
-    # clear the detector on Modal and Redis ownership
     try:
         if MODAL_CLEAR_ENDPOINT:
             requests.delete(
@@ -59,48 +66,115 @@ def clear_session(session_id: str) -> None:
 
 def process_frames_batch(session_id: str, frames_b64: list[str]) -> list[dict]:
     session, lock = get_or_create_session(session_id)
-    results = []
 
     with lock:
-        for frame_b64 in frames_b64:
-            frame = _decode_frame(frame_b64)
-            if frame is None:
-                logger.warning("[process_frames_batch] Could not decode a frame, skipping.")
-                continue
-            verdict = session.process_gaze_frame(frame)
+        # Step 1 — send ALL frames to Modal concurrently
+        start         = time.time()
+        modal_results = _call_modal_concurrent(session_id, frames_b64)
+        elapsed       = time.time() - start
+        print(f"[GazeSession] {len(frames_b64)} concurrent Modal calls finished in {elapsed:.2f}s")
+
+        # Step 2 — feed each result into the stateful GazeSession in ORDER
+        results = []
+        for r in modal_results:
+            if r is not None:
+                verdict = session.process_gaze_result(
+                    float(r["h_ratio"]),
+                    float(r["v_ratio"]),
+                    bool(r["face_present"]),
+                )
+            else:
+                verdict = session.process_gaze_result(0.0, 0.0, False)
             results.append(verdict)
 
     return results
 
 
-def _decode_frame(frame_b64: str):
+def _call_single_frame(session_id: str, index: int, frame_b64: str) -> tuple[int, Optional[dict]]:
+    """Send one frame to Modal. Returns (index, result) to preserve order."""
     try:
-        img_bytes = base64.b64decode(frame_b64)
-        np_arr    = np.frombuffer(img_bytes, np.uint8)
-        frame     = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-        return frame
-    except Exception as exc:
-        logger.error(f"[_decode_frame] Failed to decode frame: {exc}")
-        return None
+        # time to send the request , modal is not included
+        # upload frame to Modal      (network)
+        # Modal queues the request   (waiting)
+        # Modal decodes frame        (compute)
+        # Modal runs MediaPipe       (compute)
+        # Modal sends result back    (network)
+        request_start = time.time()
+        response = requests.post(
+            MODAL_ENDPOINT,
+            json={
+                "session_id": session_id,
+                "frame":      frame_b64,
+            },
+            timeout=30,
+        )
+        request_end = time.time()
+        
+        response.raise_for_status()
+
+        data = response.json()
+
+
+        
+        print(
+            f"  Frame {index:02d} | "
+            f"request={request_end - request_start:.2f}s | "
+        )
+
+        return index, {
+            "h_ratio":      float(data["h_ratio"]),
+            "v_ratio":      float(data["v_ratio"]),
+            "face_present": bool(data["face_present"]),
+        }
+    except requests.exceptions.Timeout:
+        logger.error(f"[_call_single_frame] Frame {index} timed out.")
+        return index, None
+    except requests.exceptions.RequestException as exc:
+        logger.error(f"[_call_single_frame] Frame {index} request failed: {exc}")
+        return index, None
+    except (KeyError, ValueError) as exc:
+        logger.error(f"[_call_single_frame] Frame {index} bad response: {exc}")
+        return index, None
+
+
+def _call_modal_concurrent(session_id: str, frames_b64: list[str]) -> list[Optional[dict]]:
+    """
+    Fire all frames to Modal simultaneously using a thread pool.
+    Returns results in the original frame order.
+    """
+    num_frames = len(frames_b64)
+    ordered    = [None] * num_frames
+
+    with ThreadPoolExecutor(max_workers=min(MAX_WORKERS, num_frames)) as executor:
+        futures = {
+            executor.submit(_call_single_frame, session_id, i, frame_b64): i
+            for i, frame_b64 in enumerate(frames_b64)
+        }
+        for future in as_completed(futures):
+            index, result = future.result()
+            ordered[index] = result
+
+    return ordered
+
+
 
 
 class GazeSession:
 
     def __init__(self, session_id: str):
-        self._session_id     = session_id       # passed to Modal every frame
-        self._gaze_history_x = deque(maxlen=SMOOTHING_BUFFER_SIZE)
-        self._envelope_x     = deque(maxlen=ENVELOPE_WINDOW)
-        self._initialized    = False
+        self._session_id        = session_id
+        self._gaze_history_x    = deque(maxlen=SMOOTHING_BUFFER_SIZE)
+        self._envelope_x        = deque(maxlen=ENVELOPE_WINDOW)
+        self._initialized       = False
         self._baseline_center_x = None
         self._baseline_std_x    = None
         self._attention_state   = "INITIALIZING"
         self._away_start_time   = None
         self._event_id          = 0
 
-    def process_gaze_frame(self, frame) -> dict:
+    def process_gaze_result(self, h_ratio: float, v_ratio: float, face_present: bool) -> dict:
+        """Apply calibration and attention logic to a single gaze result."""
         current_time = datetime.now().timestamp()
-
-        h_ratio, _v_ratio, face_present = self._call_modal(frame)
 
         if not face_present:
             self._attention_state = "NO_FACE"
@@ -153,51 +227,8 @@ class GazeSession:
             self._attention_state, probability, self._attention_state
         )
 
-    def _call_modal(self, frame) -> tuple[float, float, bool]:
-        try:
-            _, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-            b64    = base64.b64encode(buf).decode("utf-8")
-
-            response = requests.post(
-                MODAL_ENDPOINT,
-                json={
-                    "session_id": self._session_id,   # Modal uses this to route to correct detector
-                    "frame":      b64,
-                },
-                timeout=10,
-            )
-            response.raise_for_status()
-            data = response.json()
-
-            # Modal said this user belongs to a different container — retry once
-            if data.get("redirect"):
-                logger.info(f"[GazeSession] Redirect received for {self._session_id}, retrying...")
-                response = requests.post(
-                    MODAL_ENDPOINT,
-                    json={"session_id": self._session_id, "frame": b64},
-                    timeout=10,
-                )
-                response.raise_for_status()
-                data = response.json()
-
-            return (
-                float(data["h_ratio"]),
-                float(data["v_ratio"]),
-                bool(data["face_present"]),
-            )
-
-        except requests.exceptions.Timeout:
-            logger.error("[GazeSession] Modal request timed out.")
-            return 0.0, 0.0, False
-        except requests.exceptions.RequestException as exc:
-            logger.error(f"[GazeSession] Modal request failed: {exc}")
-            return 0.0, 0.0, False
-        except (KeyError, ValueError) as exc:
-            logger.error(f"[GazeSession] Bad response from Modal: {exc}")
-            return 0.0, 0.0, False
-
     def _build_event(self, state: str, probability: float, evidence: str) -> dict:
-        self._event_id = 1    # fixed — was = 1
+        self._event_id = 1
         return {
             "id":          self._event_id,
             "timestamp":   datetime.now().isoformat(),
