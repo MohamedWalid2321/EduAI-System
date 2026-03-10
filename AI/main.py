@@ -128,11 +128,11 @@ class Proctoring:
         import Models.EyeGazeDetection.src.Server.localMain # noqa: F401
         log.info("✅ Eye Gaze loaded")
 
-        log.info("⏳ Loading Face Recognition model (hybrid)...")
+        log.info("⏳ Loading Face Recognition model (hybrid + FAS)...")
         from Models.Face_Recognition_Service import FaceRecognition  # noqa: F401
-        # Instantiate once to warm up both RetinaFace + ArcFace ONNX
+        # Instantiate once to warm up RetinaFace + ArcFace ONNX + MiniFASNetV2
         FaceRecognition()
-        log.info("✅ Face Recognition loaded (RetinaFace + ArcFace ONNX)")
+        log.info("✅ Face Recognition loaded (RetinaFace + ArcFace ONNX + MiniFASNetV2 FAS)")
 
         log.info("🚀 All models preloaded — container is warm!")
 
