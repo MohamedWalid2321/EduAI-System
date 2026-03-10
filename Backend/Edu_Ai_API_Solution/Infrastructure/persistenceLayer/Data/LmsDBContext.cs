@@ -14,8 +14,11 @@
 
 		public DbSet<QuizQuestion> QuizQuestions { get; set; }
 		public DbSet<QuestionChoices> QuestionChoices { get; set; }
+		public DbSet<QuizAttempt> QuizAttempts { get; set; }
+		public DbSet<StudentAnswer> StudentAnswers { get; set; }
+		
 
-		override protected void OnModelCreating(ModelBuilder modelBuilder)
+        override protected void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 			// Apply all configurations from the current assembly

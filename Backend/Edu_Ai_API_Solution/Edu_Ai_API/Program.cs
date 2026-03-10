@@ -81,7 +81,7 @@ namespace Edu_Ai_API
                 .AddDefaultTokenProviders();
 
             builder.Services.AddInfrastructureServices(builder.Configuration);
-            builder.Services.AddApplicationServices();
+            builder.Services.AddApplicationServices(builder.Environment);
 
             // Authorization Services
             builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();

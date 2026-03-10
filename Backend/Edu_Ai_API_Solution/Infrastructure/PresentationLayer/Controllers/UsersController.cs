@@ -14,9 +14,9 @@ namespace PresentationLayer.Controllers
 
 		[HttpGet("")]
 		[HasPermission(Permissions.GetUsers)]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAll([FromQuery] bool IncludeNotConfirmed)
 		{
-			return Ok(await _serviceManager.UserService.GetAllAsync());
+			return Ok(await _serviceManager.UserService.GetAllAsync(IncludeNotConfirmed));
 		}
 
 		[HttpGet("{id}")]
@@ -27,13 +27,18 @@ namespace PresentationLayer.Controllers
 
 			return Ok(result); 
 		}
+		[HttpGet("{DepartmentId}/Instructors")]
+		public async Task<IActionResult> GetUsersByDepartmentId([FromRoute] int DepartmentId)
+		{
+			var result = await _serviceManager.UserService.GetAllInstructorByDepartmentIdAsync(DepartmentId);
+			return Ok(result);
+		}
 
 		[HttpPost("")]
 		[HasPermission(Permissions.AddUsers)]
 		public async Task<IActionResult> Add([FromBody] CreateUserRequest request)
 		{
 			var result = await _serviceManager.UserService.AddAsync(request);
-
 			return CreatedAtAction(nameof(Get), new { result.Id }, result);
 		}
 

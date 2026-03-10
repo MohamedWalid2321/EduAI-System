@@ -64,60 +64,6 @@
             return updatedQuiz!.Adapt<QuizResponseDto>();
         }
 
-     /*   public async Task<QuizResponseDto> AddQuestionToQuiz(int QuizId, ICollection<QuestionRequestDto> Questions)
-		{
-			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
-			var questionRepository = _unitOfWork.GetRepository<QuizQuestion, int>();
-			var choiceRepository = _unitOfWork.GetRepository<QuestionChoices, int>();
-
-			// Verify quiz exists
-			var quizEntity = await quizRepository.GetByIdAsync(QuizId);
-			if (quizEntity is null)
-			{
-				throw new QuizNotFoundException(QuizId);
-			}
-
-			foreach (var questionDto in Questions)
-			{
-				var questionEntity = new QuizQuestion
-				{
-					QuestionText = questionDto.QuestionText,
-					QuestionType = Enum.Parse<DomainLayer.Enums.QuestionTypes>(questionDto.QuestionType),
-					Marks = questionDto.Marks,
-					QuizId = QuizId,
-					QuestionChoices = new List<QuestionChoices>()
-				};
-
-				await questionRepository.AddAsync(questionEntity);
-				await _unitOfWork.SaveChangesAsync(); // Save to get the question ID
-
-				// Add question choices
-				if (questionDto.QuestionChoices != null && questionDto.QuestionChoices.Any())
-				{
-					foreach (var choiceDto in questionDto.QuestionChoices)
-					{
-						var choiceEntity = new QuestionChoices
-						{
-							ChoiceText = choiceDto.ChoiceText,
-							IsCorrect = choiceDto.IsCorrect,
-							QuizQuestionId = questionEntity.Id
-						};
-
-						await choiceRepository.AddAsync(choiceEntity);
-					}
-				}
-			}
-
-			await _unitOfWork.SaveChangesAsync();
-
-			// Reload quiz with questions and choices
-			var quizSpec = new QuizSpecification(QuizId);
-			var updatedQuiz = await quizRepository.GetByIdAsync(quizSpec);
-			return updatedQuiz!.Adapt<QuizResponseDto>();
-		}
-
-
-*/
 		public async Task DeleteQuizAsync(int quizId)
 		{
 			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Exceptions.Question
 {
-    public sealed class NotEnoughChoicesException(): InvalidOperationException($"A question must have at least two choices")
+    public sealed class NotEnoughChoicesException(): BadRequestException($"A question must have at least two choices")
     {
     }
 }

@@ -11,7 +11,9 @@ namespace ServiceLayer.Specifications.QuizSpecifications
 	{
 		public QuizByCourseIdSpecification(int courseId) : base(q => q.CourseId == courseId)
 		{
-			AddInclude(q => q.QuizQuestions);
-		}
+            AddInclude_2(query => query
+                        .Include(q => q.QuizQuestions)
+                        .ThenInclude(qq => qq.QuestionChoices));
+        }
 	}
 }

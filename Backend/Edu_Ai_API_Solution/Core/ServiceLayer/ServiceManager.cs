@@ -27,7 +27,7 @@ namespace ServiceLayer
         public IDepartmentService DepartmentService => _departmentService.Value;
 
         private readonly Lazy<ICourseService> _courseService =
-            new Lazy<ICourseService>(() => new Services.CourseService(_unitOfWork, _fileStorageService));
+            new Lazy<ICourseService>(() => new Services.CourseService(_unitOfWork, _fileStorageService,_userManager));
         public ICourseService CourseService => _courseService.Value;
 
         private readonly Lazy<IContentService> _contentService =
@@ -45,6 +45,10 @@ namespace ServiceLayer
         private readonly Lazy<IQuestionService> _questionService =
             new Lazy<IQuestionService>(() => new Services.QuestionService(_unitOfWork));
         public IQuestionService QuestionService => _questionService.Value;
+
+        private readonly Lazy<IQuizAttemptService> quizAttemptService =
+            new Lazy<IQuizAttemptService>(() => new Services.QuizAttemptService(_unitOfWork));
+        public IQuizAttemptService QuizAttemptService => quizAttemptService.Value;
 
         private readonly Lazy<IAuthunticationService> _authunticationService =
             new Lazy<IAuthunticationService>(() => new Services.AuthService(

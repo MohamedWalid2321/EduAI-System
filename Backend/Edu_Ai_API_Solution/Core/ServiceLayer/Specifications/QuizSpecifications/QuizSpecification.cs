@@ -17,6 +17,14 @@ namespace ServiceLayer.Specifications.QuizSpecifications
                         .ThenInclude(qq => qq.QuestionChoices));
 
         }
+		public QuizSpecification(string code) : base(q =>q.QuizCode==code )
+		{
+            
+            AddInclude_2(query => query
+                        .Include(q => q.QuizQuestions.Where(qq => qq.IsActive))
+                        .ThenInclude(qq => qq.QuestionChoices));
+
+        }
 
 		public QuizSpecification() : base(null)
 		{

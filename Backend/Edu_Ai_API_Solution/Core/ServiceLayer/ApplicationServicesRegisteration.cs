@@ -1,26 +1,42 @@
-﻿namespace ServiceLayer
+﻿using Microsoft.Extensions.Hosting;
+using System.Net.Http;
+namespace ServiceLayer
 {
 	public static class ApplicationServicesRegisteration
 	{
-		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment environment)
 		{
 			// Add application services registrations here
 			services.AddHttpClient<IFileStorageService, BunnyNetService>(client =>
 			{
-				// Set timeout for large file uploads (40 minutes)
 				client.Timeout = TimeSpan.FromMinutes(40);
+			})
+			.ConfigurePrimaryHttpMessageHandler(() =>
+			{
+				var handler = new HttpClientHandler();
+				
+				// Only disable SSL validation in development
+				if (environment.IsDevelopment())
+				{
+					handler.CheckCertificateRevocationList = false;
+					handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+				}
+				
+				return handler;
 			});
+
 			services.AddScoped<IServiceManager, ServiceManager>();
 			services.AddMapsterConf();
 
-            services.AddSingleton<IRedisService, RedisService>();
-            services.AddScoped<ICacheService, CacheService>();
+			services.AddSingleton<IRedisService, RedisService>();
+			services.AddScoped<ICacheService, CacheService>();
 			services.AddHttpContextAccessor();
 			services.AddScoped<IAuthunticationService, AuthService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
-            return services;
+			return services;
 		}
+		
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
 		{
 			var mappingConfig = TypeAdapterConfig.GlobalSettings;

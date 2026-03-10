@@ -13,6 +13,7 @@ namespace persistenceLayer.Auth
 				new Claim(JwtRegisteredClaimNames.GivenName,user.FirstName !),
 				new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName !),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(nameof(user.DepartmentId),user.DepartmentId.ToString() ?? "Not Enrolled" ),
 				new Claim(nameof(Roles),JsonSerializer.Serialize(Roles),JsonClaimValueTypes.JsonArray),
 				new Claim(nameof(Permissions),JsonSerializer.Serialize(Permissions),JsonClaimValueTypes.JsonArray)
 			];

@@ -1,1 +1,34 @@
+# ── Model weights (large binary files) ──
 *.onnx
+*.pth
+*.pt
+*.task
+
+# ── Python bytecode & caches ──
+__pycache__/
+*.pyc
+*.pyo
+
+# ── Environment / IDE ──
+.env
+.env.*
+.vscode/
+*.code-workspace
+
+# ── Documents & archives (not source code) ──
+*.docx
+*.zip
+*.txt
+
+# ── Test / calibration data (local only) ──
+Models/FaceAntiSpoofing/calibration_data/
+Models/FaceAntiSpoofing/calibrate_threshold.py
+Models/FaceAntiSpoofing/fas_debug.py
+
+# ── OS junk ──
+Thumbs.db
+.DS_Store
+
+# ── Logs & temp files ──
+*.log
+*.tmp
