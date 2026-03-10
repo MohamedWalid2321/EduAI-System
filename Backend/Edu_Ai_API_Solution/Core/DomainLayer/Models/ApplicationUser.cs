@@ -23,5 +23,8 @@ namespace DomainLayer.Models
 		public AcademicYear? AcademicYear { get; set; }
 		public bool IsEnrolled { get; set; } = false;
 		public DateTime? EnrolledAt { get; set; }
+
+        // Add this property to the existing ApplicationUser class
+        public ICollection<InstructorCourse> InstructorCourses { get; set; } = new List<InstructorCourse>();
 	}
 }
