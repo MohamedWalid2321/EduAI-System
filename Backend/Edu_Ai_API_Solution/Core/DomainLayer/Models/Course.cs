@@ -30,7 +30,7 @@ namespace DomainLayer.Models
 		public ICollection<Assignment>? Assignments { get; set; }
 		// Quiz RelationShip
 		public ICollection<Quiz>? Quizzes { get; set; }
-
+		public ICollection<InstructorCourse> InstructorCourses { get; set; } = new List<InstructorCourse>();
 
 
 
