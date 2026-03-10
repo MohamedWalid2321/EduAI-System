@@ -1,25 +1,12 @@
 from __future__ import annotations
 
 
-
 """
 gaze_route.py
 -------------
 FastAPI route running on the desktop app's local server.
-
-The backend sends a batch of base64-encoded frames to this route.
-The route passes them to localMain.process_frames_batch(), which:
-  - acquires a per-user threading.Lock before touching the session
-  - loops through every frame
-  - calls Modal per frame to get (h_ratio, v_ratio, face_present)
-  - feeds results into the stateful GazeSession (calibration + detection)
-  - returns a verdict per frame
-
-Race condition protection lives in localMain — if the same user sends
-two batches simultaneously, they are queued and processed one at a time.
-The GazeSession is kept alive in localMain._sessions{} across
-multiple batch calls so calibration is never lost.
 """
+
 """
 the request body sent to the gaze_route
 {
@@ -71,30 +58,21 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/analysis", tags=["Gaze Detection"])
 
-
-# ---------------------------------------------------------------------------
-# Request / Response models
-# ---------------------------------------------------------------------------
-
 class GazeFramesBatchRequest(BaseModel):
     """
     Payload the backend sends to the desktop.
 
-    session_id : stable identifier for the user/exam session.
-                 The desktop uses this to look up (or create) the
-                 correct GazeSession so calibration persists across
-                 multiple batch calls.
-
-    frames     : list of base64-encoded JPEG frames, in chronological order.
-                 The backend captures frames and buffers them, then sends
-                 the buffer here every few seconds.
+    session_id :
+    frames     : 
     """
+
     """
     FastAPI uses this to validate the incoming request. If session_id is missing or frames is not a list, 
     FastAPI automatically returns a 422 error before your code even runs.
     """
-    session_id: str               = Field(..., description="Unique user/exam session ID")
-    frames:     list[str]         = Field(..., description="Base64-encoded JPEG frames array")
+    session_id: str = Field(..., description="Unique user/exam session ID")
+    frames: list[str] = Field(..., description="Base64-encoded JPEG frames array")
+    fps: int = Field(default=30, description="Capture FPS used by backend")
 
 
 #Shape of each verdict in the response. FastAPI uses this to validate the output of the route handler.
@@ -111,11 +89,7 @@ class GazeFramesBatchResponse(BaseModel):
     session_id:       str
     frames_processed: int
     verdicts:         list[GazeVerdict]
-    summary_flag:     str   # worst flag seen in this batch
-
-# ---------------------------------------------------------------------------
-# Route
-# ---------------------------------------------------------------------------
+    summary_flag:     str   # what flag seen in this batch
 
 @router.post(
     "/gaze-frames",
@@ -124,7 +98,7 @@ class GazeFramesBatchResponse(BaseModel):
     summary="Eye-gaze detection on a batch of frames",
     description=(
         "Receives an array of base64-encoded frames from the backend. "
-        "Each frame is forwarded to Modal (Gaze.py) to get raw gaze ratios. "
+        "Each frame is processed locally by Gaze.py to get raw gaze ratios. "
         "The stateful GazeSession on the desktop handles calibration and "
         "attention detection, returning one verdict per frame."
     ),
@@ -140,14 +114,13 @@ async def gaze_detection_frames(body: GazeFramesBatchRequest):
     loop = asyncio.get_running_loop()
 
     try:
-        # Run in executor so the blocking Modal HTTP calls
-        # don't block the FastAPI event loop
         verdicts: list[dict] = await loop.run_in_executor(
             None,
             partial(
                 localMain.process_frames_batch,
                 body.session_id,
                 body.frames,
+                body.fps,
             ),
         )
         """
@@ -194,13 +167,9 @@ async def gaze_detection_frames(body: GazeFramesBatchRequest):
     description="Call this when the exam ends to free the GazeSession from memory.",
 )
 async def clear_gaze_session(session_id: str):
-    localMain.clear_session(session_id)
+    localMain.manager.clear(session_id)
     return {"detail": f"Session '{session_id}' cleared."}
 
-
-# ---------------------------------------------------------------------------
-# Helper — pick the most severe flag seen across the batch
-# ---------------------------------------------------------------------------
 
 _FLAG_SEVERITY = {
     "INITIALIZING": 0,
