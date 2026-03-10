@@ -206,8 +206,13 @@ namespace ServiceLayer.Services
 			{
 				throw new InvalidAcademicYear();
 			}
+			if (!string.IsNullOrEmpty(user!.ProfilePictureUrl))
+			{
+				await _fileStorageService.DeleteFileAsync(user!.ProfilePictureUrl);
+			}
 			user = request.Adapt(user);
 			user!.AcademicYear = academicYear;
+			
 			if (file is not null && file.Length > 0)
 			{
 				using var stream = file.OpenReadStream();
@@ -227,7 +232,8 @@ namespace ServiceLayer.Services
 			var result = await _userManager.ChangePasswordAsync(user!, request.CurrentPassword, request.NewPassword);
 			if (!result.Succeeded)
 			{
-				throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+				//throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+				throw new IdentityResultError(string.Join(", ", result.Errors.Select(e => e.Description)));
 			}
 		}
 
