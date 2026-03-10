@@ -4,6 +4,7 @@
 	{
 
 		Task<IEnumerable<CourseResponseDto>> GetAllCourseforDepartmentAsync(int departmentId);
+		Task<IEnumerable<CourseResponseDto>> GetAllStudentCourse(string UserId);
 		Task<IEnumerable<CourseResponseDto>> GetAllCourseAsync();
 		Task<FullCourseResponse> GetCourseByIdAsync(int departmentId, int courseId);
 		Task<CourseResponseDto> AddCourseAsync(int departmentId, CourseRequestDto request , IFormFile? ImageFile);

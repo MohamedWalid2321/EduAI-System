@@ -1,11 +1,17 @@
 ﻿using DomainLayer.Models;
+using ServiceLayer.Specifications.CourseSpecifications;
 
 namespace ServiceLayer.Services
 {
-	public class CourseService(IUnitOfWork unitOfWork,IFileStorageService fileStorageService) : ICourseService
+	public class CourseService(
+		IUnitOfWork unitOfWork,
+		IFileStorageService fileStorageService,
+		UserManager<ApplicationUser> userManager) : ICourseService
 	{
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
+		private readonly UserManager<ApplicationUser> _userManager = userManager;
+
 		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseforDepartmentAsync(int departmentId)
 		{
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
@@ -14,6 +20,22 @@ namespace ServiceLayer.Services
 			if (courses is null || !courses.Any())
 			{
 				throw new CoursesInDepartmentNotFoundException(departmentId);
+			}
+			return courses.Adapt<IEnumerable<CourseResponseDto>>();
+		}
+		public async Task<IEnumerable<CourseResponseDto>> GetAllStudentCourse(string UserId)
+		{
+			var user = await _userManager.FindByIdAsync(UserId);
+			if (user is null)
+			{
+				throw new UserNotFound(UserId);
+			}
+			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
+			var courseSpecification = new StudentCourseSpecification(user.DepartmentId,user.AcademicYear);
+			var courses = await CourseRepository.GetAllAsync(courseSpecification);
+			if (courses is null || !courses.Any())
+			{
+				throw  new CoursesInDepartmentNotFoundException(user.DepartmentId??0);
 			}
 			return courses.Adapt<IEnumerable<CourseResponseDto>>();
 		}
