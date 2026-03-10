@@ -5,14 +5,31 @@ namespace PresentationLayer.Controllers
 {
 	public class CourseController(IServiceManager serviceManager): ApiControllerBase
 	{
-		[HttpGet("{departmentId}")]
+		//[HttpGet("{departmentId}")]
+		////[Cache(300)]
+		//public async Task<IActionResult> GetAllCourse(int departmentId)
+		//{
+		//	var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(departmentId);
+		//	return Ok(courses);
+
+		//}
+		[HttpGet("")]
+		[Authorize]
 		//[Cache(300)]
-		public async Task<IActionResult> GetAllCourse(int departmentId)
+		public async Task<IActionResult> GetAllCourseByDepartmentId()
 		{
-			var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(departmentId);
+			var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(User.GetDepartmentIdOrThrow());
 			return Ok(courses);
 
 		}
+		[HttpGet("StudenCourse")]
+		[Authorize]
+		public async Task<IActionResult> GetAllCourseForStudent()
+		{
+			var courses = await serviceManager.CourseService.GetAllStudentCourse(User.GetUserId()!);
+			return Ok(courses);
+		}
+
 		[HttpGet("All")]
 		public async Task<IActionResult> GetAllCourse()
 		{

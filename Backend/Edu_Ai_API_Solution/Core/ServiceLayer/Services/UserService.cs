@@ -17,9 +17,10 @@ namespace ServiceLayer.Services
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
 
-		public async Task<IEnumerable<UserResponse>> GetAllAsync() {
+		public async Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed=false) {
+			// Get all users who are not disabled and have confirmed their email
 			var users = await _userManager.Users
-			.Where(u => !u.IsDisabled)
+			.Where(u => !u.IsDisabled &&(u.EmailConfirmed || (IncludeNotConfirmed.HasValue && IncludeNotConfirmed.Value)))
 			.ToListAsync();
 
 			var userResponses = new List<UserResponse>();
@@ -60,23 +61,26 @@ namespace ServiceLayer.Services
 		{
 			var emailIsExists = await _userManager.Users.AnyAsync(x => x.Email == request.Email);
 
-			if (emailIsExists)
+			if (emailIsExists) 
 				throw new DuplicatedEmail(request.Email);
-			
-
+			var DepartmentRepository = _unitOfWork.GetRepository<Department, int>();
+			if (request.DepartmentId.HasValue && await DepartmentRepository.GetByIdAsync(request.DepartmentId.Value) is not { } department)
+			{
+				throw new DepartmentNotFoundException(request.DepartmentId.Value);
+			}
 			var allowedRoles = await _roleService.GetAllAsync();
 
 			if (request.Roles.Except(allowedRoles.Select(x => x.Name)).Any())
 				throw new InvalidRoles();
 
 			var user = request.Adapt<ApplicationUser>();
+			user.EnrolledAt = DateTime.UtcNow;
 
 			var result = await _userManager.CreateAsync(user, request.Password);
 
 			if (result.Succeeded)
 			{
 				await _userManager.AddToRolesAsync(user, request.Roles);
-
 				var response = (user, request.Roles).Adapt<UserResponse>();
 
 				return response;
@@ -98,9 +102,9 @@ namespace ServiceLayer.Services
 				throw new InvalidAcademicYear();
 			}
 			var DepartmentRepository = _unitOfWork.GetRepository<Department, int>();
-			if (await DepartmentRepository.GetByIdAsync(request.DepartmentId) is not { })
+			if (request.DepartmentId.HasValue && await DepartmentRepository.GetByIdAsync(request.DepartmentId.Value) is not { } department)
 			{
-				throw new DepartmentNotFoundException(request.DepartmentId);
+				throw new DepartmentNotFoundException(request.DepartmentId.Value);
 			}
 
 			var allowedRoles = await _roleService.GetAllAsync();

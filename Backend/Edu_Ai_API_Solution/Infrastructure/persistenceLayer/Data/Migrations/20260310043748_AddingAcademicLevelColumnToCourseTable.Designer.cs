@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260310043748_AddingAcademicLevelColumnToCourseTable")]
+    partial class AddingAcademicLevelColumnToCourseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -691,62 +694,6 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("Quizzes", (string)null);
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.QuizAttempt", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsSubmitted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuizCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuizId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("StudentId", "QuizId")
-                        .IsUnique();
-
-                    b.ToTable("QuizAttempts");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.QuizQuestion", b =>
                 {
                     b.Property<int>("Id")
@@ -790,49 +737,6 @@ namespace persistenceLayer.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("QuizQuestions", (string)null);
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.StudentAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuestionChoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuizAttemptId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuizQuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionChoiceId");
-
-                    b.HasIndex("QuizAttemptId");
-
-                    b.HasIndex("QuizQuestionId");
-
-                    b.ToTable("StudentAnswers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1598,23 +1502,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.QuizAttempt", b =>
-                {
-                    b.HasOne("DomainLayer.Models.Quiz", "Quiz")
-                        .WithMany("QuizAttempts")
-                        .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Quiz");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.QuizQuestion", b =>
                 {
                     b.HasOne("DomainLayer.Models.Quiz", "Quiz")
@@ -1624,33 +1511,6 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Quiz");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.StudentAnswer", b =>
-                {
-                    b.HasOne("DomainLayer.Models.QuestionChoices", "QuestionChoice")
-                        .WithMany()
-                        .HasForeignKey("QuestionChoiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.QuizAttempt", "QuizAttempt")
-                        .WithMany("StudentAnswers")
-                        .HasForeignKey("QuizAttemptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.QuizQuestion", "QuizQuestion")
-                        .WithMany()
-                        .HasForeignKey("QuizQuestionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("QuestionChoice");
-
-                    b.Navigation("QuizAttempt");
-
-                    b.Navigation("QuizQuestion");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1732,14 +1592,7 @@ namespace persistenceLayer.Data.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.Quiz", b =>
                 {
-                    b.Navigation("QuizAttempts");
-
                     b.Navigation("QuizQuestions");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.QuizAttempt", b =>
-                {
-                    b.Navigation("StudentAnswers");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuizQuestion", b =>

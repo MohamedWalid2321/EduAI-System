@@ -27,7 +27,7 @@ namespace ServiceLayer
         public IDepartmentService DepartmentService => _departmentService.Value;
 
         private readonly Lazy<ICourseService> _courseService =
-            new Lazy<ICourseService>(() => new Services.CourseService(_unitOfWork, _fileStorageService));
+            new Lazy<ICourseService>(() => new Services.CourseService(_unitOfWork, _fileStorageService,_userManager));
         public ICourseService CourseService => _courseService.Value;
 
         private readonly Lazy<IContentService> _contentService =
