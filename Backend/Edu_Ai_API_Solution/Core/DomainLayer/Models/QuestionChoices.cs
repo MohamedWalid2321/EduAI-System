@@ -10,8 +10,7 @@ namespace DomainLayer.Models
 	{
 		public string ChoiceText { get; set; }
 		public bool IsCorrect { get; set; }
-		// QuizQuestion RelationShip
-		public int QuizQuestionId { get; set; }
-		public QuizQuestion QuizQuestion { get; set; }
+		public int QuizQuestionId { get; set; } // QuizQuestion RelationShip
+        public QuizQuestion QuizQuestion { get; set; }
 	}
 }

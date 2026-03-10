@@ -14,5 +14,6 @@ namespace Shared.Dtos.QuizDto.Request
 		public DateTime ScheduledDate { get; set; } // when the quiz is scheduled to take place (New) ##
 		public TimeSpan Duration { get; set; } // duration of the quiz
 		public double TotalMarks { get; set; }
-	}
+		public bool IsActive { get; set; }  // indicates if the quiz is currently active or not
+    }
 }

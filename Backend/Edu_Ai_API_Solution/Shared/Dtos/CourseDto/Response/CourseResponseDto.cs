@@ -8,13 +8,13 @@ namespace Shared.Dtos.CourseDto.Response
 {
 	public class CourseResponseDto
 	{
+		public int Id { get; set; }
 		public string Title { get; set; } = null!;
 		public string Description { get; set; } = null!;
 		public string ImageUrl { get; set; } = null!;
 		public string semster { get; set; } = string.Empty;
 		public int Credit_Hour { get; set; }
-		public string CourseStatus { get; set; } = null!;
+		public bool IsPublished { get; set; }
 		public string LearningOutcomes { get; set; } = null!;
-		public AssesmentDto Assesment { get; set; } = null!;
 	}
 }

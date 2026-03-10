@@ -1,109 +1,68 @@
-﻿
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class QuizService(IUnitOfWork unitOfWork) : IQuizService
 	{
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-		public async Task<QuizResponseDto> AddQuestionToQuiz(int QuizId, ICollection<QuizQuestionDto> Questions)
-		{
-			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
-			var questionRepository = _unitOfWork.GetRepository<QuizQuestion, int>();
-			var choiceRepository = _unitOfWork.GetRepository<QuestionChoices, int>();
-
-			// Verify quiz exists
-			var quizEntity = await quizRepository.GetByIdAsync(QuizId);
-			if (quizEntity is null)
-			{
-				throw new QuizNotFoundException(QuizId);
-			}
-
-			foreach (var questionDto in Questions)
-			{
-				var questionEntity = new QuizQuestion
-				{
-					QuestionText = questionDto.QuestionText,
-					QuestionType = Enum.Parse<DomainLayer.Enums.QuestionTypes>(questionDto.QuestionType),
-					Marks = questionDto.Marks,
-					QuizId = QuizId,
-					QuestionChoices = new List<QuestionChoices>()
-				};
-
-				await questionRepository.AddAsync(questionEntity);
-				await _unitOfWork.SaveChangesAsync(); // Save to get the question ID
-
-				// Add question choices
-				if (questionDto.QuestionChoices != null && questionDto.QuestionChoices.Any())
-				{
-					foreach (var choiceDto in questionDto.QuestionChoices)
-					{
-						var choiceEntity = new QuestionChoices
-						{
-							ChoiceText = choiceDto.ChoiceText,
-							IsCorrect = choiceDto.IsCorrect,
-							QuizQuestionId = questionEntity.Id
-						};
-
-						await choiceRepository.AddAsync(choiceEntity);
-					}
-				}
-			}
-
-			await _unitOfWork.SaveChangesAsync();
-
-			// Reload quiz with questions and choices
-			var quizSpec = new QuizSpecification(QuizId);
-			var updatedQuiz = await quizRepository.GetByIdAsync(quizSpec);
-			return updatedQuiz!.Adapt<QuizResponseDto>();
-		}
-
-		public async Task<QuizResponseDto> CreateOrUpdateQuizAync(int CourseId, QuizRequestDto quizRequest)
-		{
-			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
-			var courseRepository = _unitOfWork.GetRepository<Course, int>();
+        public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizRequestDto quizRequest)
+        {
+            var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
+            var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			
-			// Verify course exists
-			var course = await courseRepository.GetByIdAsync(CourseId);
-			if (course is null)
-			{
-				throw new CourseNotFoundException(CourseId);
-			}
 
-			if (quizRequest.Id.HasValue && quizRequest.Id > 0)
-			{
-				// Update
-				var existingQuiz = await quizRepository.GetByIdAsync(quizRequest.Id.Value);
-				if (existingQuiz == null)
-				{
-					throw new QuizNotFoundException(quizRequest.Id.Value);
-				}
+            // Verify course exists
+            var course = await courseRepository.GetByIdAsync(CourseId);
+            if (course is null)
+            {
+                throw new CourseNotFoundException(CourseId);
+            }
 
-				// Update properties on tracked entity
-				existingQuiz.Title = quizRequest.Title;
-				existingQuiz.Description = quizRequest.Description;
-				existingQuiz.ScheduledDate = quizRequest.ScheduledDate;
-				existingQuiz.Duration = quizRequest.Duration;
-				existingQuiz.TotalMarks = quizRequest.TotalMarks;
-				existingQuiz.CourseId = CourseId;
+            if (quizRequest.Id.HasValue && quizRequest.Id > 0)
+            {
+                // Update
+                var existingQuiz = await quizRepository.GetByIdAsync(quizRequest.Id.Value);
+                if (existingQuiz == null)
+                {
+                    throw new QuizNotFoundException(quizRequest.Id.Value);
+                }
 
-				quizRepository.Update(existingQuiz);
-			}
-			else
-			{
-				// Create 
-				var quizEntity = quizRequest.Adapt<Quiz>();
-				quizEntity.CourseId = CourseId;
+                // Update properties on tracked entity
+                existingQuiz.Title = quizRequest.Title;
+                existingQuiz.Description = quizRequest.Description;
+                existingQuiz.ScheduledDate = quizRequest.ScheduledDate;
+                existingQuiz.Duration = quizRequest.Duration;
+                existingQuiz.TotalMarks = quizRequest.TotalMarks;
+                existingQuiz.CourseId = CourseId;
+				existingQuiz.IsActive = quizRequest.IsActive; // Ensure quiz is active when updated
+				existingQuiz.QuizCode = Guid.NewGuid()
+											.ToString("N")   
+											.Substring(0, 8)
+											.ToUpper();
+
+
+                quizRepository.Update(existingQuiz);
+            }
+            else
+            {
 				
-				await quizRepository.AddAsync(quizEntity);
-			}
-			
-			await _unitOfWork.SaveChangesAsync();
+                // Create 
+                var quizEntity = quizRequest.Adapt<Quiz>();
+				quizEntity.QuizCode = Guid.NewGuid()
+                                            .ToString("N")
+                                            .Substring(0, 8)
+                                            .ToUpper();
+                quizEntity.CourseId = CourseId;
 
-			// Reload with includes for the response
-			var quizSpec = new QuizSpecification(quizRequest.Id.HasValue && quizRequest.Id > 0 ? quizRequest.Id.Value : course.Quizzes?.LastOrDefault()?.Id ?? 0);
-			var updatedQuiz = await quizRepository.GetByIdAsync(quizSpec);
-			return updatedQuiz!.Adapt<QuizResponseDto>();
-		}
+                await quizRepository.AddAsync(quizEntity);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            // Reload with includes for the response
+            var quizSpec = new QuizSpecification(quizRequest.Id.HasValue && quizRequest.Id > 0 ? quizRequest.Id.Value : course.Quizzes?.LastOrDefault()?.Id ?? 0);
+            var updatedQuiz = await quizRepository.GetByIdAsync(quizSpec);
+            return updatedQuiz!.Adapt<QuizResponseDto>();
+        }
 
 		public async Task DeleteQuizAsync(int quizId)
 		{

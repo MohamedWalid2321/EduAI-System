@@ -223,7 +223,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGe3aeN4lenqDfX1shgVnAEMcZqC4qnJ9caQkc5Mna9jcuQF7K9Q54rkCdNGDoDXQQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGUHrTsfoNKHTFA2Enwl/+iugX67rtCVlv4lrgXYJbIKjApyLjERXoz7nMQkpBM5Hg==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -246,7 +246,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGmbmdjEHCLoPblShOhhHEPaFRq9OZBjWKqCb2xyKSo7ZU6gtdV9YFTY7wJ1lqdMuQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGeBqLesGxAGAoaHQZB/ldMkxLFIKakh+hj0JYFE2Sygl4EcfUzkjivYYcbc89bgBg==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -478,7 +478,7 @@ namespace persistenceLayer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CourseStatus")
+                    b.Property<int>("AcademicLevel")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -499,6 +499,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -561,31 +564,31 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1000,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1385),
+                            CreatedAt = new DateTime(2026, 3, 10, 6, 37, 47, 528, DateTimeKind.Local).AddTicks(4171),
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1001,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1449),
+                            CreatedAt = new DateTime(2026, 3, 10, 6, 37, 47, 528, DateTimeKind.Local).AddTicks(4219),
                             Title = "ElectricalEngineering"
                         },
                         new
                         {
                             Id = 1003,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1452),
+                            CreatedAt = new DateTime(2026, 3, 10, 6, 37, 47, 528, DateTimeKind.Local).AddTicks(4221),
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1004,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1455),
+                            CreatedAt = new DateTime(2026, 3, 10, 6, 37, 47, 528, DateTimeKind.Local).AddTicks(4223),
                             Title = "BiomedicalEngineering"
                         },
                         new
                         {
                             Id = 1002,
-                            CreatedAt = new DateTime(2026, 3, 1, 12, 38, 39, 555, DateTimeKind.Local).AddTicks(1457),
+                            CreatedAt = new DateTime(2026, 3, 10, 6, 37, 47, 528, DateTimeKind.Local).AddTicks(4224),
                             Title = "MechanicalEngineering"
                         });
                 });
@@ -623,7 +626,8 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizQuestionId");
+                    b.HasIndex("QuizQuestionId", "ChoiceText")
+                        .IsUnique();
 
                     b.ToTable("QuestionChoices", (string)null);
                 });
@@ -653,11 +657,18 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QuizCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ScheduledDate")
                         .HasColumnType("datetime2");
@@ -674,7 +685,66 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasIndex("CourseId");
 
+                    b.HasIndex("QuizCode")
+                        .IsUnique();
+
                     b.ToTable("Quizzes", (string)null);
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.QuizAttempt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSubmitted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QuizCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuizId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("StudentId", "QuizId")
+                        .IsUnique();
+
+                    b.ToTable("QuizAttempts");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuizQuestion", b =>
@@ -690,6 +760,9 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -713,9 +786,53 @@ namespace persistenceLayer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizId");
+                    b.HasIndex("QuizId", "QuestionText")
+                        .IsUnique();
 
                     b.ToTable("QuizQuestions", (string)null);
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.StudentAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionChoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuizAttemptId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuizQuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionChoiceId");
+
+                    b.HasIndex("QuizAttemptId");
+
+                    b.HasIndex("QuizQuestionId");
+
+                    b.ToTable("StudentAnswers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1481,6 +1598,23 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.QuizAttempt", b =>
+                {
+                    b.HasOne("DomainLayer.Models.Quiz", "Quiz")
+                        .WithMany("QuizAttempts")
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Quiz");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.QuizQuestion", b =>
                 {
                     b.HasOne("DomainLayer.Models.Quiz", "Quiz")
@@ -1490,6 +1624,33 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Quiz");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.StudentAnswer", b =>
+                {
+                    b.HasOne("DomainLayer.Models.QuestionChoices", "QuestionChoice")
+                        .WithMany()
+                        .HasForeignKey("QuestionChoiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.QuizAttempt", "QuizAttempt")
+                        .WithMany("StudentAnswers")
+                        .HasForeignKey("QuizAttemptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.QuizQuestion", "QuizQuestion")
+                        .WithMany()
+                        .HasForeignKey("QuizQuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("QuestionChoice");
+
+                    b.Navigation("QuizAttempt");
+
+                    b.Navigation("QuizQuestion");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1571,7 +1732,14 @@ namespace persistenceLayer.Data.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.Quiz", b =>
                 {
+                    b.Navigation("QuizAttempts");
+
                     b.Navigation("QuizQuestions");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.QuizAttempt", b =>
+                {
+                    b.Navigation("StudentAnswers");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuizQuestion", b =>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Exceptions.Course
 {
-    public sealed class CoursesInDepartmentNotFoundException(int id): NotFoundException($"Courses in Department with this Id : {id} is Not Found ")
+    public sealed class CoursesInDepartmentNotFoundException(int id): NotFoundException($"There is no Courses in Department with id :{id}")
     {
     }
 }

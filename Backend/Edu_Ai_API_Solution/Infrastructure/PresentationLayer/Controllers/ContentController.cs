@@ -16,25 +16,33 @@ namespace PresentationLayer.Controllers
 			[FromBody] ContentRequestDto contentDto)
 		{
 			var createdOrUpdatedContent = await serviceManager.ContentService
-				.CreateOrUpdateContentForCourse(courseId, contentDto);
+				.AddContentForCourse(courseId, contentDto);
 			return Ok(createdOrUpdatedContent);
 		}
-		
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteContent(int id)
+		[HttpPut("{ContentId}")]
+		public async Task<IActionResult> UpdateContent(int ContentId, [FromBody] ContentRequestDto contentDto)
 		{
-			await serviceManager.ContentService.DeleteContentAsync(id);
+			await serviceManager.ContentService.UpdateContentForCourse(ContentId, contentDto);
+			return Ok();
+		}
+
+		[HttpDelete("{ContentId}")]
+		public async Task<IActionResult> DeleteContent(int ContentId)
+		{
+			await serviceManager.ContentService.DeleteContentAsync(ContentId);
 			return Ok();
 		}
 		
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetContentById(int id)
+		[HttpGet("{ContentId}")]
+		public async Task<IActionResult> GetContentById(int ContentId)
 		{
-			var content = await serviceManager.ContentService.GetContentByIdAsync(id);
+			var content = await serviceManager.ContentService.GetContentByIdAsync(ContentId);
 			return Ok(content);
 		}
 		
 		[HttpPost("{contentId}/attachments")]
+		[RequestSizeLimit(524288000)] // 500 MB
+		[RequestFormLimits(MultipartBodyLengthLimit = 524288000)]
 		public async Task<IActionResult> AddAttachmentToContent(
 			int contentId, 
 			[FromForm] List<IFormFile?> attachmentFiles)

@@ -13,11 +13,11 @@ namespace DomainLayer.Models
 		public DateTime ScheduledDate { get; set; } // when the quiz is scheduled to take place (New) ##
 		public TimeSpan Duration { get; set; } // duration of the quiz
 		public double TotalMarks { get; set; } // total marks for the quiz
-		// Remark : I Want to add property IsActive to know if the quiz is currently active or not after handling the scheduling feature and the taking quiz feature
-		// Course RelationShip
-		public int CourseId { get; set; }
-		public Course Course { get; set; }
-		// QuizQuestion RelationShip
-		public ICollection<QuizQuestion> QuizQuestions { get; set; }
-	}
+		public bool IsActive { get; set; } = true; // indicates if the quiz is currently active or not
+		public string QuizCode { get; set; } = null!; // a unique code for the quiz that students can use to access it (New) ##
+        public int CourseId { get; set; }// Course RelationShip
+        public Course Course { get; set; }
+		public ICollection<QuizQuestion> QuizQuestions { get; set; }= [];// QuizQuestion RelationShip
+		public ICollection<QuizAttempt> QuizAttempts { get; set; } = []; // QuizAttempt RelationShip
+    }
 }

@@ -2,7 +2,8 @@ namespace DomainLayer.Enums
 {
     public enum AcademicYear
     {
-        First = 1,
+        Default = 0,
+		First = 1,
         Second = 2,
         Third = 3,
         Fourth = 4,
