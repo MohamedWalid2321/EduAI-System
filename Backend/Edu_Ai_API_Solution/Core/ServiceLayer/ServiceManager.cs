@@ -50,6 +50,11 @@ namespace ServiceLayer
             new Lazy<IQuizAttemptService>(() => new Services.QuizAttemptService(_unitOfWork));
         public IQuizAttemptService QuizAttemptService => quizAttemptService.Value;
 
+        private readonly Lazy<IAssignmentSubmissionService> assignmentSubmissionService =
+            new Lazy<IAssignmentSubmissionService>(() => new Services.AssignmentSubmissionService(_unitOfWork,_fileStorageService));
+
+        public IAssignmentSubmissionService AssignmentSubmissionService => assignmentSubmissionService.Value;
+
         private readonly Lazy<IAuthunticationService> _authunticationService =
             new Lazy<IAuthunticationService>(() => new Services.AuthService(
                 _userManager, 

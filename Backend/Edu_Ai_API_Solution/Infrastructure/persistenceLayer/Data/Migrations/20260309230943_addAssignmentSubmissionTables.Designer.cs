@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260309230943_addAssignmentSubmissionTables")]
+    partial class addAssignmentSubmissionTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +226,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIiFB2MMRioICyCw9URGQjRe/VIWTH9jsdjA6r9ZE9b4fmizB4nwt0TeXjs/cF7ZsA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENNMh62/kIldStfMGdXGdB/3NmA00Ttqc7MiXBAB8gQemRaK2MZ+PzbeAcAP3VQt0g==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -246,7 +249,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGGq+FLDC4gI/aE+akPn1bv6Ytf3FR0a7HQH0nwHdXnk9HkQMz66qy5Qo26EFgiI1w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHRyKkyofQ4GJIudjC97L6M/Fcb/gV49fkGS8OdZdUCC4fqTyvYMJ2EXmb0tNujCXA==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -417,9 +420,8 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
@@ -571,9 +573,6 @@ namespace persistenceLayer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AcademicLevel")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -657,75 +656,33 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1000,
-                            CreatedAt = new DateTime(2026, 3, 10, 11, 13, 20, 426, DateTimeKind.Local).AddTicks(4903),
-                            Title = "ComputerEngineering"
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(925),
+                            Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1001,
-                            CreatedAt = new DateTime(2026, 3, 10, 11, 13, 20, 426, DateTimeKind.Local).AddTicks(4955),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(943),
                             Title = "ElectricalEngineering"
                         },
                         new
                         {
                             Id = 1003,
-                            CreatedAt = new DateTime(2026, 3, 10, 11, 13, 20, 426, DateTimeKind.Local).AddTicks(4957),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(944),
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1004,
-                            CreatedAt = new DateTime(2026, 3, 10, 11, 13, 20, 426, DateTimeKind.Local).AddTicks(4958),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(945),
                             Title = "BiomedicalEngineering"
                         },
                         new
                         {
                             Id = 1002,
-                            CreatedAt = new DateTime(2026, 3, 10, 11, 13, 20, 426, DateTimeKind.Local).AddTicks(4959),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(946),
                             Title = "MechanicalEngineering"
                         });
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.InstructorCourse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AssignedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InstructorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.ToTable("InstructorCourse");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -1090,390 +1047,404 @@ namespace persistenceLayer.Data.Migrations
                         {
                             Id = 14,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:enrollInstructor",
+                            ClaimValue = "Department:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 15,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:unenrollInstructor",
+                            ClaimValue = "Department:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 16,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:read",
+                            ClaimValue = "Department:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 17,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:add",
+                            ClaimValue = "Department:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 18,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:update",
+                            ClaimValue = "questions:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 19,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:delete",
+                            ClaimValue = "questions:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 20,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "questions:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 21,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "questions:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 22,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "questions:solve",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 23,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:delete",
+                            ClaimValue = "users:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 24,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:solve",
+                            ClaimValue = "users:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 25,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:read",
+                            ClaimValue = "users:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 26,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:add",
+                            ClaimValue = "users:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 27,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:update",
+                            ClaimValue = "roles:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 28,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:delete",
+                            ClaimValue = "roles:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 29,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:read",
+                            ClaimValue = "roles:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 30,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:add",
+                            ClaimValue = "roles:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 31,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:update",
-                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
+                            ClaimValue = "Ass:read",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 32,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:delete",
-                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
+                            ClaimValue = "Ass:add",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 33,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
+                            ClaimValue = "Ass:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 34,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:add",
+                            ClaimValue = "Ass:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 35,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:update",
+                            ClaimValue = "Content:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 36,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:delete",
+                            ClaimValue = "Content:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 37,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:read",
+                            ClaimValue = "Content:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 38,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:add",
+                            ClaimValue = "Content:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 39,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:update",
+                            ClaimValue = "Course:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 40,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:delete",
+                            ClaimValue = "Course:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 41,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:read",
+                            ClaimValue = "Course:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 42,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:add",
+                            ClaimValue = "Course:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 43,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:update",
+                            ClaimValue = "Department:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 44,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:delete",
+                            ClaimValue = "Department:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 45,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:enrollInstructor",
+                            ClaimValue = "Department:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 46,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:unenrollInstructor",
+                            ClaimValue = "Department:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 47,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:read",
+                            ClaimValue = "questions:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 48,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "questions:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 49,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "questions:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 50,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "users:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 51,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:read",
+                            ClaimValue = "users:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 52,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "users:update",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 53,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:add",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "users:delete",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 54,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:update",
+                            ClaimValue = "Ass:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 55,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:delete",
+                            ClaimValue = "Ass:add",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 56,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:read",
+                            ClaimValue = "Ass:update",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 57,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:add",
+                            ClaimValue = "Ass:delete",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 58,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:update",
+                            ClaimValue = "Content:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 59,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:delete",
+                            ClaimValue = "Content:add",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 60,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:read",
+                            ClaimValue = "Content:update",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 61,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "Content:delete",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 62,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "Course:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 63,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "questions:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 64,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
-                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                            ClaimValue = "questions:add",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 65,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:solve",
-                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                            ClaimValue = "questions:update",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 66,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:read",
+                            ClaimValue = "Ass:read",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
                             Id = 67,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:read",
+                            ClaimValue = "Ass:solve",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
                             Id = 68,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "Content:read",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
                             Id = 69,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Course:read",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            ClaimType = "Permissions",
+                            ClaimValue = "questions:read",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 71,
                             ClaimType = "Permissions",
                             ClaimValue = "questions:solve",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
@@ -1719,25 +1690,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("PrerequisiteCourse");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.InstructorCourse", b =>
-                {
-                    b.HasOne("DomainLayer.Models.Course", "Course")
-                        .WithMany("InstructorCourses")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.ApplicationUser", "Instructor")
-                        .WithMany("InstructorCourses")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Instructor");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
                 {
                     b.HasOne("DomainLayer.Models.QuizQuestion", "QuizQuestion")
@@ -1866,11 +1818,6 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("InstructorCourses");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.Assignment", b =>
                 {
                     b.Navigation("AssignmentAttachments");
@@ -1895,8 +1842,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Assignments");
 
                     b.Navigation("Contents");
-
-                    b.Navigation("InstructorCourses");
 
                     b.Navigation("Quizzes");
                 });

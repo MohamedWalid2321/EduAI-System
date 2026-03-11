@@ -1,4 +1,3 @@
-
 namespace persistenceLayer.Data.Configurations
 {
 	public class AssignmentAttachmentConfiguration : IEntityTypeConfiguration<AssignmentAttachment>
