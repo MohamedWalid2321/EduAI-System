@@ -1,18 +1,34 @@
-﻿
-using DomainLayer.Models;
+﻿using DomainLayer.Models;
 
 namespace PresentationLayer.Controllers
 {
 	public class CourseController(IServiceManager serviceManager): ApiControllerBase
 	{
-		[HttpGet("{departmentId}")]
+		//[HttpGet("{departmentId}")]
+		////[Cache(300)]
+		//public async Task<IActionResult> GetAllCourse(int departmentId)
+		//{
+		//	var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(departmentId);
+		//	return Ok(courses);
+
+		//}
+		[HttpGet("")]
+		[Authorize]
 		//[Cache(300)]
-		public async Task<IActionResult> GetAllCourse(int departmentId)
+		public async Task<IActionResult> GetAllCourseByDepartmentId()
 		{
-			var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(departmentId);
+			var courses = await serviceManager.CourseService.GetAllCourseforDepartmentAsync(User.GetDepartmentIdOrThrow());
 			return Ok(courses);
 
 		}
+		[HttpGet("StudenCourse")]
+		[Authorize]
+		public async Task<IActionResult> GetAllCourseForStudent()
+		{
+			var courses = await serviceManager.CourseService.GetAllStudentCourse(User.GetUserId()!);
+			return Ok(courses);
+		}
+
 		[HttpGet("All")]
 		public async Task<IActionResult> GetAllCourse()
 		{
@@ -68,6 +84,37 @@ namespace PresentationLayer.Controllers
 			return Ok();
 		}
 
+		[HttpPost("{courseId}/instructors")]
+		[HasPermission(Permissions.EnrollInstructor)]
+		public async Task<IActionResult> EnrollInstructor(int courseId, [FromBody] EnrollInstructorRequest request)
+		{
+			var assignedBy = User.GetUserId()!;
+			var result = await serviceManager.CourseService.EnrollInstructorAsync(courseId, request.InstructorId, assignedBy);
+			return CreatedAtAction(nameof(GetCourseInstructors), new { courseId }, result);
+		}
 
+		[HttpDelete("{courseId}/instructors/{instructorId}")]
+		[HasPermission(Permissions.UnenrollInstructor)]
+		public async Task<IActionResult> UnenrollInstructor(int courseId, string instructorId)
+		{
+			await serviceManager.CourseService.UnenrollInstructorAsync(courseId, instructorId);
+			return NoContent();
+		}
+
+		[HttpGet("{courseId}/instructors")]
+		[HasPermission(Permissions.GetCourse)]
+		public async Task<IActionResult> GetCourseInstructors(int courseId)
+		{
+			var instructors = await serviceManager.CourseService.GetCourseInstructorsAsync(courseId);
+			return Ok(instructors);
+		}
+
+		[HttpGet("instructor/{instructorId}/courses")]
+		[HasPermission(Permissions.GetCourse)]
+		public async Task<IActionResult> GetInstructorCourses(string instructorId)
+		{
+			var courses = await serviceManager.CourseService.GetInstructorCoursesAsync(instructorId);
+			return Ok(courses);
+		}
 	}
 }

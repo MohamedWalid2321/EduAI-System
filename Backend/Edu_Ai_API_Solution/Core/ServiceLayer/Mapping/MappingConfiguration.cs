@@ -20,6 +20,8 @@ namespace ServiceLayer.Mapping
 			// Mapping Email To UserName in ApplicationUser
 			config.NewConfig<RegisterRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email);
+			config.NewConfig<ApplicationUser, UserProfileResponse>()
+				.Map(dest => dest.AcademicYear, src => src.AcademicYear.ToString());
 
 			config.NewConfig<(ApplicationUser user, IList<string> roles), UserResponse>()
 			.Map(dest => dest, src => src.user)
@@ -42,10 +44,12 @@ namespace ServiceLayer.Mapping
 					{
 						ChoiceText = answer,
 						IsCorrect = index == src.CorrectAnswerIndex
-					}).ToList()
+					}).ToList());
+			TypeAdapterConfig<ApplicationUser, InstructorsDetailsResponse>
+				.NewConfig()
+				.Map(dest => dest.FullName, src => $"Dr. {src.FirstName} {src.LastName}");
 
-    );
 
-        }
+		}
 	}
 }

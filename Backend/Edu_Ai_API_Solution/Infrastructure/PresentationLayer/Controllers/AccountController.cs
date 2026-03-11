@@ -16,20 +16,20 @@
 		public async Task<IActionResult> Info([FromForm]  UpdateUserProfileRequest request, IFormFile file)
 		{
 			await _serviceManager.UserService.UpdateUserProfileAsync(User.GetUserId()!, request,file);
-			return NoContent();
+			return Ok();
 		}
 		[HttpPut("change-password")]
 		public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
 		{
 			await _serviceManager.UserService.ChangePasswordAsync(User.GetUserId()!, request);
 
-			return  NoContent() ;
+			return  Ok() ;
 		}
-		[HttpPut("LevelUp/{id}")]
-		public async Task<IActionResult> LevelUp([FromRoute]string id)
+		[HttpPut("LevelUp")]
+		public async Task<IActionResult> LevelUp()
 		{
-			await _serviceManager.UserService.LevelUp(id);
-			return NoContent();
+			await _serviceManager.UserService.LevelUp(User.GetUserId()!);
+			return Ok();
 		}
 
 	}

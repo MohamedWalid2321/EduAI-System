@@ -12,7 +12,7 @@ namespace persistenceLayer.Data.Configurations
 		public void Configure(EntityTypeBuilder<Department> builder)
 		{
 			builder.HasData(
-				new Department { Id = DefaultDepartment.ComputerEngineeringId, Title = DefaultDepartment.CommunicationEngineering },
+				new Department { Id = DefaultDepartment.ComputerEngineeringId, Title = DefaultDepartment.ComputerEngineering },
 				new Department { Id = DefaultDepartment.ElectricalEngineeringId, Title = DefaultDepartment.ElectricalEngineering },
 				new Department { Id = DefaultDepartment.CommunicationEngineeringId, Title = DefaultDepartment.CommunicationEngineering },
 				new Department { Id = DefaultDepartment.BiomedicalEngineeringId, Title = DefaultDepartment.BiomedicalEngineering },
