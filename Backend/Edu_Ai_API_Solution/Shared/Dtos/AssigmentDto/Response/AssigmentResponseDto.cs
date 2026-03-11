@@ -13,6 +13,6 @@ namespace Shared.Dtos.AssigmentDto.Response
 		public string Description { get; set; } = null!;
 		public DateTime DueDate { get; set; }
 		public double TotalMarks { get; set; }
-		public ICollection<AssigmentAttachmentDto>? AssignmentAttachments { get; set; }
+		public ICollection<AssignmentAttachmentDto>? AssignmentAttachments { get; set; }
 	}
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260309230943_addAssignmentSubmissionTables")]
+    partial class addAssignmentSubmissionTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +226,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE26laMqnTbFmIfFFoTdnjFfaRTZkybzYjYkne+7LDr4O+PZ4d4via8R0dtuP5s/hQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENNMh62/kIldStfMGdXGdB/3NmA00Ttqc7MiXBAB8gQemRaK2MZ+PzbeAcAP3VQt0g==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -246,7 +249,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH0DITB+ukzPia/un4boCEL6/FYpNVOwSNJGAJ3AEVk80FcL0DmUa9NuAdtPXpFiNg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHRyKkyofQ4GJIudjC97L6M/Fcb/gV49fkGS8OdZdUCC4fqTyvYMJ2EXmb0tNujCXA==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
@@ -417,9 +420,8 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
@@ -654,31 +656,31 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1000,
-                            CreatedAt = new DateTime(2026, 3, 10, 2, 13, 19, 316, DateTimeKind.Local).AddTicks(4011),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(925),
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1001,
-                            CreatedAt = new DateTime(2026, 3, 10, 2, 13, 19, 316, DateTimeKind.Local).AddTicks(4030),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(943),
                             Title = "ElectricalEngineering"
                         },
                         new
                         {
                             Id = 1003,
-                            CreatedAt = new DateTime(2026, 3, 10, 2, 13, 19, 316, DateTimeKind.Local).AddTicks(4031),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(944),
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1004,
-                            CreatedAt = new DateTime(2026, 3, 10, 2, 13, 19, 316, DateTimeKind.Local).AddTicks(4031),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(945),
                             Title = "BiomedicalEngineering"
                         },
                         new
                         {
                             Id = 1002,
-                            CreatedAt = new DateTime(2026, 3, 10, 2, 13, 19, 316, DateTimeKind.Local).AddTicks(4032),
+                            CreatedAt = new DateTime(2026, 3, 10, 1, 9, 42, 537, DateTimeKind.Local).AddTicks(946),
                             Title = "MechanicalEngineering"
                         });
                 });
