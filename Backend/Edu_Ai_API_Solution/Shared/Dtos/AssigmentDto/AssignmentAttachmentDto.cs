@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Dtos.AssigmentDto
 {
-	public class AssigmentAttachmentDto
+	public class AssignmentAttachmentDto
 	{
 		public Guid Id { get; set; } // Added - needed to identify attachment
 		public string FileName { get; set; } = null!;

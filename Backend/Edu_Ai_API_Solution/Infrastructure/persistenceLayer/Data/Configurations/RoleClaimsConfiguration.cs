@@ -22,7 +22,6 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             });
         }
 
-        // Admin - All except Role Management
         var adminPermissions = new[]
         {
             // Assignment
@@ -30,13 +29,13 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             // Content
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
             // Course
-            Permissions.GetCourse, Permissions.AddCourse, Permissions.UpdateCourse, Permissions.DeleteCourse,
-            // Department
-            Permissions.GetDepartment, Permissions.AddDepartment, Permissions.UpdateDepartment, Permissions.DeleteDepartment,
+            Permissions.GetCourse, Permissions.AddCourse, Permissions.UpdateCourse, Permissions.DeleteCourse,Permissions.EnrollInstructor, Permissions.UnenrollInstructor,
+            // Department (ReadOnly)
+            Permissions.GetDepartment, 
             // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
-            // Users
-            Permissions.GetUsers, Permissions.AddUsers, Permissions.UpdateUsers, Permissions.DeleteUsers
+            // Users(ReadOnly)
+            Permissions.GetUsers,
             // Note: No Role permissions (GetRoles, AddRoles, UpdateRoles, DeleteRoles)
         };
 

@@ -18,6 +18,8 @@ namespace DomainLayer.Models
 		public Course Course { get; set; }
 		// AssignmentAttachment RelationShip
 		public ICollection<AssignmentAttachment> AssignmentAttachments { get; set; }
+        // AssignmentSubmission RelationShip
+		public ICollection<AssignmentSubmission> AssignmentSubmissions { get; set; }
 
-	}
+    }
 }

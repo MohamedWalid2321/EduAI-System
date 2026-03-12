@@ -1,5 +1,4 @@
-﻿
-using DomainLayer.Models;
+﻿using DomainLayer.Models;
 
 namespace PresentationLayer.Controllers
 {
@@ -85,6 +84,37 @@ namespace PresentationLayer.Controllers
 			return Ok();
 		}
 
+		[HttpPost("{courseId}/instructors")]
+		[HasPermission(Permissions.EnrollInstructor)]
+		public async Task<IActionResult> EnrollInstructor(int courseId, [FromBody] EnrollInstructorRequest request)
+		{
+			var assignedBy = User.GetUserId()!;
+			var result = await serviceManager.CourseService.EnrollInstructorAsync(courseId, request.InstructorId, assignedBy);
+			return CreatedAtAction(nameof(GetCourseInstructors), new { courseId }, result);
+		}
 
+		[HttpDelete("{courseId}/instructors/{instructorId}")]
+		[HasPermission(Permissions.UnenrollInstructor)]
+		public async Task<IActionResult> UnenrollInstructor(int courseId, string instructorId)
+		{
+			await serviceManager.CourseService.UnenrollInstructorAsync(courseId, instructorId);
+			return NoContent();
+		}
+
+		[HttpGet("{courseId}/instructors")]
+		[HasPermission(Permissions.GetCourse)]
+		public async Task<IActionResult> GetCourseInstructors(int courseId)
+		{
+			var instructors = await serviceManager.CourseService.GetCourseInstructorsAsync(courseId);
+			return Ok(instructors);
+		}
+
+		[HttpGet("instructor/{instructorId}/courses")]
+		[HasPermission(Permissions.GetCourse)]
+		public async Task<IActionResult> GetInstructorCourses(string instructorId)
+		{
+			var courses = await serviceManager.CourseService.GetInstructorCoursesAsync(instructorId);
+			return Ok(courses);
+		}
 	}
 }

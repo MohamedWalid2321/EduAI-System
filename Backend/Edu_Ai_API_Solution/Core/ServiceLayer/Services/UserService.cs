@@ -44,6 +44,16 @@ namespace ServiceLayer.Services
 
 			return userResponses;
 		}
+		public async Task<IEnumerable<InstructorsDetailsResponse>> GetAllInstructorByDepartmentIdAsync(int departmentId)
+		{
+			var instructors = await _userManager.GetUsersInRoleAsync(DefaultRoles.Instructor);
+			var filteredInstructors = instructors
+				.Where(i => i.DepartmentId == departmentId)
+				.ToList();
+			return filteredInstructors.Adapt<IEnumerable<InstructorsDetailsResponse>>();
+
+
+		}
 
 		public async Task<UserResponse> GetAsync(string id)
 		{
@@ -196,8 +206,13 @@ namespace ServiceLayer.Services
 			{
 				throw new InvalidAcademicYear();
 			}
+			if (!string.IsNullOrEmpty(user!.ProfilePictureUrl))
+			{
+				await _fileStorageService.DeleteFileAsync(user!.ProfilePictureUrl);
+			}
 			user = request.Adapt(user);
 			user!.AcademicYear = academicYear;
+			
 			if (file is not null && file.Length > 0)
 			{
 				using var stream = file.OpenReadStream();
@@ -217,7 +232,8 @@ namespace ServiceLayer.Services
 			var result = await _userManager.ChangePasswordAsync(user!, request.CurrentPassword, request.NewPassword);
 			if (!result.Succeeded)
 			{
-				throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+				//throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+				throw new IdentityResultError(string.Join(", ", result.Errors.Select(e => e.Description)));
 			}
 		}
 
@@ -232,5 +248,6 @@ namespace ServiceLayer.Services
 			return Convert.ToBase64String(memoryStream.ToArray());
 		}
 
+		
 	}
 }
