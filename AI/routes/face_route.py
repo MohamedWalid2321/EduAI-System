@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 import logging
 from functools import partial
 from typing import List, Optional
 
+import cv2
+import numpy as np
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, status
 from pydantic import BaseModel
 
@@ -32,23 +35,81 @@ def _get_fr():
     return _fr_instance
 
 
+# ---------------------------------------------------------------------------
+# Helper — decode a base64 (or data-URI) string to a BGR numpy array
+# ---------------------------------------------------------------------------
+def _b64_to_cv2(b64_string: str, label: str = "image") -> np.ndarray:
+    """Decode a base64 string to an OpenCV BGR image; raise 422 on failure."""
+    try:
+        if "," in b64_string:
+            b64_string = b64_string.split(",", 1)[1]
+        raw = base64.b64decode(b64_string)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Invalid base64 encoding for {label}.",
+        )
+    arr = np.frombuffer(raw, np.uint8)
+    img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    if img is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Could not decode {label} — unsupported or corrupt image.",
+        )
+    return img
+
+
 # ===========================================================================
-# ENROLL — compute & cache reference embedding(s) for a session (Edit 2)
+# ENROLL — base64 JSON  (primary — for .NET backend)
 # ===========================================================================
+class _EnrollBase64Request(BaseModel):
+    session_id: str
+    references: List[str]   # list of base64-encoded images
+
+
 @router.post(
     "/enroll",
     status_code=status.HTTP_200_OK,
-    summary="Enroll reference photo(s) for a session",
+    summary="Enroll reference photo(s) for a session (base64 JSON)",
 )
-async def enroll(
+async def enroll(body: _EnrollBase64Request):
+    """
+    Accepts a JSON body with a ``session_id`` and a list of base64-encoded
+    reference images.  Computes an averaged ArcFace embedding and caches it
+    in-memory.  Subsequent ``/verify`` calls for the same session skip
+    re-computation.
+    """
+    fr = _get_fr()
+
+    if not body.references:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, detail="references list is empty.")
+
+    images = [_b64_to_cv2(ref, label=f"reference[{i}]") for i, ref in enumerate(body.references)]
+
+    loop = asyncio.get_running_loop()
+    result = await loop.run_in_executor(
+        executor, partial(fr.enroll, body.session_id, images)
+    )
+
+    if not result.get("success"):
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, detail=result["error"])
+
+    return result
+
+
+# ===========================================================================
+# ENROLL — file upload  (testing — Postman / multipart form-data)
+# ===========================================================================
+@router.post(
+    "/enroll-file",
+    status_code=status.HTTP_200_OK,
+    summary="Enroll reference photo(s) for a session (file upload, testing)",
+)
+async def enroll_file(
     session_id: str = Form(..., description="Unique session identifier"),
     references: List[UploadFile] = File(..., description="One or more reference photos"),
 ):
-    """
-    Accepts one or more reference images + a ``session_id``.
-    Computes an averaged ArcFace embedding and caches it in-memory.
-    Subsequent ``/verify`` calls for the same session skip re-computation.
-    """
+    """File-upload variant of /enroll — kept for Postman testing."""
     fr = _get_fr()
 
     images = []
@@ -86,22 +147,50 @@ async def unenroll(
 
 
 # ===========================================================================
-# VERIFY — per-frame check against enrolled template (Edit 2 + 3)
+# VERIFY — base64 JSON  (primary — for .NET backend)
 # ===========================================================================
+class _VerifyBase64Request(BaseModel):
+    session_id: str
+    frame: str              # base64-encoded image
+
+
 @router.post(
     "/verify",
     status_code=status.HTTP_200_OK,
-    summary="Verify a frame against the enrolled session template",
+    summary="Verify a frame against the enrolled session template (base64 JSON)",
 )
-async def verify(
-    session_id: str = Form(..., description="Session ID from /enroll"),
-    frame: UploadFile = File(..., description="Current exam webcam frame"),
-):
+async def verify(body: _VerifyBase64Request):
     """
+    Accepts a JSON body with ``session_id`` and a base64-encoded ``frame``.
     Detection + FAS run on every call.
     FR embedding comparison runs only when the recognition interval has
     elapsed; between passes the last similarity is reused.
     """
+    fr = _get_fr()
+
+    frame_img = _b64_to_cv2(body.frame, label="frame")
+
+    loop = asyncio.get_running_loop()
+    result = await loop.run_in_executor(
+        executor, partial(fr.verify, body.session_id, frame_img)
+    )
+
+    return {"face_recognition": result}
+
+
+# ===========================================================================
+# VERIFY — file upload  (testing — Postman / multipart form-data)
+# ===========================================================================
+@router.post(
+    "/verify-file",
+    status_code=status.HTTP_200_OK,
+    summary="Verify a frame against the enrolled session template (file upload, testing)",
+)
+async def verify_file(
+    session_id: str = Form(..., description="Session ID from /enroll"),
+    frame: UploadFile = File(..., description="Current exam webcam frame"),
+):
+    """File-upload variant of /verify — kept for Postman testing."""
     fr = _get_fr()
 
     frame_bytes = await frame.read()
