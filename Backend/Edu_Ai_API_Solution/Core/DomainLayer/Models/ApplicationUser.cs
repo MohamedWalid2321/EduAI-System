@@ -13,7 +13,7 @@ namespace DomainLayer.Models
 		public string? FirstName { get; set; } = string.Empty;
 		public string? LastName { get; set; }= string.Empty;
 		public string? ProfilePictureUrl { get; set; } = string.Empty;
-		public string? ProfilePictureBase64 { get; set; } = string.Empty;
+		//public string? ProfilePictureBase64 { get; set; } = string.Empty;
 		public DateOnly DateOfBirth { get; set; }
 		public bool IsDisabled { get; set; }
 		public List<RefreshToken> RefreshTokens { get; set; } = [];

@@ -19,10 +19,6 @@ namespace persistenceLayer.Data.Configurations
 			builder.Property(u => u.ProfilePictureUrl)
 				.HasMaxLength(500)
 				.IsRequired(false);
-			// For very large base64 strings (SQL Server)
-			builder.Property(u => u.ProfilePictureBase64)
-				.HasColumnType("NVARCHAR(MAX)")
-				.IsRequired(false);
 			builder.HasOne(u => u.Department)
 				.WithMany(d => d.Users)
 				.HasForeignKey(u => u.DepartmentId)

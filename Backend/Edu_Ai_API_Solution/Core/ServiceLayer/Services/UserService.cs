@@ -222,7 +222,6 @@ namespace ServiceLayer.Services
 					$"Users/{user!.Email}",
 					file.ContentType);
 				user.ProfilePictureUrl = imagePath;
-				user.ProfilePictureBase64 = await ConvertFileToBase64Async(file);
 			}
 			await _userManager.UpdateAsync(user!);
 		}
