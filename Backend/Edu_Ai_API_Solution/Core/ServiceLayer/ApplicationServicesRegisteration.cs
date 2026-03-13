@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Hangfire;
+using Microsoft.Extensions.Hosting;
 using System.Net.Http;
 namespace ServiceLayer
 {
 	public static class ApplicationServicesRegisteration
 	{
-		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment environment)
+		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment environment,IConfiguration configuration)
 		{
 			// Add application services registrations here
 			services.AddHttpClient<IFileStorageService, BunnyNetService>(client =>
@@ -26,7 +27,8 @@ namespace ServiceLayer
 			});
 
 			services.AddScoped<IServiceManager, ServiceManager>();
-			services.AddMapsterConf();
+			services.AddMapsterConf()
+				.AddBackgroundJobsConfig(configuration);
 
 			services.AddSingleton<IRedisService, RedisService>();
 			services.AddScoped<ICacheService, CacheService>();
@@ -43,6 +45,19 @@ namespace ServiceLayer
 			mappingConfig.Scan(Assembly.GetExecutingAssembly());
 
 			services.AddSingleton<IMapper>(new Mapper(mappingConfig));
+
+			return services;
+		}
+		private static IServiceCollection AddBackgroundJobsConfig(this IServiceCollection services,
+		IConfiguration configuration)
+		{
+			services.AddHangfire(config => config
+				.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+				.UseSimpleAssemblyNameTypeSerializer()
+				.UseRecommendedSerializerSettings()
+				.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection")));
+
+			services.AddHangfireServer();
 
 			return services;
 		}
