@@ -61,11 +61,12 @@ def create_app():
         allow_headers=["*"],
     )
 
-    from routes import object_router, gaze_router, face_router, new_object_route
-    application.include_router(object_router)
-    application.include_router(gaze_router)
-    application.include_router(face_router)
-    application.include_router(new_object_route)
+    from routes import speech_router#, gaze_router, object_router, face_router, new_object_route
+    application.include_router(speech_router)
+    # application.include_router(object_router)
+    # application.include_router(gaze_router)
+    # application.include_router(face_router)
+    # application.include_router(new_object_route)
 
     @application.get("/health", tags=["Health"])
     async def health_check():
