@@ -1,5 +1,6 @@
 ﻿
 
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using ServiceAbstractionLayer;
 using Shared.Constants;
@@ -322,10 +323,10 @@ namespace ServiceLayer.Services
 					{ "{{action_url}}", $"{origin}/Auth/emailConfrimation?userId={user.Id}&code={code}" }
 				}
 				);
-			await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Confirm your email", body);
+			//await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Confirm your email", body);
+			BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Confirm your email", body));
 			_logger.LogInformation("Confirmation email sent. UserId: {UserId}, Email: {Email}, ConfirmationCode: {ConfirmationCode}", user.Id, user.Email, code);
-
-
+			await Task.CompletedTask;
 		}
 		private async Task SendResetPasswordEmail(ApplicationUser user, string code)
 		{
@@ -339,8 +340,8 @@ namespace ServiceLayer.Services
 				}
 			);
 
-			await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Change Password", emailBody);
-
+			//await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Change Password", emailBody);
+			BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Change Password", emailBody));
 			await Task.CompletedTask;
 		}
 
