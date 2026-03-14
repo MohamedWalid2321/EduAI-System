@@ -15,5 +15,7 @@ namespace Shared.Dtos.CourseDto.Request
 		public int semster { get; set; }
 		public int Credit_Hour { get; set; }
 		public string LearningOutcomes { get; set; } = null!;
+		[Range(1,5)]
+		public int academicLevel { get; set; }
 	}
 }

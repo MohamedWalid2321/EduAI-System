@@ -36,6 +36,7 @@ namespace ServiceLayer
 			services.AddScoped<IAuthunticationService, AuthService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
+			services.AddScoped<IEnrollmentService, EnrollmentService>();
 			return services;
 		}
 		

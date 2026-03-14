@@ -1,10 +1,4 @@
-﻿using DomainLayer.Contracts;
-using Microsoft.AspNetCore.Mvc;
-using ServiceAbstractionLayer;
-using Shared.Constants;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class UserService(UserManager<ApplicationUser> userManager,
 		IRoleService roleService,
@@ -51,8 +45,6 @@ namespace ServiceLayer.Services
 				.Where(i => i.DepartmentId == departmentId)
 				.ToList();
 			return filteredInstructors.Adapt<IEnumerable<InstructorsDetailsResponse>>();
-
-
 		}
 
 		public async Task<UserResponse> GetAsync(string id)
@@ -125,6 +117,9 @@ namespace ServiceLayer.Services
 			if (await _userManager.FindByIdAsync(id) is not { } user)
 				throw new UserNotFound(id);
 
+			var originalDepartmentId = user.DepartmentId;
+			var originalAcademicYear = user.AcademicYear;
+
 			user = request.Adapt(user);
 			user.AcademicYear = academicYear;
 
@@ -139,6 +134,10 @@ namespace ServiceLayer.Services
 				}
 				await _userManager.AddToRolesAsync(user, request.Roles);
 
+			var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+
+			if (enrollmentDataChanged && user.DepartmentId.HasValue && user.AcademicYear.HasValue)
+				BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(id));
 				return ;
 			}
 
@@ -178,6 +177,7 @@ namespace ServiceLayer.Services
 
 			throw new IdentityResultError(error.Description);
 		}
+		// only for Students or any user who has AcademicYear and DepartmentId
 		public async Task LevelUp(string id)
 		{
 			if (await _userManager.FindByIdAsync(id) is not { } user)
@@ -187,7 +187,10 @@ namespace ServiceLayer.Services
 			user.AcademicYear += 1;
 			var result = await _userManager.UpdateAsync(user);
 			if (result.Succeeded)
+			{
+				BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(id));
 				return;
+			}
 			var error = result.Errors.First();
 			throw new IdentityResultError(error.Description);
 		}
@@ -202,14 +205,24 @@ namespace ServiceLayer.Services
 		public async Task UpdateUserProfileAsync(string userId, UpdateUserProfileRequest request, IFormFile? file)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
+			if ((!string.IsNullOrWhiteSpace(request.AcademicYear)) && (!await _userManager.IsInRoleAsync(user!,DefaultRoles.Student)) ) {
+				throw new IsNotStudentException();
+			}
 			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
+			}
+			if (user!.IsDisabled) {
+				throw new DisabledUser(user.Email!);
 			}
 			if (!string.IsNullOrEmpty(user!.ProfilePictureUrl))
 			{
 				await _fileStorageService.DeleteFileAsync(user!.ProfilePictureUrl);
 			}
+
+			var originalDepartmentId = user.DepartmentId;
+			var originalAcademicYear = user.AcademicYear;
+
 			user = request.Adapt(user);
 			user!.AcademicYear = academicYear;
 			
@@ -224,6 +237,9 @@ namespace ServiceLayer.Services
 				user.ProfilePictureUrl = imagePath;
 			}
 			await _userManager.UpdateAsync(user!);
+		var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+		if (enrollmentDataChanged && (await _userManager.IsInRoleAsync(user!, DefaultRoles.Student)))
+			BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(userId));
 		}
 		public async Task ChangePasswordAsync(string userId, ChangePasswordRequest request)
 		{
@@ -235,18 +251,5 @@ namespace ServiceLayer.Services
 				throw new IdentityResultError(string.Join(", ", result.Errors.Select(e => e.Description)));
 			}
 		}
-
-
-		private async Task<string> ConvertFileToBase64Async(IFormFile file)
-		{
-			if (file == null || file.Length == 0)
-				return string.Empty;
-
-			using var memoryStream = new MemoryStream();
-			await file.CopyToAsync(memoryStream);
-			return Convert.ToBase64String(memoryStream.ToArray());
-		}
-
-		
 	}
 }
