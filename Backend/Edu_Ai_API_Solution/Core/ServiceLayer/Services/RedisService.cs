@@ -88,6 +88,55 @@
             }
         }
 
+        // Scans for all keys matching the given glob pattern and deletes them.
+        // Uses Redis SCAN to avoid blocking the server (safe for production).
+        // Pattern example: "/api/course|user:*" deletes all per-user course cache entries.
+        public async Task RemoveByPatternAsync(string pattern)
+        {
+            try
+            {
+                var cursor = "0";
+
+                do
+                {
+                    // POST with JSON body avoids URL path-segment encoding entirely.
+                    // %2F (encoded '/') in path segments is blocked by most HTTP infrastructure
+                    // (nginx, Cloudflare, etc.) as path-traversal protection, breaking SCAN.
+                    // JSON body carries the pattern as a plain string — no encoding issues.
+                    var commandJson = JsonSerializer.Serialize(
+                        new object[] { "SCAN", cursor, "MATCH", pattern, "COUNT", 100 });
+
+                    var content = new StringContent(commandJson, Encoding.UTF8, "application/json");
+                    var response = await _client.PostAsync(_baseUrl, content);
+                    response.EnsureSuccessStatusCode();
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    using var doc = JsonDocument.Parse(json);
+
+                    // result[0] = next cursor (Upstash returns integer, not string)
+                    // result[1] = array of matched keys
+                    var result = doc.RootElement.GetProperty("result");
+
+                    cursor = result[0].ValueKind == JsonValueKind.Number
+                        ? result[0].GetInt64().ToString()
+                        : result[0].GetString()!;
+
+                    foreach (var keyElement in result[1].EnumerateArray())
+                    {
+                        var key = keyElement.GetString();
+                        if (key != null)
+                            await RemoveKeyAsync(key);
+                    }
+                }
+                while (cursor != "0");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Redis SCAN/DEL exception: {ex.Message}");
+                throw;
+            }
+        }
+
         /// Stores a value in Redis with an optional expiration time (TTL).
 
         public async Task SetKeyAsync(string cacheKey, object cacheValue, TimeSpan? ttl = null)

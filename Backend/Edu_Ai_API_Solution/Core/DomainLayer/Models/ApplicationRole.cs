@@ -11,6 +11,6 @@ namespace DomainLayer.Models
 	{
 		public bool IsDefault { get; set; }
 		public bool IsDeleted { get; set; }
-
+		public bool IsEnrollable { get; set; } // Courses can be assigned to this role for enrollment purposes or not
 	}
 }

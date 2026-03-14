@@ -57,7 +57,7 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetAss, Permissions.AddAss, Permissions.UpdateAss, Permissions.DeleteAss,
             // Content - Full management
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
-            // Course - Read only
+            // Course - Read only + can be assigned to teach
             Permissions.GetCourse,
             // Questions/Quiz - Full management
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions
@@ -77,6 +77,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
         // Student - Read-only access + solve quiz and assignment
         var studentPermissions = new[]
         {
+            // Profile
+             Permissions.LevelUp,
             // Assignment - Read + Solve (submit)
             Permissions.GetAss,
             Permissions.SolveAss,

@@ -1,17 +1,4 @@
-﻿using DomainLayer.Exceptions.Roles;
-using Microsoft.AspNetCore.Identity;
-using Shared.Constants;
-using Shared.Dtos.RolesDto.Request;
-using Shared.Dtos.RolesDto.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class RoleService(RoleManager<ApplicationRole> roleManager ) : IRoleService
 	{

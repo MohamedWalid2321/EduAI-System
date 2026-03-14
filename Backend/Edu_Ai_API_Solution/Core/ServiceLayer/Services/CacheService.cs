@@ -17,6 +17,9 @@ namespace ServiceLayer.Services
         public Task RemoveAsync(string key)
             => _redis.RemoveKeyAsync(key);
 
+        public Task RemoveByPatternAsync(string pattern)
+            => _redis.RemoveByPatternAsync(pattern);
+
         public Task SetAsync(string key, object value, TimeSpan ttl)
             => _redis.SetKeyAsync(key, value, ttl);
     }

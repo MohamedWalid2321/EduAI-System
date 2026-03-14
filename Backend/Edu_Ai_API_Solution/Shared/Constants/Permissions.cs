@@ -9,6 +9,7 @@ namespace Shared.Constants
 	public static class Permissions
 	{
 		public static string Type { get; } = "Permissions";
+		public const string LevelUp = "Profile:levelUp";
 
 		public const string GetAss = "Ass:read";
 		public const string AddAss = "Ass:add";
@@ -22,6 +23,7 @@ namespace Shared.Constants
 		public const string DeleteContent = "Content:delete";
 
 		public const string GetCourse = "Course:read";
+		public const string GetAllCourses = "Course:readAll";
 		public const string AddCourse = "Course:add";
 		public const string UpdateCourse = "Course:update";
 		public const string DeleteCourse = "Course:delete";

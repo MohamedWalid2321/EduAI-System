@@ -10,7 +10,9 @@ namespace ServiceLayer.Mapping
 			// Configure CourseRequestDto to Course mapping with enum conversion
 			config.NewConfig<CourseRequestDto, Course>()
 				.Map(dest => dest.semster, src => src.semster)
-				.Map(dest => dest.IsPublished, src => true);
+				.Map(dest => dest.IsPublished, src => true)
+				.Map(dest => dest.AcademicLevel,src=> src.academicLevel);
+
 			TypeAdapterConfig<Course, FullCourseResponse>
 			.NewConfig()
 			.Map(dest => dest.Assesment, src => src.Assessments);

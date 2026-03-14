@@ -26,6 +26,7 @@
 			return  Ok() ;
 		}
 		[HttpPut("LevelUp")]
+		[HasPermission(Permissions.LevelUp)]
 		public async Task<IActionResult> LevelUp()
 		{
 			await _serviceManager.UserService.LevelUp(User.GetUserId()!);

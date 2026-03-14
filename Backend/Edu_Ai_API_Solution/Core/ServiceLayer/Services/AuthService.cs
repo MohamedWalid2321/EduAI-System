@@ -1,12 +1,4 @@
-﻿
-
-using Hangfire;
-using Microsoft.AspNetCore.Identity;
-using ServiceAbstractionLayer;
-using Shared.Constants;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class AuthService(UserManager<ApplicationUser> userManager,
 		SignInManager<ApplicationUser> signInManager,
@@ -133,7 +125,6 @@ namespace ServiceLayer.Services
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 			_logger.LogInformation("User registered successfully. UserId: {UserId}, Email: {Email}, ConfirmationCode: {ConfirmationCode}", user.Id, user.Email, code);
-		//TODO: Send confirmation email with the code
 			await SendConfirmationEmailAsync(user, code);
 
 
@@ -240,6 +231,7 @@ namespace ServiceLayer.Services
 				throw new Exception(error != null ? error.Description : "Email confirmation failed");
 			}
 			await _userManager.AddToRoleAsync(user, DefaultRoles.Student);
+		BackgroundJob.Enqueue<IEnrollmentService>(s => s.AutoEnrollAsync(user.Id));
 		}
 
 		public async Task ResendConfirmEmailAsync(ResendConfirmEmailRequest request)

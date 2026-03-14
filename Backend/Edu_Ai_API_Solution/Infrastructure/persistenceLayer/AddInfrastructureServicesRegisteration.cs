@@ -9,7 +9,10 @@ namespace persistenceLayer
 		{
 			services.AddDbContext<LmsDBContext>(options =>
 			{
-				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), sqlServerOptionsAction: sqlOptions =>
+				{
+					sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+				});
 			});
 			services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
 			services.AddScoped<IEmailSender, EmailService>();

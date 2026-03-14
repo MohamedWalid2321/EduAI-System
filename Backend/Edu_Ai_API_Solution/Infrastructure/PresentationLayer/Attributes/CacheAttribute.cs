@@ -78,7 +78,12 @@ namespace PresentationLayer.Attributes
         private static string GenerateCacheKey(HttpContext context)
         {
             var request = context.Request;
-            var keyBuilder = new StringBuilder(request.Path);
+            var keyBuilder = new StringBuilder(request.Path.ToString().ToLowerInvariant());
+
+            // Scope cache per authenticated user so users never receive each other's data
+            var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId != null)
+                keyBuilder.Append($"|user:{userId}");
 
             foreach (var query in request.Query.OrderBy(q => q.Key))
             {

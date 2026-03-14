@@ -51,3 +51,13 @@ global using Shared.Dtos.AuthDto.Response;
 
 global using Shared.Dtos.UserDto.Request;
 global using Shared.Dtos.UserDto.Response;
+
+global using Hangfire;
+global using ServiceLayer.Specifications.UserCourseSpecifications;
+
+global using Shared.Constants;
+
+global using DomainLayer.Exceptions.Roles;
+global using Shared.Dtos.RolesDto.Request;
+global using Shared.Dtos.RolesDto.Response;
+global using System.Security.Claims;

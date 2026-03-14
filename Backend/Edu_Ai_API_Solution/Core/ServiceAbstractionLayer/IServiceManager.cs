@@ -13,6 +13,7 @@
 		IQuestionService QuestionService { get; }
 		IQuizAttemptService QuizAttemptService { get; }
 		IAssignmentSubmissionService AssignmentSubmissionService { get; }
+		IEnrollmentService EnrollmentService { get; }
 
 
     }
