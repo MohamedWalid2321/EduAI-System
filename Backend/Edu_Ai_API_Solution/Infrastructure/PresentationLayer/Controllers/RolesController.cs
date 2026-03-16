@@ -58,5 +58,15 @@ namespace PresentationLayer.Controllers
 
 			return NoContent();
 		}
+		[HttpGet("permissions/all")]
+		public IActionResult GetAllPermissions()
+		{
+			var permissions = Permissions.GetAllPermissions()
+				.Where(p => p != null)
+				.OrderBy(p => p)
+				.ToList();
+
+			return Ok(new { count = permissions.Count, permissions });
+		}
 	}
 }

@@ -27,6 +27,7 @@ namespace PresentationLayer.Controllers
 
 			return Ok(result); 
 		}
+		[Authorize]
 		[HttpGet("{DepartmentId}/Instructors")]
 		public async Task<IActionResult> GetUsersByDepartmentId([FromRoute] int DepartmentId)
 		{
