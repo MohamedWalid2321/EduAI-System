@@ -24,6 +24,8 @@ namespace ServiceLayer.Mapping
 			.Map(dest => dest.UserName, src => src.Email);
 			config.NewConfig<ApplicationUser, UserProfileResponse>()
 				.Map(dest => dest.AcademicYear, src => src.AcademicYear.ToString());
+			config.NewConfig<RoleRequest, ApplicationRole>()
+				.Map(dest => dest.IsEnrollable, src => src.IsEnrollable);
 
 			config.NewConfig<(ApplicationUser user, IList<string> roles), UserResponse>()
 			.Map(dest => dest, src => src.user)

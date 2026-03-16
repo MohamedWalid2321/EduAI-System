@@ -11,6 +11,7 @@ namespace Shared.Dtos.RolesDto.Response
 		public string Id { get; set; } = string.Empty;
 		public string Name { get; set; } = string.Empty;
 		public bool IsDeleted { get; set; }
+		public bool IsEnrollable { get; set; }
 		public IList<string> Permissions { get; set; } = [];
 	}
 }
