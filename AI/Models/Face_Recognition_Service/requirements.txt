@@ -18,3 +18,4 @@ onnxruntime==1.16.3
 # Core dependencies
 numpy>=1.23.5,<1.25
 opencv-python==4.8.1.78
+upstash-redis

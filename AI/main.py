@@ -21,6 +21,18 @@ import time
 
 import modal
 
+# Face enrollment vectors in Redis expire after 3 hours by default.
+# Override by setting FACE_ENROLLMENT_TTL_SECONDS in the deployment environment.
+os.environ.setdefault("FACE_ENROLLMENT_TTL_SECONDS", "10800")
+
+# Modal secret used to inject Upstash Redis credentials at deploy/runtime.
+# Create it with:
+#   modal secret create eduai-upstash-redis \
+#       UPSTASH_REDIS_REST_URL=... \
+#       UPSTASH_REDIS_REST_TOKEN=...
+_upstash_secret_name = os.getenv("MODAL_UPSTASH_SECRET_NAME", "eduai-upstash-redis")
+_upstash_secret = modal.Secret.from_name(_upstash_secret_name)
+
 # ---------------------------------------------------------------------------
 # Path setup — ensure sub-packages can be imported
 # ---------------------------------------------------------------------------
@@ -61,12 +73,12 @@ def create_app():
         allow_headers=["*"],
     )
 
-    from routes import speech_router#, gaze_router, object_router, face_router, new_object_route
+    from routes import speech_router, gaze_router, object_router, face_router, new_object_route
     application.include_router(speech_router)
-    # application.include_router(object_router)
-    # application.include_router(gaze_router)
-    # application.include_router(face_router)
-    # application.include_router(new_object_route)
+    application.include_router(object_router)
+    application.include_router(gaze_router)
+    application.include_router(face_router)
+    application.include_router(new_object_route)
 
     @application.get("/health", tags=["Health"])
     async def health_check():
@@ -96,7 +108,12 @@ modal_image = (
 )
 
 
-@app.cls(image=modal_image, gpu="any", scaledown_window=600)
+@app.cls(
+    image=modal_image,
+    gpu="L40S",
+    scaledown_window=600,
+    secrets=[_upstash_secret],
+)
 class Proctoring:
     """Modal class that keeps models warm in memory between requests."""
 
