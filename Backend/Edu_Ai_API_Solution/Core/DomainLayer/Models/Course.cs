@@ -31,5 +31,7 @@ namespace DomainLayer.Models
 		// Quiz RelationShip
 		public ICollection<Quiz>? Quizzes { get; set; }
 		public ICollection<UserCourse> UserCourses { get; set; } = [];
+		// Lecture RelationShip
+		public ICollection<Lecture> Lectures { get; set; } = [];
 	}
 }
