@@ -4,6 +4,7 @@ global using DomainLayer.Exceptions.Assigment;
 global using DomainLayer.Exceptions.Content;
 global using DomainLayer.Exceptions.Course;
 global using DomainLayer.Exceptions.Department;
+global using DomainLayer.Exceptions.Lecture;
 global using DomainLayer.Exceptions.Quiz;
 global using DomainLayer.Models;
 global using Mapster;
@@ -15,6 +16,7 @@ global using ServiceLayer.Specifications.AssignmentSpecifications;
 global using ServiceLayer.Specifications.ContentSpecifications;
 global using ServiceLayer.Specifications.CourseSpecification;
 global using ServiceLayer.Specifications.DepartmentSpecification;
+global using ServiceLayer.Specifications.LectureSpecifications;
 global using ServiceLayer.Specifications.QuizSpecifications;
 global using Shared.Dtos;
 global using Shared.Dtos.AssigmentDto.Request;
@@ -24,6 +26,8 @@ global using Shared.Dtos.ContentDto.ContentRequest;
 global using Shared.Dtos.ContentDto.ContentResponse;
 global using Shared.Dtos.CourseDto.Request;
 global using Shared.Dtos.CourseDto.Response;
+global using Shared.Dtos.LectureDto.Request;
+global using Shared.Dtos.LectureDto.Response;
 global using Shared.Dtos.QuizDto;
 global using Shared.Dtos.QuizDto.Request;
 global using Shared.Dtos.QuizDto.Response;
@@ -40,7 +44,6 @@ global using MapsterMapper;
 global using Microsoft.Extensions.DependencyInjection;
 global using ServiceLayer.Services;
 global using System.Reflection;
-
 global using DomainLayer.Exceptions.User;
 global using Microsoft.AspNetCore.Identity.UI.Services;
 global using Microsoft.AspNetCore.WebUtilities;
@@ -48,15 +51,11 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging;
 global using Shared.Dtos.AuthDto.Request;
 global using Shared.Dtos.AuthDto.Response;
-
 global using Shared.Dtos.UserDto.Request;
 global using Shared.Dtos.UserDto.Response;
-
 global using Hangfire;
 global using ServiceLayer.Specifications.UserCourseSpecifications;
-
 global using Shared.Constants;
-
 global using DomainLayer.Exceptions.Roles;
 global using Shared.Dtos.RolesDto.Request;
 global using Shared.Dtos.RolesDto.Response;

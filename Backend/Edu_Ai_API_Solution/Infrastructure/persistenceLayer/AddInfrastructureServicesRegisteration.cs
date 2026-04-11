@@ -59,7 +59,8 @@ namespace persistenceLayer
 					ValidAudience = jwtSettings.Audience,
 					ValidateLifetime = true,
 					IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSettings.Key)),
-					ValidateIssuerSigningKey = true
+					ValidateIssuerSigningKey = true,
+					ClockSkew = TimeSpan.Zero
 				};
 			});
 
