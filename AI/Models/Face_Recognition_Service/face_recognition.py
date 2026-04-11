@@ -1,13 +1,13 @@
 """
 Face Recognition Module — Hybrid Approach
 ==========================================
-Detection:   InsightFace RetinaFace (via FaceAnalysis, detection-only mode)
+Detection:   Local SCRFD ONNX (shared FaceDetectionService)
 Recognition: ArcFace ONNX (w600k_r50.onnx) loaded directly with onnxruntime
 
 Why hybrid?
-  - InsightFace handles the complex RetinaFace box-decoding + landmark extraction.
+    - Local SCRFD handles box-decoding + 5-point landmark extraction.
   - Raw ONNX gives us full control over ArcFace inference, enables batching,
-    and avoids pulling the full buffalo_l recognition weights.
+        and keeps recognition independent from detection internals.
 
 Designed to run as a Modal-hosted FastAPI service (consumed via Postman / .NET backend).
 
@@ -109,13 +109,41 @@ def _ort_providers() -> list[str]:
     return providers
 
 
+def _resolve_fas_device(requested_device: str) -> str:
+    """Resolve requested FAS device, preferring CUDA when available."""
+    device = (requested_device or "").strip().lower()
+    if device in {"", "auto"}:
+        device = "cuda"
+
+    if device == "cuda":
+        try:
+            import torch
+        except Exception:
+            logger.warning("PyTorch import failed; falling back to CPU for FAS.")
+            return "cpu"
+
+        if torch.cuda.is_available():
+            return "cuda"
+
+        logger.warning(
+            "FAS requested CUDA but no CUDA device is available; falling back to CPU."
+        )
+        return "cpu"
+
+    if device == "cpu":
+        return "cpu"
+
+    logger.warning("Unsupported fas_device '%s'; falling back to CPU.", requested_device)
+    return "cpu"
+
+
 class FaceRecognition:
     """
     Hybrid Face Recognition for AI Proctoring.
 
     Pipeline
     --------
-    1. **Detection** — InsightFace ``FaceAnalysis`` (detection-only mode)
+     1. **Detection** — local SCRFD detector (shared service)
        returns bounding boxes + 5-point keypoints.
     2. **Alignment** — Affine warp to 112×112 using the 5-point landmarks.
     3. **Recognition** — ArcFace ONNX (``w600k_r50.onnx``) produces a
@@ -137,7 +165,7 @@ class FaceRecognition:
         Same as compare_faces but accepts base64-encoded images (for .NET).
     
     detect_faces(image: np.ndarray) -> list:
-        Run RetinaFace to detect faces and return bounding boxes + landmarks.
+        Run SCRFD to detect faces and return bounding boxes + landmarks.
     
     extract_embedding(image: np.ndarray, face) -> np.ndarray:
         Align and extract a 512-D ArcFace embedding from a detected face.
@@ -169,18 +197,18 @@ class FaceRecognition:
         arcface_onnx_path: str = DEFAULT_ARCFACE_ONNX_PATH,
         det_size: Tuple[int, int] = (640, 640),
         fas_weights_path: str | None = None,
-        fas_device: str = "cpu",
+        fas_device: str = "auto",
         recognition_interval: float = DEFAULT_RECOGNITION_INTERVAL,
         face_detector: FaceDetectionService | None = None,
     ):
         """
         Args:
             similarity_threshold: Min cosine similarity to accept a match (0–1).
-            detection_threshold:  Min confidence for the RetinaFace detector.
+            detection_threshold:  Min confidence for the SCRFD detector.
             arcface_onnx_path:    Path to the ArcFace ``.onnx`` weights file.
             det_size:             Detection input resolution ``(width, height)``.
             fas_weights_path:     Path to MiniFASNetV2 weights. ``None`` = auto-resolve.
-            fas_device:           Device for FAS inference (``'cpu'`` or ``'cuda'``).
+            fas_device:           Device for FAS inference (``'auto'``, ``'cpu'``, ``'cuda'``).
             recognition_interval: Legacy arg kept for backward compatibility.
             face_detector:        Optional shared face-detection service instance.
         """
@@ -218,7 +246,8 @@ class FaceRecognition:
                 "2.7_80x80_MiniFASNetV2.pth",
             )
         logger.info("Loading FAS model (MiniFASNetV2) …")
-        self._fas = FASModel(weights_path=fas_weights_path, device=fas_device)
+        resolved_fas_device = _resolve_fas_device(fas_device)
+        self._fas = FASModel(weights_path=fas_weights_path, device=resolved_fas_device)
         logger.info("FAS model ready  (%s)", fas_weights_path)
 
         # Rolling window of recent liveness scores for active-challenge logic
@@ -800,10 +829,10 @@ class FaceRecognition:
     # ==================================================================
     def _detect_faces(self, image: np.ndarray) -> List:
         """
-        Run RetinaFace on *image*.
+        Run SCRFD on *image*.
 
-        Returns a list of insightface ``Face`` objects that carry
-        ``.bbox``, ``.kps`` (5-point landmarks), and ``.det_score``.
+        Returns a list of face objects that carry ``.bbox``,
+        ``.kps`` (5-point landmarks), and ``.det_score``.
         """
         return self._face_detector.detect_faces(image)
 

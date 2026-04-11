@@ -91,6 +91,7 @@ def create_app():
 # Modal deployment
 # ---------------------------------------------------------------------------
 app = modal.App("eduai-proctoring")
+_modal_gpu = os.getenv("MODAL_GPU", "L4")
 
 modal_image = (
     modal.Image.debian_slim(python_version="3.10")
@@ -110,7 +111,7 @@ modal_image = (
 
 @app.cls(
     image=modal_image,
-    gpu="L40S",
+    gpu=_modal_gpu,
     scaledown_window=600,
     secrets=[_upstash_secret],
 )
@@ -140,9 +141,9 @@ class Proctoring:
 
         log.info("⏳ Loading Face Recognition model (hybrid + FAS)...")
         from Models.Face_Recognition_Service import FaceRecognition  # noqa: F401
-        # Instantiate once to warm up RetinaFace + ArcFace ONNX + MiniFASNetV2
-        FaceRecognition()
-        log.info("✅ Face Recognition loaded (RetinaFace + ArcFace ONNX + MiniFASNetV2 FAS)")
+        # Instantiate once to warm up SCRFD + ArcFace ONNX + MiniFASNetV2
+        FaceRecognition(fas_device=os.getenv("FACE_FAS_DEVICE", "auto"))
+        log.info("✅ Face Recognition loaded (SCRFD + ArcFace ONNX + MiniFASNetV2 FAS)")
 
         log.info("🚀 All models preloaded — container is warm!")
 
