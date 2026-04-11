@@ -44,6 +44,7 @@ namespace persistenceLayer.Auth
 					ValidateIssuerSigningKey = true,
 					ValidateIssuer = false,
 					ValidateAudience = false,
+					ValidateLifetime = false,
 					ClockSkew = TimeSpan.Zero
 				}, out SecurityToken validatedToken);
 				var jwtToken = (JwtSecurityToken)validatedToken;
