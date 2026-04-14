@@ -6,7 +6,7 @@ using ServiceLayer.Specifications.LectureSpecifications;
 
 namespace ServiceLayer.Services
 {
-	public class LectureService(IUnitOfWork unitOfWork, IConfiguration configuration,UserManager<ApplicationUser> userManager) : ILectureService
+	public class LectureService(IUnitOfWork unitOfWork, IConfiguration configuration, UserManager<ApplicationUser> userManager) : ILectureService
 	{
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -106,12 +106,15 @@ namespace ServiceLayer.Services
 			if (!lecture.IsActive)
 				throw new LectureNotActiveException(lectureId);
 
-			
-			var user = await _userManager.FindByIdAsync(userId);
-
-			var displayName = user is not null
-				? $"{user.FirstName} {user.LastName}".Trim()
+			// Resolve the joining user's display name
+			var joiningUser = await _userManager.FindByIdAsync(userId);
+			var displayName = joiningUser is not null
+				? $"{joiningUser.FirstName} {joiningUser.LastName}".Trim()
 				: "Student";
+
+			// Resolve the room creator — their email is the Jitsi moderator identity
+			var creator = await _userManager.FindByIdAsync(lecture.CreatedById);
+			var moderatorEmail = creator?.Email ?? string.Empty;
 
 			return new LectureJoinResponse
 			{
@@ -119,11 +122,12 @@ namespace ServiceLayer.Services
 				RoomName = lecture.RoomName,
 				JitsiDomain = _jitsiDomain,
 				DisplayName = displayName,
-				JitsiUrl = $"https://{_jitsiDomain}/{lecture.RoomName}"
+				JitsiUrl = $"https://{_jitsiDomain}/{lecture.RoomName}",
+				ModeratorEmail = moderatorEmail
 			};
 		}
 
-		// Generates a deterministic, URL-safe unique room name per course+lecture
+		// Generates a URL-safe unique room name per course + lecture title
 		private static string GenerateRoomName(int courseId, string title)
 		{
 			var sanitized = new string(title
@@ -132,7 +136,7 @@ namespace ServiceLayer.Services
 				.ToArray())
 				.Replace(' ', '-');
 
-			return $"lumino-course{courseId}-{sanitized}-{Guid.NewGuid():N}";
+			return $"lumina-course{courseId}-{sanitized}-{Guid.NewGuid():N}";
 		}
 	}
 }

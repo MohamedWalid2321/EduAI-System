@@ -8,7 +8,7 @@ namespace Shared.Dtos.QuizDto.Response
 {
     public class QuestionChoiceResponseDto
     {
-        //public int Id { get; set; }
+        public int Id { get; set; }
 
         public string ChoiceText { get; set; }
 
