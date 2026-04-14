@@ -41,12 +41,17 @@
 				.Map(dest => dest.NormalizedUserName, src => src.Email.ToUpper());
 
 			config.NewConfig<QuestionRequestDto, QuizQuestion>()
+				.Map(dest => dest.QuestionType, src => (QuestionTypes)src.QuestionType)
 				.Map(dest => dest.QuestionChoices, src => src.QuestionChoices
 					.Select((answer, index) => new QuestionChoices
 					{
 						ChoiceText = answer,
 						IsCorrect = index == src.CorrectAnswerIndex
 					}).ToList());
+
+			config.NewConfig<QuizQuestion, QuestionResponseDto>()
+				.Map(dest => dest.QuestionType, src => src.QuestionType.ToString());
+
 			TypeAdapterConfig<ApplicationUser, InstructorsDetailsResponse>
 				.NewConfig()
 				.Map(dest => dest.FullName, src => $"Dr. {src.FirstName} {src.LastName}");

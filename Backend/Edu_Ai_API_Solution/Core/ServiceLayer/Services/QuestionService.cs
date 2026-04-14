@@ -22,12 +22,11 @@ namespace ServiceLayer.Services
             {
                 throw new QuizNotFoundException(quizId);
             }
-
             var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText);
 
             //check the duplicate of question in the same quiz
             var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications);
-            if (count>0)
+            if (count > 0)
             {
                 throw new QuestionAlreadyExistsException(questionRequest.QuestionText);
             }
@@ -115,7 +114,6 @@ namespace ServiceLayer.Services
                 throw new QuestionNotFoundException(questionRequest.Id);
             }
 
-            
             var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText);
             //check the duplicate of question in the same quiz
             var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications);
@@ -146,10 +144,9 @@ namespace ServiceLayer.Services
                 throw new InvalidCorrectAnswerIndexException();
             }
 
-            var questionEntityToUpdate = await QuestionRepository.GetByIdAsync(questionSpecifications);
-            questionEntityToUpdate.QuestionText = questionRequest.QuestionText;
-            questionEntityToUpdate.QuestionType = Enum.Parse<DomainLayer.Enums.QuestionTypes>(questionRequest.QuestionType);
-            questionEntityToUpdate.Marks = questionRequest.Marks;
+            questionEntity.QuestionText = questionRequest.QuestionText;
+            questionEntity.QuestionType = (QuestionTypes)questionRequest.QuestionType;
+            questionEntity.Marks = questionRequest.Marks;
 
             questionEntity.QuestionChoices.Clear();
             questionEntity.QuestionChoices = questionRequest.QuestionChoices
@@ -159,7 +156,7 @@ namespace ServiceLayer.Services
                     IsCorrect = index == questionRequest.CorrectAnswerIndex
                 }).ToList();
 
-            QuestionRepository.Update(questionEntityToUpdate);
+            QuestionRepository.Update(questionEntity);
             await _unitOfWork.SaveChangesAsync();
             return questionEntity.Adapt<QuestionResponseDto>();
 
