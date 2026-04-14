@@ -63,11 +63,11 @@ namespace ServiceLayer.Services
                 Questions = quizEntity.QuizQuestions
                                     .Select(q => new QuestionForStudentDto
                                     {
-                                        //Id = q.Id,
+                                        Id = q.Id,
                                         QuestionText = q.QuestionText,
                                         Choices = q.QuestionChoices.Select(c => new ChoiceDto
                                         {
-                                            //Id = c.Id,
+                                            Id = c.Id,
                                             ChoiceText = c.ChoiceText
                                         }).ToList()
                                     }).ToList()
