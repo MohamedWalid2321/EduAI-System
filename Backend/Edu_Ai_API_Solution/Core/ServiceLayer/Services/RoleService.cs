@@ -21,6 +21,7 @@
 				Id = role.Id,
 				Name = role.Name!,
 				IsDeleted = role.IsDeleted,
+				IsEnrollable = role.IsEnrollable,
 				Permissions = permissions.Select(x => x.Value).ToList()
 			};
 
@@ -43,6 +44,7 @@
 			var role = new ApplicationRole
 			{
 				Name = request.Name,
+				IsEnrollable= request.IsEnrollable,
 				ConcurrencyStamp = Guid.NewGuid().ToString()
 			};
 
@@ -60,6 +62,7 @@
 					Id = role.Id,
 					Name = role.Name!,
 					IsDeleted = role.IsDeleted,
+					IsEnrollable = role.IsEnrollable,
 					Permissions = request.Permissions.Distinct().ToList()
 				};
 
