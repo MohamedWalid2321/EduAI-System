@@ -14,9 +14,9 @@ namespace PresentationLayer.Controllers
 
 		[HttpGet("")]
 		[HasPermission(Permissions.GetUsers)]
-		public async Task<IActionResult> GetAll([FromQuery] bool IncludeNotConfirmed)
+		public async Task<IActionResult> GetAll([FromQuery] bool IncludeNotConfirmed, [FromQuery] bool includeDisabled)
 		{
-			return Ok(await _serviceManager.UserService.GetAllAsync(IncludeNotConfirmed));
+			return Ok(await _serviceManager.UserService.GetAllAsync(IncludeNotConfirmed, includeDisabled));
 		}
 
 		[HttpGet("{id}")]

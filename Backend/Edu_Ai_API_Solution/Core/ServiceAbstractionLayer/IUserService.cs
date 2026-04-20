@@ -3,7 +3,7 @@ namespace ServiceAbstractionLayer
 {
 	public interface IUserService
 	{
-		Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed = false);
+		Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed = false, bool? includeDisabled = false);
 		Task<IEnumerable<InstructorsDetailsResponse>> GetAllInstructorByDepartmentIdAsync(int departmentId);
 		Task<UserResponse> GetAsync(string id);
 		Task<UserResponse> AddAsync(CreateUserRequest request);
