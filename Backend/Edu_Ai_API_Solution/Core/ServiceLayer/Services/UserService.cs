@@ -11,10 +11,11 @@
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
 
-		public async Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed=false) {
-			// Get all users who are not disabled and have confirmed their email
+		public async Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed=false, bool? includeDisabled = false) {
+			// if includeDisabled is false or null, exclude disabled users, otherwise include them
+			// if IncludeNotConfirmed is false or null, exclude not confirmed users, otherwise include them
 			var users = await _userManager.Users
-			.Where(u => !u.IsDisabled &&(u.EmailConfirmed || (IncludeNotConfirmed.HasValue && IncludeNotConfirmed.Value)))
+			.Where(u =>	!(u.IsDisabled && !(includeDisabled.HasValue && includeDisabled.Value)) && (u.EmailConfirmed || (IncludeNotConfirmed.HasValue && IncludeNotConfirmed.Value)))
 			.ToListAsync();
 
 			var userResponses = new List<UserResponse>();
