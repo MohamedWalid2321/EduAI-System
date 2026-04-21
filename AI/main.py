@@ -32,7 +32,7 @@ os.environ.setdefault("FACE_ENROLLMENT_TTL_SECONDS", "10800")
 #       UPSTASH_REDIS_REST_TOKEN=...
 _upstash_secret_name = os.getenv("MODAL_UPSTASH_SECRET_NAME", "eduai-upstash-redis")
 _upstash_secret = modal.Secret.from_name(_upstash_secret_name)
-##
+
 # ---------------------------------------------------------------------------
 # Path setup — ensure sub-packages can be imported
 # ---------------------------------------------------------------------------
