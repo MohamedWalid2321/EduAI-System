@@ -134,10 +134,10 @@ class Proctoring:
         from Models.objectDetectionYolo.objectDetection import yoloDetect  # noqa: F401        
         log.info("✅ YOLO loaded")
 
-        log.info("⏳ Loading OWL-ViT model...")
-        from Models.objectDetectionOWL_VIT.main_detect import load_owl_vit  # noqa: F401
-        load_owl_vit()
-        log.info("✅ OWL-ViT loaded")
+        # log.info("⏳ Loading OWL-ViT model...")
+        # from Models.objectDetectionOWL_VIT.main_detect import load_owl_vit  # noqa: F401
+        # load_owl_vit()
+        # log.info("✅ OWL-ViT loaded")
 
         #speech detection doesn't require a heavy model load, so we skip preloading it.
 
@@ -146,16 +146,16 @@ class Proctoring:
         log.info("✅ Eye Gaze loaded")
 
 
-        log.info("⏳ Loading Face Detection model...")
-        from Models.FaceDetection.face_detection import FaceDetectionService  # noqa: F401
-        FaceDetectionService()
-        log.info("✅ Face Detection loaded")
+        # log.info("⏳ Loading Face Detection model...")
+        # from Models.FaceDetection.face_detection import FaceDetectionService  # noqa: F401
+        # FaceDetectionService()
+        # log.info("✅ Face Detection loaded")
 
 
-        log.info("⏳ Loading Face Anti-Spoofing model (MiniFASNetV2)...")
-        from Models.FaceAntiSpoofing.fas import FaceAntiSpoofingService  # noqa: F401
-        FaceAntiSpoofingService()
-        log.info("✅ Face Anti-Spoofing loaded (MiniFASNetV2)")
+        # log.info("⏳ Loading Face Anti-Spoofing model (MiniFASNetV2)...")
+        # from Models.FaceAntiSpoofing.fas import FaceAntiSpoofingService  # noqa: F401
+        # FaceAntiSpoofingService()
+        # log.info("✅ Face Anti-Spoofing loaded (MiniFASNetV2)")
 
 
         log.info("⏳ Loading Face Recognition model (hybrid + FAS)...")
