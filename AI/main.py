@@ -25,13 +25,46 @@ import modal
 # Override by setting FACE_ENROLLMENT_TTL_SECONDS in the deployment environment.
 os.environ.setdefault("FACE_ENROLLMENT_TTL_SECONDS", "10800")
 
-# Modal secret used to inject Upstash Redis credentials at deploy/runtime.
-# Create it with:
+# Optional Modal secret used to inject Upstash Redis credentials.
+# Create a named secret with:
 #   modal secret create eduai-upstash-redis \
 #       UPSTASH_REDIS_REST_URL=... \
 #       UPSTASH_REDIS_REST_TOKEN=...
+#
+# Secret attach modes (MODAL_ATTACH_UPSTASH_SECRET):
+#   - disabled (default): do not attach any Modal secret
+#   - true/required: attach named secret and fail fast if missing
+#   - auto: attach transient secret from local env vars if they exist
 _upstash_secret_name = os.getenv("MODAL_UPSTASH_SECRET_NAME", "eduai-upstash-redis")
-_upstash_secret = modal.Secret.from_name(_upstash_secret_name)
+_upstash_secret_mode = os.getenv("MODAL_ATTACH_UPSTASH_SECRET", "disabled").strip().lower()
+_upstash_secret = None
+
+if _upstash_secret_mode in {"1", "true", "yes", "on", "required"}:
+    _upstash_secret = modal.Secret.from_name(_upstash_secret_name)
+elif _upstash_secret_mode == "auto":
+    _upstash_rest_url = os.getenv("UPSTASH_REDIS_REST_URL", "").strip()
+    _upstash_rest_token = os.getenv("UPSTASH_REDIS_REST_TOKEN", "").strip()
+    if _upstash_rest_url and _upstash_rest_token:
+        _upstash_secret = modal.Secret.from_dict(
+            {
+                "UPSTASH_REDIS_REST_URL": _upstash_rest_url,
+                "UPSTASH_REDIS_REST_TOKEN": _upstash_rest_token,
+            }
+        )
+    else:
+        print(
+            "[modal] Upstash secret auto mode is enabled but env vars are missing; "
+            "continuing without Modal secret attachment."
+        )
+        _upstash_secret = None
+elif _upstash_secret_mode not in {"0", "false", "no", "off", "disabled"}:
+    print(
+        f"[modal] Unknown MODAL_ATTACH_UPSTASH_SECRET='{_upstash_secret_mode}'. "
+        "Falling back to disabled mode."
+    )
+    _upstash_secret = None
+
+_modal_secrets = [_upstash_secret] if _upstash_secret is not None else []
 
 # ---------------------------------------------------------------------------
 # Path setup — ensure sub-packages can be imported
@@ -113,7 +146,7 @@ modal_image = (
     image=modal_image,
     gpu=_modal_gpu,
     scaledown_window=600,
-    secrets=[_upstash_secret],
+    secrets=_modal_secrets,
 )
 class Proctoring:
     """Modal class that keeps models warm in memory between requests."""
