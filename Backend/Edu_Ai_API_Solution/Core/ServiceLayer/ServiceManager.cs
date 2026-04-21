@@ -4,6 +4,7 @@ using ServiceAbstractionLayer;
 using DomainLayer.Contracts;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 
 namespace ServiceLayer
@@ -21,6 +22,7 @@ namespace ServiceLayer
 		IRoleService _roleService,
 		IUserService _userService,
 		IEnrollmentService _enrollmentService,
+		IConfiguration _configuration,
 		ILogger<AuthService> _authLogger) : IServiceManager
 	{
 		private readonly Lazy<IDepartmentService> _departmentService =
@@ -54,6 +56,10 @@ namespace ServiceLayer
 		private readonly Lazy<IAssignmentSubmissionService> assignmentSubmissionService =
 			new Lazy<IAssignmentSubmissionService>(() => new Services.AssignmentSubmissionService(_unitOfWork, _fileStorageService));
 		public IAssignmentSubmissionService AssignmentSubmissionService => assignmentSubmissionService.Value;
+
+		private readonly Lazy<ILectureService> _lectureService =
+			new Lazy<ILectureService>(() => new Services.LectureService(_unitOfWork, _configuration,_userManager));
+		public ILectureService LectureService => _lectureService.Value;
 
 		private readonly Lazy<IAuthunticationService> _authunticationService =
 			new Lazy<IAuthunticationService>(() => new Services.AuthService(

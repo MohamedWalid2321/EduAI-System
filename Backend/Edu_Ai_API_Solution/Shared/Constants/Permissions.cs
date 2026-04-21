@@ -55,7 +55,11 @@ namespace Shared.Constants
 		public const string UpdateRoles = "roles:update";
 		public const string DeleteRoles = "roles:delete";
 
-		//public const string Results = "results:read";
+		// Lecture Permissions
+		public const string CreateLecture = "Lecture:create";
+		public const string UpdateLecture = "Lecture:update";
+		public const string DeleteLecture = "Lecture:delete";
+		public const string JoinLecture = "Lecture:join";
 
 		public static IList<string?> GetAllPermissions() =>
 			typeof(Permissions).GetFields().Select(x => x.GetValue(x) as string).ToList();

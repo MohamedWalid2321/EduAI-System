@@ -1,13 +1,13 @@
 ﻿using Hangfire;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
+
 namespace ServiceLayer
 {
 	public static class ApplicationServicesRegisteration
 	{
-		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment environment,IConfiguration configuration)
+		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment environment, IConfiguration configuration)
 		{
-			// Add application services registrations here
 			services.AddHttpClient<IFileStorageService, BunnyNetService>(client =>
 			{
 				client.Timeout = TimeSpan.FromMinutes(40);
@@ -22,7 +22,6 @@ namespace ServiceLayer
 					handler.CheckCertificateRevocationList = false;
 					handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 				}
-				
 				return handler;
 			});
 
@@ -37,18 +36,18 @@ namespace ServiceLayer
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
 			services.AddScoped<IEnrollmentService, EnrollmentService>();
+			services.AddScoped<ILectureService, LectureService>();
 			return services;
 		}
-		
+
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)
 		{
 			var mappingConfig = TypeAdapterConfig.GlobalSettings;
 			mappingConfig.Scan(Assembly.GetExecutingAssembly());
-
 			services.AddSingleton<IMapper>(new Mapper(mappingConfig));
-
 			return services;
 		}
+
 		private static IServiceCollection AddBackgroundJobsConfig(this IServiceCollection services,
 		IConfiguration configuration)
 		{
@@ -59,7 +58,6 @@ namespace ServiceLayer
 				.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection")));
 
 			services.AddHangfireServer();
-
 			return services;
 		}
 	}
