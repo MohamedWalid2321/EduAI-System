@@ -91,6 +91,7 @@ def create_app():
 # Modal deployment
 # ---------------------------------------------------------------------------
 app = modal.App("eduai-proctoring")
+_modal_gpu = os.getenv("MODAL_GPU", "L4")
 
 modal_image = (
     modal.Image.debian_slim(python_version="3.10")
@@ -110,7 +111,7 @@ modal_image = (
 
 @app.cls(
     image=modal_image,
-    gpu="L40S",
+    gpu=_modal_gpu,
     scaledown_window=600,
     secrets=[_upstash_secret],
 )

@@ -103,14 +103,14 @@ class FASModel:
 
         self.model = MiniFASNetV2(conv6_kernel=_KERNEL)
 
-        state_dict = torch.load(weights_path, map_location=self.device, weights_only=True)
+        state_dict = torch.load(weights_path, map_location=self.device, weights_only=True)#weights_only=True to avoid unnecessary optimizer state loading and speed up loading time
         # Handle weights saved with DataParallel ('module.' prefix)
         first_key = next(iter(state_dict))
         if first_key.startswith("module."):
             state_dict = OrderedDict(
                 (k[7:], v) for k, v in state_dict.items()
             )
-        self.model.load_state_dict(state_dict)
+        self.model.load_state_dict(state_dict) #
         self.model.eval().to(self.device)
 
         logger.info("FASModel (MiniFASNetV2) loaded from %s (device=%s)",
@@ -123,7 +123,7 @@ class FASModel:
 
         Args:
             image: Full BGR frame (numpy array).
-            bbox:  Face bounding box **[x1, y1, x2, y2]** from InsightFace.
+            bbox:  Face bounding box **[x1, y1, x2, y2]** from the detector.
                    If ``None``, the whole image is treated as a face crop and
                    simply resized to 80×80 (useful for pre-cropped test images).
 
@@ -132,7 +132,7 @@ class FASModel:
             *score* ∈ [0, 1] is the real-face probability.
         """
         if bbox is not None:
-            # Convert InsightFace [x1, y1, x2, y2] → [x, y, w, h]
+            # Convert [x1, y1, x2, y2] → [x, y, w, h]
             x1, y1, x2, y2 = bbox.astype(int) if hasattr(bbox, "astype") else list(map(int, bbox))
             bbox_xywh = [x1, y1, x2 - x1, y2 - y1]
             face_patch = _cropper.crop(
