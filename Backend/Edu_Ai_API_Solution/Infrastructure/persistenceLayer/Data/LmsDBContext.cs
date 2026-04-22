@@ -1,5 +1,6 @@
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Http;
+using System.Linq.Expressions;
 
 namespace persistenceLayer.Data
 {
@@ -25,10 +26,29 @@ namespace persistenceLayer.Data
 		{
 			base.OnModelCreating(modelBuilder);
 			modelBuilder.ApplyConfigurationsFromAssembly(typeof(LmsDBContext).Assembly);
+			foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+			{
+				if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+				{
+					modelBuilder.Entity(entityType.ClrType)
+						.HasQueryFilter(BuildIsDeletedFilter(entityType.ClrType));
+				}
+			}
 		}
+
+		private static LambdaExpression BuildIsDeletedFilter(Type entityType)
+		{
+			var param = Expression.Parameter(entityType, "e");
+			var body = Expression.Equal(
+				Expression.Property(param, nameof(BaseEntity.IsDeleted)),
+				Expression.Constant(false)
+			);
+			return Expression.Lambda(body, param);
+		}
+
 		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
-			var entries = ChangeTracker.Entries<BaseEntity>(); 
+			var entries = ChangeTracker.Entries<BaseEntity>();
 			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
 			foreach (var entry in entries)
@@ -41,6 +61,8 @@ namespace persistenceLayer.Data
 				{
 					entry.Entity.LastUpdatedBy = userId;
 					entry.Entity.LastUpdatedAt = DateTime.UtcNow;
+					if (entry.Entity.IsDeleted && entry.Entity.DeletedAt.HasValue)
+						entry.Entity.DeletedBy = userId;
 				}
 			}
 

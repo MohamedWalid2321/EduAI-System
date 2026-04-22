@@ -12,6 +12,9 @@ namespace DomainLayer.Models
 		public DateTime? LastUpdatedAt { get; set; }
 		public string? CreatedBy { get; set; }
 		public string? LastUpdatedBy { get; set; }
+		public bool IsDeleted { get; set; } = false;       
+		public DateTime? DeletedAt { get; set; }
+		public string? DeletedBy { get; set; }
 	}
 
 	public class BaseEntity<Tkey> : BaseEntity
