@@ -17,9 +17,6 @@ namespace DomainLayer.Models
 		public bool IsPublished { get; set; } = false;
 		public AcademicYear AcademicLevel { get; set; }
 		public String LearningOutcomes { get; set; } = null!;
-		// Self RelationShip
-		public int? PrerequisiteCourseId { get; set; }
-		public Course? PrerequisiteCourse { get; set; }
 		// Department RelationShip
 		public ICollection<Department> Departments { get; set; } = [];
 		// Assessment RelationShip
