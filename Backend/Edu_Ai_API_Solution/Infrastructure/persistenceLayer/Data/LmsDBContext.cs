@@ -1,7 +1,12 @@
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Http;
+
 namespace persistenceLayer.Data
 {
-	public class LmsDBContext(DbContextOptions<LmsDBContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
+	public class LmsDBContext(DbContextOptions<LmsDBContext> options, IHttpContextAccessor httpContextAccessor) : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
 	{
+		private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+
 		public DbSet<Department> Departments { get; set; }
 		public DbSet<Course> Courses { get; set; }
 		public DbSet<Assessment> Assessments { get; set; }
@@ -21,5 +26,26 @@ namespace persistenceLayer.Data
 			base.OnModelCreating(modelBuilder);
 			modelBuilder.ApplyConfigurationsFromAssembly(typeof(LmsDBContext).Assembly);
 		}
+		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+		{
+			var entries = ChangeTracker.Entries<BaseEntity>(); 
+			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+			foreach (var entry in entries)
+			{
+				if (entry.State == EntityState.Added)
+				{
+					entry.Entity.CreatedBy = userId;
+				}
+				else if (entry.State == EntityState.Modified)
+				{
+					entry.Entity.LastUpdatedBy = userId;
+					entry.Entity.LastUpdatedAt = DateTime.UtcNow;
+				}
+			}
+
+			return base.SaveChangesAsync(cancellationToken);
+		}
+
 	}
 }
