@@ -22,6 +22,8 @@ using StackExchange.Redis;
 using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
 using HangfireBasicAuthenticationFilter;
+using System.Diagnostics;
+
 namespace Edu_Ai_API
 {
     public class Program
@@ -158,8 +160,9 @@ namespace Edu_Ai_API
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-
+            
             app.Run();
+            
         }
     }
 }

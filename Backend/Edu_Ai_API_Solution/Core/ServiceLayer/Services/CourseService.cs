@@ -56,6 +56,18 @@ namespace ServiceLayer.Services
 		}
 
 		public async Task<IEnumerable<CourseResponseDto>> GetUserEnrolledCoursesAsync(string userId)
+				throw new UserNotFound(UserId);
+			}
+			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
+			var courseSpecification = new StudentCourseSpecification(user.DepartmentId,user.AcademicYearEnum);
+			var courses = await CourseRepository.GetAllAsync(courseSpecification);
+			if (courses is null || !courses.Any())
+			{
+				throw  new CoursesInDepartmentNotFoundException(user.DepartmentId??0);
+			}
+			return courses.Adapt<IEnumerable<CourseResponseDto>>();
+		}
+		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseAsync()
 		{
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new UserNotFound(userId);

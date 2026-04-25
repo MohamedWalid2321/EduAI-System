@@ -21,9 +21,20 @@ router = APIRouter(prefix="/analysis", tags=["Face Recognition"])
 
 # ---------------------------------------------------------------------------
 # Singleton FaceRecognition instance — shared across requests so that the
-# enrollment cache and FR-gate state persist for the container's lifetime.
+# local enrollment cache persists for the container's lifetime.
 # ---------------------------------------------------------------------------
 _fr_instance = None
+_fd_instance = None
+
+
+def _get_fd():
+    """Return (and lazily create) the shared FaceDetectionService instance."""
+    global _fd_instance
+    if _fd_instance is None:
+        from Models.FaceDetection import FaceDetectionService
+
+        _fd_instance = FaceDetectionService()
+    return _fd_instance
 
 
 def _get_fr():
@@ -31,7 +42,8 @@ def _get_fr():
     global _fr_instance
     if _fr_instance is None:
         from Models.Face_Recognition_Service import FaceRecognition
-        _fr_instance = FaceRecognition()
+
+        _fr_instance = FaceRecognition(face_detector=_get_fd())
     return _fr_instance
 
 
@@ -75,9 +87,9 @@ class _EnrollBase64Request(BaseModel):
 async def enroll(body: _EnrollBase64Request):
     """
     Accepts a JSON body with a ``session_id`` and a list of base64-encoded
-    reference images.  Computes an averaged ArcFace embedding and caches it
-    in-memory.  Subsequent ``/verify`` calls for the same session skip
-    re-computation.
+    reference images. Computes an averaged ArcFace embedding and stores it in
+    Upstash Redis (when configured), while also caching locally for speed.
+    Subsequent ``/verify`` calls for the same session skip re-computation.
     """
     fr = _get_fr()
 
@@ -154,6 +166,11 @@ class _VerifyBase64Request(BaseModel):
     frame: str              # base64-encoded image
 
 
+class _FaceDetectionBase64Request(BaseModel):
+    session_id: str
+    frame: str              # base64-encoded image
+
+
 @router.post(
     "/verify",
     status_code=status.HTTP_200_OK,
@@ -163,8 +180,7 @@ async def verify(body: _VerifyBase64Request):
     """
     Accepts a JSON body with ``session_id`` and a base64-encoded ``frame``.
     Detection + FAS run on every call.
-    FR embedding comparison runs only when the recognition interval has
-    elapsed; between passes the last similarity is reused.
+    FR embedding comparison runs on every call.
     """
     fr = _get_fr()
 
@@ -176,6 +192,63 @@ async def verify(body: _VerifyBase64Request):
     )
 
     return {"face_recognition": result}
+
+
+# ===========================================================================
+# FACE DETECTION ONLY — base64 JSON  (primary — for .NET backend)
+# ===========================================================================
+@router.post(
+    "/face-detection",
+    status_code=status.HTTP_200_OK,
+    summary="Face detection only (base64 JSON)",
+)
+async def face_detection(body: _FaceDetectionBase64Request):
+    """
+    Detect faces in a single frame and return a lightweight evidence payload.
+
+    Evidence values:
+    - One face detected
+    - no_face_detected
+    - multiple_faces
+    """
+    fd = _get_fd()
+
+    frame_img = _b64_to_cv2(body.frame, label="frame")
+
+    loop = asyncio.get_running_loop()
+    result = await loop.run_in_executor(
+        executor,
+        partial(fd.analyze_frame, frame_img, body.session_id),
+    )
+
+    return result
+
+
+# ===========================================================================
+# FACE DETECTION ONLY — file upload  (testing — Postman / multipart form-data)
+# ===========================================================================
+@router.post(
+    "/face-detection-file",
+    status_code=status.HTTP_200_OK,
+    summary="Face detection only (file upload, testing)",
+)
+async def face_detection_file(
+    session_id: str = Form(..., description="Unique session identifier"),
+    frame: UploadFile = File(..., description="Current exam webcam frame"),
+):
+    """File-upload variant of /face-detection — kept for Postman testing."""
+    fd = _get_fd()
+
+    frame_bytes = await frame.read()
+    frame_img = bytes_to_cv2(frame_bytes, label="frame")
+
+    loop = asyncio.get_running_loop()
+    result = await loop.run_in_executor(
+        executor,
+        partial(fd.analyze_frame, frame_img, session_id),
+    )
+
+    return result
 
 
 # ===========================================================================

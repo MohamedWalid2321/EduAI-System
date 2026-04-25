@@ -14,7 +14,7 @@ namespace ServiceLayer.Specifications.CourseSpecification
 			AddInclude(c => c.Assessments);
 			AddInclude(c => c.Departments);
 		}
-		public CourseSpecification(int? departmentId, AcademicYear academicYear) : base(c => c.Departments.Any(d => d.Id == departmentId) && c.AcademicLevel == academicYear)
+		public CourseSpecification(int? departmentId, AcademicYearEnum academicYear) : base(c => c.Departments.Any(d => d.Id == departmentId) && c.AcademicLevel == academicYear)
 		{
 			AddInclude(c => c.Assessments);
 			AddInclude(c => c.Departments);

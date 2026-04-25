@@ -14,7 +14,8 @@ namespace persistenceLayer
 					sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 				});
 			});
-			services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
+            services.Configure<PaymentSettings>(configuration.GetSection(nameof(PaymentSettings)));
+            services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
 			services.AddScoped<IEmailSender, EmailService>();
 			services.AddScoped<IEmailBodyBuilder, EmailBodyBuilder>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();

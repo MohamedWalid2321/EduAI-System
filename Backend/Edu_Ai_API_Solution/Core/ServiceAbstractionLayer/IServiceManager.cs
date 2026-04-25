@@ -12,10 +12,13 @@ namespace ServiceAbstractionLayer
 		IQuestionService QuestionService { get; }
 		IQuizAttemptService QuizAttemptService { get; }
 		IAssignmentSubmissionService AssignmentSubmissionService { get; }
-		IAuthunticationService AuthunticationService { get; }
-		IRoleService RoleService { get; }
-		IUserService UserService { get; }
-		IEnrollmentService EnrollmentService { get; }
-		ILectureService LectureService { get; }
-	}
+		IAcademicYearService AcademicYearService { get; }
+		IFeesService FeesService { get; }
+
+		IPaymentService PaymentService { get; }
+
+        IPaymobService PaymentGateway { get; }
+
+
+    }
 }

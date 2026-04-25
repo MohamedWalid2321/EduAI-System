@@ -37,6 +37,35 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("CourseDepartment");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.AcademicYear", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AcademicYear", (string)null);
+                });
+
             modelBuilder.Entity("DomainLayer.Models.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -120,7 +149,10 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AcademicYear")
+                    b.Property<int?>("AcademicYearEnum")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AcademicYearId")
                         .HasColumnType("int");
 
                     b.Property<int>("AccessFailedCount")
@@ -215,6 +247,7 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = "585c8473-10ce-4377-8407-1f64655876c1",
+                            AcademicYearId = 0,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "7d47a4bf-ded7-4642-83fd-7b16df7ac368",
                             DateOfBirth = new DateOnly(1, 1, 1),
@@ -227,7 +260,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECabZUlAQHKtj7Dv9Q5bxDkMZroNP8XiFvnwjh9MHKEH5FzyQzEKgX0GskuJ65PHXA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOWZVo54O7t+j0m6vtcBTTF9ZYE0F8PDMvFfkTBcLVpPrcU8SyXaYxD1uMxwvVvtWg==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "",
                             SecurityStamp = "911889FEF7B44646B1E278C5C4F7C893",
@@ -237,6 +270,7 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = "6dc6528a-b280-4770-9eae-82671ee81ef7",
+                            AcademicYearId = 0,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "99d2bbc6-bc54-4248-a172-a77de3ae4430",
                             DateOfBirth = new DateOnly(1, 1, 1),
@@ -249,7 +283,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKepBIO259Rbyb2FVs6w2oj16wTDb88YTh8XNVuTFZUBX37nH2VyL7PdvZyzpX89hg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMPNEtSHlXRLP5XwNknrW6yQcQlJG9m99gozXg3cangkZ8gfZN6m9AiXMAXETC2dGQ==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "",
                             SecurityStamp = "55BF92C9EF0249CDA210D85D1A851BC9",
@@ -636,7 +670,7 @@ namespace persistenceLayer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AcademicLevel")
+                    b.Property<int?>("AcademicLevel")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -735,38 +769,71 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1000,
-                            CreatedAt = new DateTime(2026, 4, 22, 3, 47, 22, 757, DateTimeKind.Local).AddTicks(1475),
-                            IsDeleted = false,
+                            CreatedAt = new DateTime(2026, 4, 24, 21, 55, 25, 307, DateTimeKind.Local).AddTicks(7366),
                             Title = "ComputerEngineering"
                         },
                         new
                         {
                             Id = 1001,
-                            CreatedAt = new DateTime(2026, 4, 22, 3, 47, 22, 757, DateTimeKind.Local).AddTicks(1532),
-                            IsDeleted = false,
+                            CreatedAt = new DateTime(2026, 4, 24, 21, 55, 25, 307, DateTimeKind.Local).AddTicks(7390),
                             Title = "ElectricalEngineering"
                         },
                         new
                         {
                             Id = 1003,
-                            CreatedAt = new DateTime(2026, 4, 22, 3, 47, 22, 757, DateTimeKind.Local).AddTicks(1535),
-                            IsDeleted = false,
+                            CreatedAt = new DateTime(2026, 4, 24, 21, 55, 25, 307, DateTimeKind.Local).AddTicks(7391),
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1004,
-                            CreatedAt = new DateTime(2026, 4, 22, 3, 47, 22, 757, DateTimeKind.Local).AddTicks(1536),
-                            IsDeleted = false,
+                            CreatedAt = new DateTime(2026, 4, 24, 21, 55, 25, 307, DateTimeKind.Local).AddTicks(7392),
                             Title = "BiomedicalEngineering"
                         },
                         new
                         {
                             Id = 1002,
-                            CreatedAt = new DateTime(2026, 4, 22, 3, 47, 22, 757, DateTimeKind.Local).AddTicks(1537),
-                            IsDeleted = false,
+                            CreatedAt = new DateTime(2026, 4, 24, 21, 55, 25, 307, DateTimeKind.Local).AddTicks(7392),
                             Title = "MechanicalEngineering"
                         });
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Fee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Fee", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Lecture", b =>
@@ -830,6 +897,69 @@ namespace persistenceLayer.Data.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("Lecture");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -2025,7 +2155,28 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Content");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Lecture", b =>
+            modelBuilder.Entity("DomainLayer.Models.Course", b =>
+                {
+                    b.HasOne("DomainLayer.Models.Course", "PrerequisiteCourse")
+                        .WithMany()
+                        .HasForeignKey("PrerequisiteCourseId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("PrerequisiteCourse");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Fee", b =>
+                {
+                    b.HasOne("DomainLayer.Models.AcademicYear", "AcademicYear")
+                        .WithMany("Fees")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AcademicYear");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.InstructorCourse", b =>
                 {
                     b.HasOne("DomainLayer.Models.Course", "Course")
                         .WithMany("Lectures")
@@ -2042,6 +2193,23 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Payment", b =>
+                {
+                    b.HasOne("DomainLayer.Models.AcademicYear", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -2189,6 +2357,13 @@ namespace persistenceLayer.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.AcademicYear", b =>
+                {
+                    b.Navigation("Fees");
+
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.ApplicationUser", b =>

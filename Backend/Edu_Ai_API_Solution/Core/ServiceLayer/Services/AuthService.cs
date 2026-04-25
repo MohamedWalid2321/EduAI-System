@@ -84,7 +84,7 @@
 			{
 				throw new DuplicatedEmail(request.Email);
 			}
-			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
 			}
@@ -101,7 +101,7 @@
 				LastName = request.LastName,
 				DateOfBirth = request.DateOfBirth,
 				DepartmentId = request.DepartmentId,
-				AcademicYear = academicYear,
+                AcademicYearEnum = academicYear,
 				IsEnrolled = true,
 				EnrolledAt = DateTime.UtcNow
 			};

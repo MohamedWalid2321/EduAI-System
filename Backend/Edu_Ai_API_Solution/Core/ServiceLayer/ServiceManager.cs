@@ -28,6 +28,25 @@ namespace ServiceLayer
 		private readonly Lazy<IDepartmentService> _departmentService =
 			new Lazy<IDepartmentService>(() => new Services.DepartmentService(_unitOfWork));
 		public IDepartmentService DepartmentService => _departmentService.Value;
+    public class ServiceManager(
+        IUnitOfWork _unitOfWork,
+        IFileStorageService _fileStorageService,
+        UserManager<ApplicationUser> _userManager,
+        SignInManager<ApplicationUser> _signInManager,
+        RoleManager<ApplicationRole> _roleManager,
+        IJwtProvider _jwtProvider,
+        IEmailSender _emailSender,
+        IHttpContextAccessor _httpContextAccessor,
+        IEmailBodyBuilder _emailBodyBuilder,
+        IRoleService _roleService,  
+        IUserService _userService,
+        IPaymobService _paymentGateway,
+
+        ILogger<AuthService> _authLogger) : IServiceManager
+    {
+        private readonly Lazy<IDepartmentService> _departmentService =
+            new Lazy<IDepartmentService>(() => new Services.DepartmentService(_unitOfWork));
+        public IDepartmentService DepartmentService => _departmentService.Value;
 
 		private readonly Lazy<ICourseService> _courseService =
 			new Lazy<ICourseService>(() => new Services.CourseService(_unitOfWork, _fileStorageService, _userManager, _roleManager));
@@ -57,9 +76,26 @@ namespace ServiceLayer
 			new Lazy<IAssignmentSubmissionService>(() => new Services.AssignmentSubmissionService(_unitOfWork, _fileStorageService));
 		public IAssignmentSubmissionService AssignmentSubmissionService => assignmentSubmissionService.Value;
 
-		private readonly Lazy<ILectureService> _lectureService =
-			new Lazy<ILectureService>(() => new Services.LectureService(_unitOfWork, _configuration,_userManager));
-		public ILectureService LectureService => _lectureService.Value;
+        private readonly Lazy<IAcademicYearService> academicYearService =
+            new Lazy<IAcademicYearService>(()=>new Services.AcademicYearService(_unitOfWork));
+
+        public IAcademicYearService AcademicYearService => academicYearService.Value;
+
+        private readonly Lazy<IFeesService> feesService =
+            new Lazy<IFeesService>(() => new Services.FeesService(_unitOfWork));
+
+        public IFeesService FeesService => feesService.Value;
+
+
+        public IPaymobService PaymentGateway => _paymentGateway;
+
+        private readonly Lazy<IPaymentService> paymentService =
+            new Lazy<IPaymentService>(() => new Services.PaymentService(_unitOfWork , _userManager, _paymentGateway));
+
+        public IPaymentService PaymentService => paymentService.Value;
+
+
+        public IAssignmentSubmissionService AssignmentSubmissionService => assignmentSubmissionService.Value;
 
 		private readonly Lazy<IAuthunticationService> _authunticationService =
 			new Lazy<IAuthunticationService>(() => new Services.AuthService(
@@ -75,6 +111,10 @@ namespace ServiceLayer
 				_authLogger));
 		public IAuthunticationService AuthunticationService => _authunticationService.Value;
 
+        public IRoleService RoleService => _roleService;
+        public IUserService UserService => _userService;
+
+    }
 		public IRoleService RoleService => _roleService;
 		public IUserService UserService => _userService;
 		public IEnrollmentService EnrollmentService => _enrollmentService;
