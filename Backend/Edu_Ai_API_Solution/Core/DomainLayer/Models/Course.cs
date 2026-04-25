@@ -15,7 +15,7 @@ namespace DomainLayer.Models
 		public string ImageUrl { get; set; } = null!;
 		public int Credit_Hour { get; set; }
 		public bool IsPublished { get; set; }= false;
-		public AcademicYear AcademicLevel { get; set; }
+		public AcademicYearEnum? AcademicLevel { get; set; }
 		public String LearningOutcomes { get; set; } = null!;
 		// Self RelationShip
 		public int? PrerequisiteCourseId { get; set; }

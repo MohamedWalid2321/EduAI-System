@@ -34,7 +34,11 @@ namespace ServiceLayer
 			services.AddScoped<IAuthunticationService, AuthService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
-			return services;
+            services.AddHttpClient<PaymobService>();
+            services.AddScoped<IPaymobService, PaymobService>();
+
+
+            return services;
 		}
 		
 		private static IServiceCollection AddMapsterConf(this IServiceCollection services)

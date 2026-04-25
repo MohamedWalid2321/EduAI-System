@@ -13,6 +13,12 @@
 		IQuestionService QuestionService { get; }
 		IQuizAttemptService QuizAttemptService { get; }
 		IAssignmentSubmissionService AssignmentSubmissionService { get; }
+		IAcademicYearService AcademicYearService { get; }
+		IFeesService FeesService { get; }
+
+		IPaymentService PaymentService { get; }
+
+        IPaymobService PaymentGateway { get; }
 
 
     }

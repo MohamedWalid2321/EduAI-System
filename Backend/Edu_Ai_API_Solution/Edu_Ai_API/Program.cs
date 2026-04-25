@@ -18,6 +18,7 @@ using ServiceLayer;
 using ServiceLayer.Services;
 using Shared.ErrorModels;
 using StackExchange.Redis;
+using System.Diagnostics;
 
 namespace Edu_Ai_API
 {
@@ -142,8 +143,9 @@ namespace Edu_Ai_API
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-
+            
             app.Run();
+            
         }
     }
 }

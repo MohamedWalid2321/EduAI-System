@@ -35,7 +35,7 @@ namespace ServiceLayer.Services
 						LastName = user.LastName!,
 						Email = user.Email!,
 						IsDisabled = user.IsDisabled,
-						AcademicYear = user.AcademicYear.ToString()!,
+						AcademicYear = user.AcademicYearEnum.ToString()!,
 						DepartmentId = user.DepartmentId ?? 0,
 						Roles = roles
 					});
@@ -107,7 +107,7 @@ namespace ServiceLayer.Services
 
 			if (emailIsExists)
 				throw new DuplicatedEmail(request.Email);
-			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
 			}
@@ -126,7 +126,7 @@ namespace ServiceLayer.Services
 				throw new UserNotFound(id);
 
 			user = request.Adapt(user);
-			user.AcademicYear = academicYear;
+			user.AcademicYearEnum = academicYear;
 
 			var result = await _userManager.UpdateAsync(user);
 
@@ -182,9 +182,9 @@ namespace ServiceLayer.Services
 		{
 			if (await _userManager.FindByIdAsync(id) is not { } user)
 				throw new UserNotFound(id);
-			if (user.AcademicYear == AcademicYear.Fifth)
+			if (user.AcademicYearEnum == AcademicYearEnum.Fifth)
 				throw new MaxAcademicYearReached();
-			user.AcademicYear += 1;
+			user.AcademicYearEnum += 1;
 			var result = await _userManager.UpdateAsync(user);
 			if (result.Succeeded)
 				return;
@@ -202,7 +202,7 @@ namespace ServiceLayer.Services
 		public async Task UpdateUserProfileAsync(string userId, UpdateUserProfileRequest request, IFormFile? file)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
-			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
 			}
@@ -211,7 +211,7 @@ namespace ServiceLayer.Services
 				await _fileStorageService.DeleteFileAsync(user!.ProfilePictureUrl);
 			}
 			user = request.Adapt(user);
-			user!.AcademicYear = academicYear;
+			user!.AcademicYearEnum = academicYear;
 			
 			if (file is not null && file.Length > 0)
 			{

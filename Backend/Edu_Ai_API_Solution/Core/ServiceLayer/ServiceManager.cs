@@ -19,7 +19,9 @@ namespace ServiceLayer
         IHttpContextAccessor _httpContextAccessor,
         IEmailBodyBuilder _emailBodyBuilder,
         IRoleService _roleService,  
-        IUserService _userService,   
+        IUserService _userService,
+        IPaymobService _paymentGateway,
+
         ILogger<AuthService> _authLogger) : IServiceManager
     {
         private readonly Lazy<IDepartmentService> _departmentService =
@@ -53,6 +55,25 @@ namespace ServiceLayer
         private readonly Lazy<IAssignmentSubmissionService> assignmentSubmissionService =
             new Lazy<IAssignmentSubmissionService>(() => new Services.AssignmentSubmissionService(_unitOfWork,_fileStorageService));
 
+        private readonly Lazy<IAcademicYearService> academicYearService =
+            new Lazy<IAcademicYearService>(()=>new Services.AcademicYearService(_unitOfWork));
+
+        public IAcademicYearService AcademicYearService => academicYearService.Value;
+
+        private readonly Lazy<IFeesService> feesService =
+            new Lazy<IFeesService>(() => new Services.FeesService(_unitOfWork));
+
+        public IFeesService FeesService => feesService.Value;
+
+
+        public IPaymobService PaymentGateway => _paymentGateway;
+
+        private readonly Lazy<IPaymentService> paymentService =
+            new Lazy<IPaymentService>(() => new Services.PaymentService(_unitOfWork , _userManager, _paymentGateway));
+
+        public IPaymentService PaymentService => paymentService.Value;
+
+
         public IAssignmentSubmissionService AssignmentSubmissionService => assignmentSubmissionService.Value;
 
         private readonly Lazy<IAuthunticationService> _authunticationService =
@@ -71,5 +92,6 @@ namespace ServiceLayer
 
         public IRoleService RoleService => _roleService;
         public IUserService UserService => _userService;
+
     }
 }

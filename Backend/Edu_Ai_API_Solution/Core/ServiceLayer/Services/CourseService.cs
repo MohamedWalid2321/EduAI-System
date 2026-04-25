@@ -32,7 +32,7 @@ namespace ServiceLayer.Services
 				throw new UserNotFound(UserId);
 			}
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseSpecification = new StudentCourseSpecification(user.DepartmentId,user.AcademicYear);
+			var courseSpecification = new StudentCourseSpecification(user.DepartmentId,user.AcademicYearEnum);
 			var courses = await CourseRepository.GetAllAsync(courseSpecification);
 			if (courses is null || !courses.Any())
 			{

@@ -1,6 +1,6 @@
 namespace DomainLayer.Enums
 {
-    public enum AcademicYear
+    public enum AcademicYearEnum
     {
         Default = 0,
 		First = 1,
