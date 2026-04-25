@@ -10,9 +10,8 @@ namespace Shared.Dtos.QuizDto.Response
     {
         public int Id { get; set; }
         public bool IsActive { get; set; }  
-
-        public  string QuestionText { get; set; }
-
+        public string QuestionText { get; set; }
+        public string QuestionType { get; set; } // e.g. "MultipleChoice" or "TrueFalse"
         public List<QuestionChoiceResponseDto> QuestionChoices { get; set; }
     }
 }

@@ -32,3 +32,5 @@ Thumbs.db
 # ── Logs & temp files ──
 *.log
 *.tmp
+
+speech_chunk.py

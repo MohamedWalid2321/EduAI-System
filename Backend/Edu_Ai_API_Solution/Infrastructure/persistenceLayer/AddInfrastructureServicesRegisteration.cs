@@ -9,7 +9,10 @@ namespace persistenceLayer
 		{
 			services.AddDbContext<LmsDBContext>(options =>
 			{
-				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), sqlServerOptionsAction: sqlOptions =>
+				{
+					sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+				});
 			});
             services.Configure<PaymentSettings>(configuration.GetSection(nameof(PaymentSettings)));
             services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
@@ -57,7 +60,8 @@ namespace persistenceLayer
 					ValidAudience = jwtSettings.Audience,
 					ValidateLifetime = true,
 					IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSettings.Key)),
-					ValidateIssuerSigningKey = true
+					ValidateIssuerSigningKey = true,
+					ClockSkew = TimeSpan.Zero
 				};
 			});
 

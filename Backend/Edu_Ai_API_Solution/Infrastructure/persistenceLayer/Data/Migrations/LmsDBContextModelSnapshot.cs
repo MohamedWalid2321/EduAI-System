@@ -81,6 +81,9 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsEnrollable")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -105,6 +108,7 @@ namespace persistenceLayer.Data.Migrations
                             ConcurrencyStamp = "5540e8da-f93d-4457-a355-f04bb15c4594",
                             IsDefault = false,
                             IsDeleted = false,
+                            IsEnrollable = false,
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
@@ -114,6 +118,7 @@ namespace persistenceLayer.Data.Migrations
                             ConcurrencyStamp = "f51e5a91-bced-49c2-8b86-c2e170c0846c",
                             IsDefault = false,
                             IsDeleted = false,
+                            IsEnrollable = false,
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
@@ -123,6 +128,7 @@ namespace persistenceLayer.Data.Migrations
                             ConcurrencyStamp = "9bba17c3-ee48-423a-b2c0-a63245d0edf0",
                             IsDefault = false,
                             IsDeleted = false,
+                            IsEnrollable = true,
                             Name = "Instructor",
                             NormalizedName = "INSTRUCTOR"
                         },
@@ -132,6 +138,7 @@ namespace persistenceLayer.Data.Migrations
                             ConcurrencyStamp = "5ee6bc12-5cb0-4304-91e7-6a00744e042a",
                             IsDefault = true,
                             IsDeleted = false,
+                            IsEnrollable = true,
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         });
@@ -208,9 +215,6 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ProfilePictureBase64")
-                        .HasColumnType("NVARCHAR(MAX)");
-
                     b.Property<string>("ProfilePictureUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -258,7 +262,6 @@ namespace persistenceLayer.Data.Migrations
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEOWZVo54O7t+j0m6vtcBTTF9ZYE0F8PDMvFfkTBcLVpPrcU8SyXaYxD1uMxwvVvtWg==",
                             PhoneNumberConfirmed = false,
-                            ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
                             SecurityStamp = "911889FEF7B44646B1E278C5C4F7C893",
                             TwoFactorEnabled = false,
@@ -282,7 +285,6 @@ namespace persistenceLayer.Data.Migrations
                             NormalizedUserName = "ADMIN@LUMINO.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEMPNEtSHlXRLP5XwNknrW6yQcQlJG9m99gozXg3cangkZ8gfZN6m9AiXMAXETC2dGQ==",
                             PhoneNumberConfirmed = false,
-                            ProfilePictureBase64 = "",
                             ProfilePictureUrl = "",
                             SecurityStamp = "55BF92C9EF0249CDA210D85D1A851BC9",
                             TwoFactorEnabled = false,
@@ -310,8 +312,17 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Hours")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsMandatory")
                         .HasColumnType("bit");
@@ -349,6 +360,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -356,6 +373,9 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -393,6 +413,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -402,6 +428,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -438,12 +467,21 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Feedback")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("Grade")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -485,6 +523,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -494,6 +538,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -536,6 +583,15 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -574,6 +630,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -583,6 +645,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -617,6 +682,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<int>("Credit_Hour")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -626,6 +697,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
@@ -641,9 +715,6 @@ namespace persistenceLayer.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("PrerequisiteCourseId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -653,8 +724,6 @@ namespace persistenceLayer.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PrerequisiteCourseId");
 
                     b.ToTable("Courses", (string)null);
                 });
@@ -672,6 +741,15 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -758,7 +836,7 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("Fee", (string)null);
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.InstructorCourse", b =>
+            modelBuilder.Entity("DomainLayer.Models.Lecture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -766,24 +844,32 @@ namespace persistenceLayer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AssignedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InstructorId")
+                    b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -791,13 +877,26 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("ScheduledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("InstructorId");
+                    b.HasIndex("CreatedById");
 
-                    b.ToTable("InstructorCourse");
+                    b.ToTable("Lecture");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Payment", b =>
@@ -882,7 +981,16 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -919,6 +1027,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -928,6 +1042,9 @@ namespace persistenceLayer.Data.Migrations
                         .HasColumnType("time");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -975,6 +1092,15 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsSubmitted")
                         .HasColumnType("bit");
@@ -1031,7 +1157,16 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -1076,7 +1211,16 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -1103,6 +1247,61 @@ namespace persistenceLayer.Data.Migrations
                     b.HasIndex("QuizQuestionId");
 
                     b.ToTable("StudentAnswers");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.UserCourse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EnrolledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnrolledBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId", "CourseId")
+                        .IsUnique();
+
+                    b.ToTable("UserCourses", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1134,483 +1333,595 @@ namespace persistenceLayer.Data.Migrations
                         {
                             Id = 1,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
+                            ClaimValue = "Profile:levelUp",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:add",
+                            ClaimValue = "Ass:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:update",
+                            ClaimValue = "Ass:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:delete",
+                            ClaimValue = "Ass:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 5,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:solve",
+                            ClaimValue = "Ass:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 6,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:read",
+                            ClaimValue = "Ass:solve",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 7,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:add",
+                            ClaimValue = "Content:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 8,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:update",
+                            ClaimValue = "Content:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 9,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:delete",
+                            ClaimValue = "Content:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 10,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:read",
+                            ClaimValue = "Content:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 11,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:add",
+                            ClaimValue = "Course:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 12,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:update",
+                            ClaimValue = "Course:readAll",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 13,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:delete",
+                            ClaimValue = "Course:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 14,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:enrollInstructor",
+                            ClaimValue = "Course:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 15,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:unenrollInstructor",
+                            ClaimValue = "Course:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 16,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:read",
+                            ClaimValue = "Course:enrollInstructor",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 17,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:add",
+                            ClaimValue = "Course:unenrollInstructor",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 18,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:update",
+                            ClaimValue = "Department:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 19,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:delete",
+                            ClaimValue = "Department:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 20,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "Department:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 21,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "Department:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 22,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "questions:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 23,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:delete",
+                            ClaimValue = "questions:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 24,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:solve",
+                            ClaimValue = "questions:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 25,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:read",
+                            ClaimValue = "questions:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 26,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:add",
+                            ClaimValue = "questions:solve",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 27,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:update",
+                            ClaimValue = "users:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 28,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:delete",
+                            ClaimValue = "users:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 29,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:read",
+                            ClaimValue = "users:update",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 30,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:add",
+                            ClaimValue = "users:delete",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 31,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:update",
+                            ClaimValue = "roles:read",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 32,
                             ClaimType = "Permissions",
-                            ClaimValue = "roles:delete",
+                            ClaimValue = "roles:add",
                             RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 33,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
+                            ClaimValue = "roles:update",
+                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 34,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:add",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
+                            ClaimValue = "roles:delete",
+                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 35,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:update",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
+                            ClaimValue = "Lecture:create",
+                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 36,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:delete",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
+                            ClaimValue = "Lecture:update",
+                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 37,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:read",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
+                            ClaimValue = "Lecture:delete",
+                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 38,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:add",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
+                            ClaimValue = "Lecture:join",
+                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
                         },
                         new
                         {
                             Id = 39,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:update",
+                            ClaimValue = "Ass:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 40,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:delete",
+                            ClaimValue = "Ass:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 41,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:read",
+                            ClaimValue = "Ass:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 42,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:add",
+                            ClaimValue = "Ass:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 43,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:update",
+                            ClaimValue = "Content:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 44,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:delete",
+                            ClaimValue = "Content:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 45,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:enrollInstructor",
+                            ClaimValue = "Content:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 46,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:unenrollInstructor",
+                            ClaimValue = "Content:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 47,
                             ClaimType = "Permissions",
-                            ClaimValue = "Department:read",
+                            ClaimValue = "Course:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 48,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "Course:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 49,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "Course:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 50,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "Course:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 51,
                             ClaimType = "Permissions",
-                            ClaimValue = "users:read",
+                            ClaimValue = "Course:enrollInstructor",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 52,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "Course:unenrollInstructor",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 53,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:add",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "Department:read",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 54,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:update",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "questions:read",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 55,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:delete",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "questions:add",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 56,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:read",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "questions:update",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 57,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:add",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "users:read",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 58,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:update",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "Lecture:create",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 59,
                             ClaimType = "Permissions",
-                            ClaimValue = "Content:delete",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "Lecture:update",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 60,
                             ClaimType = "Permissions",
-                            ClaimValue = "Course:read",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "Lecture:delete",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 61,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                            ClaimValue = "Lecture:join",
+                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 62,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "Ass:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 63,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "Ass:add",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 64,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:read",
-                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                            ClaimValue = "Ass:update",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 65,
                             ClaimType = "Permissions",
-                            ClaimValue = "Ass:solve",
-                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                            ClaimValue = "Ass:delete",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 66,
                             ClaimType = "Permissions",
                             ClaimValue = "Content:read",
-                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 67,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Content:add",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Content:update",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Content:delete",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Course:read",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            ClaimType = "Permissions",
+                            ClaimValue = "questions:read",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            ClaimType = "Permissions",
+                            ClaimValue = "questions:add",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            ClaimType = "Permissions",
+                            ClaimValue = "questions:update",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Lecture:create",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Lecture:update",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Lecture:delete",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 77,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Lecture:join",
+                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Profile:levelUp",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Ass:read",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Ass:solve",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Content:read",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 82,
                             ClaimType = "Permissions",
                             ClaimValue = "Course:read",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
-                            Id = 68,
+                            Id = 83,
                             ClaimType = "Permissions",
                             ClaimValue = "questions:read",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
-                            Id = 69,
+                            Id = 84,
                             ClaimType = "Permissions",
                             ClaimValue = "questions:solve",
+                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            ClaimType = "Permissions",
+                            ClaimValue = "Lecture:join",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         });
                 });
@@ -1868,20 +2179,20 @@ namespace persistenceLayer.Data.Migrations
             modelBuilder.Entity("DomainLayer.Models.InstructorCourse", b =>
                 {
                     b.HasOne("DomainLayer.Models.Course", "Course")
-                        .WithMany("InstructorCourses")
+                        .WithMany("Lectures")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DomainLayer.Models.ApplicationUser", "Instructor")
-                        .WithMany("InstructorCourses")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("DomainLayer.Models.ApplicationUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
 
-                    b.Navigation("Instructor");
+                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Payment", b =>
@@ -1978,6 +2289,25 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("QuizQuestion");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.UserCourse", b =>
+                {
+                    b.HasOne("DomainLayer.Models.Course", "Course")
+                        .WithMany("UserCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.ApplicationUser", "User")
+                        .WithMany("UserCourses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("DomainLayer.Models.ApplicationRole", null)
@@ -2038,7 +2368,7 @@ namespace persistenceLayer.Data.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("InstructorCourses");
+                    b.Navigation("UserCourses");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Assignment", b =>
@@ -2066,9 +2396,11 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Navigation("Contents");
 
-                    b.Navigation("InstructorCourses");
+                    b.Navigation("Lectures");
 
                     b.Navigation("Quizzes");
+
+                    b.Navigation("UserCourses");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Department", b =>

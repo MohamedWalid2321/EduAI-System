@@ -1,11 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Identity;
-using ServiceAbstractionLayer;
-using Shared.Constants;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class AuthService(UserManager<ApplicationUser> userManager,
 		SignInManager<ApplicationUser> signInManager,
@@ -121,7 +114,6 @@ namespace ServiceLayer.Services
 					$"Users/{user.Email}",
 					file.ContentType);
 				user.ProfilePictureUrl = imagePath;
-				user.ProfilePictureBase64 = await ConvertFileToBase64Async(file);
 			}
 		
 			var result = await _userManager.CreateAsync(user, request.Password);
@@ -133,7 +125,6 @@ namespace ServiceLayer.Services
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 			_logger.LogInformation("User registered successfully. UserId: {UserId}, Email: {Email}, ConfirmationCode: {ConfirmationCode}", user.Id, user.Email, code);
-		//TODO: Send confirmation email with the code
 			await SendConfirmationEmailAsync(user, code);
 
 
@@ -240,6 +231,7 @@ namespace ServiceLayer.Services
 				throw new Exception(error != null ? error.Description : "Email confirmation failed");
 			}
 			await _userManager.AddToRoleAsync(user, DefaultRoles.Student);
+		BackgroundJob.Enqueue<IEnrollmentService>(s => s.AutoEnrollAsync(user.Id));
 		}
 
 		public async Task ResendConfirmEmailAsync(ResendConfirmEmailRequest request)
@@ -322,10 +314,10 @@ namespace ServiceLayer.Services
 					{ "{{action_url}}", $"{origin}/Auth/emailConfrimation?userId={user.Id}&code={code}" }
 				}
 				);
-			await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Confirm your email", body);
+			//await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Confirm your email", body);
+			BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Confirm your email", body));
 			_logger.LogInformation("Confirmation email sent. UserId: {UserId}, Email: {Email}, ConfirmationCode: {ConfirmationCode}", user.Id, user.Email, code);
-
-
+			await Task.CompletedTask;
 		}
 		private async Task SendResetPasswordEmail(ApplicationUser user, string code)
 		{
@@ -339,8 +331,8 @@ namespace ServiceLayer.Services
 				}
 			);
 
-			await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Change Password", emailBody);
-
+			//await _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Change Password", emailBody);
+			BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Lumino: Change Password", emailBody));
 			await Task.CompletedTask;
 		}
 

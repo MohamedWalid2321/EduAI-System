@@ -13,7 +13,9 @@ namespace ServiceLayer.Mapping
 			// Configure CourseRequestDto to Course mapping with enum conversion
 			config.NewConfig<CourseRequestDto, Course>()
 				.Map(dest => dest.semster, src => src.semster)
-				.Map(dest => dest.IsPublished, src => true);
+				.Map(dest => dest.IsPublished, src => true)
+				.Map(dest => dest.AcademicLevel, src => src.academicLevel);
+
 			TypeAdapterConfig<Course, FullCourseResponse>
 			.NewConfig()
 			.Map(dest => dest.Assesment, src => src.Assessments);
@@ -24,6 +26,9 @@ namespace ServiceLayer.Mapping
 			config.NewConfig<RegisterRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email);
 			config.NewConfig<ApplicationUser, UserProfileResponse>()
+				.Map(dest => dest.AcademicYear, src => src.AcademicYear.ToString());
+			config.NewConfig<RoleRequest, ApplicationRole>()
+				.Map(dest => dest.IsEnrollable, src => src.IsEnrollable);
 				.Map(dest => dest.AcademicYear, src => src.AcademicYearEnum.ToString());
 
 			config.NewConfig<(ApplicationUser user, IList<string> roles), UserResponse>()
@@ -37,20 +42,24 @@ namespace ServiceLayer.Mapping
 
 			config.NewConfig<CreateUserRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email)
-			.Map(dest => dest.EmailConfirmed, src => true)
-			;
+			.Map(dest => dest.EmailConfirmed, src => true);
 
 			config.NewConfig<UpdateUserRequest, ApplicationUser>()
 				.Map(dest => dest.UserName, src => src.Email)
 				.Map(dest => dest.NormalizedUserName, src => src.Email.ToUpper());
 
-            config.NewConfig<QuestionRequestDto, QuizQuestion>()
+			config.NewConfig<QuestionRequestDto, QuizQuestion>()
+				.Map(dest => dest.QuestionType, src => (QuestionTypes)src.QuestionType)
 				.Map(dest => dest.QuestionChoices, src => src.QuestionChoices
-                    .Select((answer, index) => new QuestionChoices
+					.Select((answer, index) => new QuestionChoices
 					{
 						ChoiceText = answer,
 						IsCorrect = index == src.CorrectAnswerIndex
 					}).ToList());
+
+			config.NewConfig<QuizQuestion, QuestionResponseDto>()
+				.Map(dest => dest.QuestionType, src => src.QuestionType.ToString());
+
 			TypeAdapterConfig<ApplicationUser, InstructorsDetailsResponse>
 				.NewConfig()
 				.Map(dest => dest.FullName, src => $"Dr. {src.FirstName} {src.LastName}");
@@ -69,5 +78,9 @@ namespace ServiceLayer.Mapping
     .Map(dest => dest.fees, src => src.Fees);
 
         }
+			// Lecture mappings
+			config.NewConfig<Lecture, LectureResponse>()
+				.Map(dest => dest.CreatedByName, src => $"{src.CreatedBy.FirstName} {src.CreatedBy.LastName}");
+		}
 	}
 }

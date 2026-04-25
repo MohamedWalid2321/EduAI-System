@@ -1,10 +1,4 @@
-﻿using DomainLayer.Contracts;
-using Microsoft.AspNetCore.Mvc;
-using ServiceAbstractionLayer;
-using Shared.Constants;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class UserService(UserManager<ApplicationUser> userManager,
 		IRoleService roleService,
@@ -17,10 +11,11 @@ namespace ServiceLayer.Services
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
 
-		public async Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed=false) {
-			// Get all users who are not disabled and have confirmed their email
+		public async Task<IEnumerable<UserResponse>> GetAllAsync(bool? IncludeNotConfirmed=false, bool? includeDisabled = false) {
+			// if includeDisabled is false or null, exclude disabled users, otherwise include them
+			// if IncludeNotConfirmed is false or null, exclude not confirmed users, otherwise include them
 			var users = await _userManager.Users
-			.Where(u => !u.IsDisabled &&(u.EmailConfirmed || (IncludeNotConfirmed.HasValue && IncludeNotConfirmed.Value)))
+			.Where(u =>	!(u.IsDisabled && !(includeDisabled.HasValue && includeDisabled.Value)) && (u.EmailConfirmed || (IncludeNotConfirmed.HasValue && IncludeNotConfirmed.Value)))
 			.ToListAsync();
 
 			var userResponses = new List<UserResponse>();
@@ -51,8 +46,6 @@ namespace ServiceLayer.Services
 				.Where(i => i.DepartmentId == departmentId)
 				.ToList();
 			return filteredInstructors.Adapt<IEnumerable<InstructorsDetailsResponse>>();
-
-
 		}
 
 		public async Task<UserResponse> GetAsync(string id)
@@ -125,6 +118,9 @@ namespace ServiceLayer.Services
 			if (await _userManager.FindByIdAsync(id) is not { } user)
 				throw new UserNotFound(id);
 
+			var originalDepartmentId = user.DepartmentId;
+			var originalAcademicYear = user.AcademicYear;
+
 			user = request.Adapt(user);
 			user.AcademicYearEnum = academicYear;
 
@@ -139,6 +135,10 @@ namespace ServiceLayer.Services
 				}
 				await _userManager.AddToRolesAsync(user, request.Roles);
 
+			var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+
+			if (enrollmentDataChanged && user.DepartmentId.HasValue && user.AcademicYear.HasValue)
+				BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(id));
 				return ;
 			}
 
@@ -178,6 +178,7 @@ namespace ServiceLayer.Services
 
 			throw new IdentityResultError(error.Description);
 		}
+		// only for Students or any user who has AcademicYear and DepartmentId
 		public async Task LevelUp(string id)
 		{
 			if (await _userManager.FindByIdAsync(id) is not { } user)
@@ -187,7 +188,10 @@ namespace ServiceLayer.Services
 			user.AcademicYearEnum += 1;
 			var result = await _userManager.UpdateAsync(user);
 			if (result.Succeeded)
+			{
+				BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(id));
 				return;
+			}
 			var error = result.Errors.First();
 			throw new IdentityResultError(error.Description);
 		}
@@ -203,13 +207,24 @@ namespace ServiceLayer.Services
 		{
 			var user = await _userManager.FindByIdAsync(userId);
 			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
+			if ((!string.IsNullOrWhiteSpace(request.AcademicYear)) && (!await _userManager.IsInRoleAsync(user!,DefaultRoles.Student)) ) {
+				throw new IsNotStudentException();
+			}
+			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
+			}
+			if (user!.IsDisabled) {
+				throw new DisabledUser(user.Email!);
 			}
 			if (!string.IsNullOrEmpty(user!.ProfilePictureUrl))
 			{
 				await _fileStorageService.DeleteFileAsync(user!.ProfilePictureUrl);
 			}
+
+			var originalDepartmentId = user.DepartmentId;
+			var originalAcademicYear = user.AcademicYear;
+
 			user = request.Adapt(user);
 			user!.AcademicYearEnum = academicYear;
 			
@@ -222,9 +237,11 @@ namespace ServiceLayer.Services
 					$"Users/{user!.Email}",
 					file.ContentType);
 				user.ProfilePictureUrl = imagePath;
-				user.ProfilePictureBase64 = await ConvertFileToBase64Async(file);
 			}
 			await _userManager.UpdateAsync(user!);
+		var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+		if (enrollmentDataChanged && (await _userManager.IsInRoleAsync(user!, DefaultRoles.Student)))
+			BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(userId));
 		}
 		public async Task ChangePasswordAsync(string userId, ChangePasswordRequest request)
 		{
@@ -236,18 +253,5 @@ namespace ServiceLayer.Services
 				throw new IdentityResultError(string.Join(", ", result.Errors.Select(e => e.Description)));
 			}
 		}
-
-
-		private async Task<string> ConvertFileToBase64Async(IFormFile file)
-		{
-			if (file == null || file.Length == 0)
-				return string.Empty;
-
-			using var memoryStream = new MemoryStream();
-			await file.CopyToAsync(memoryStream);
-			return Convert.ToBase64String(memoryStream.ToArray());
-		}
-
-		
 	}
 }

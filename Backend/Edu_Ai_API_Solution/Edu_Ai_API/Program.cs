@@ -2,6 +2,7 @@ using DomainLayer.Contracts;
 using DomainLayer.Models;
 using Edu_Ai_API.CustomMiddleWares;
 using Edu_Ai_API.Factories;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,9 @@ using ServiceLayer;
 using ServiceLayer.Services;
 using Shared.ErrorModels;
 using StackExchange.Redis;
+using Hangfire;
+using Hangfire.Dashboard.BasicAuthorization;
+using HangfireBasicAuthenticationFilter;
 using System.Diagnostics;
 
 namespace Edu_Ai_API
@@ -82,7 +86,7 @@ namespace Edu_Ai_API
                 .AddDefaultTokenProviders();
 
             builder.Services.AddInfrastructureServices(builder.Configuration);
-            builder.Services.AddApplicationServices(builder.Environment);
+            builder.Services.AddApplicationServices(builder.Environment, builder.Configuration);
 
             // Authorization Services
             builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
@@ -137,7 +141,20 @@ namespace Edu_Ai_API
                     
                     // c.RoutePrefix = string.Empty;
                 });
-            }
+				app.UseHangfireDashboard("/jobs", new DashboardOptions
+				{
+					Authorization =
+	                [
+		                new HangfireCustomBasicAuthenticationFilter
+		                {
+			                User = app.Configuration.GetValue<string>("HangfireSettings:Username"),
+			                Pass = app.Configuration.GetValue<string>("HangfireSettings:Password")
+		                }
+	                ],
+					DashboardTitle = "Lumina Dashboard",
+					//IsReadOnlyFunc = (DashboardContext conext) => true
+				});
+			}
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

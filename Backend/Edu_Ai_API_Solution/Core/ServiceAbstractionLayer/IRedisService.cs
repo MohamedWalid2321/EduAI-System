@@ -6,6 +6,7 @@
 
         public Task<string?> GetKeyAsync(string key);
         public Task RemoveKeyAsync(string key);
+        public Task RemoveByPatternAsync(string pattern);
 
     }
 }

@@ -1,17 +1,4 @@
-﻿using DomainLayer.Exceptions.Roles;
-using Microsoft.AspNetCore.Identity;
-using Shared.Constants;
-using Shared.Dtos.RolesDto.Request;
-using Shared.Dtos.RolesDto.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ServiceLayer.Services
+﻿namespace ServiceLayer.Services
 {
 	public class RoleService(RoleManager<ApplicationRole> roleManager ) : IRoleService
 	{
@@ -34,6 +21,7 @@ namespace ServiceLayer.Services
 				Id = role.Id,
 				Name = role.Name!,
 				IsDeleted = role.IsDeleted,
+				IsEnrollable = role.IsEnrollable,
 				Permissions = permissions.Select(x => x.Value).ToList()
 			};
 
@@ -56,6 +44,7 @@ namespace ServiceLayer.Services
 			var role = new ApplicationRole
 			{
 				Name = request.Name,
+				IsEnrollable= request.IsEnrollable,
 				ConcurrencyStamp = Guid.NewGuid().ToString()
 			};
 
@@ -73,6 +62,7 @@ namespace ServiceLayer.Services
 					Id = role.Id,
 					Name = role.Name!,
 					IsDeleted = role.IsDeleted,
+					IsEnrollable = role.IsEnrollable,
 					Permissions = request.Permissions.Distinct().ToList()
 				};
 

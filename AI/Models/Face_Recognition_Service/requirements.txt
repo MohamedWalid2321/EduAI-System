@@ -1,20 +1,16 @@
 # ============================================
 # Face Recognition — Hybrid Approach
 # ============================================
-# Detection:   InsightFace RetinaFace (detection-only mode)
+# Detection:   Local SCRFD ONNX (project implementation)
 # Recognition: ArcFace ONNX (w600k_r50.onnx) via onnxruntime
 #
 # Install with: pip install -r requirements.txt
 # ============================================
 
-# InsightFace — used for RetinaFace face detection only
-insightface==0.7.3
-
-# ONNX Runtime — runs the ArcFace .onnx model directly
-onnxruntime==1.16.3
-# For GPU support, use instead:
-# onnxruntime-gpu==1.16.3
+# ONNX Runtime (GPU build) — runs ArcFace with CUDA when available
+onnxruntime-gpu==1.16.3
 
 # Core dependencies
 numpy>=1.23.5,<1.25
 opencv-python==4.8.1.78
+upstash-redis

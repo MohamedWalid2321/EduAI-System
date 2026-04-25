@@ -13,13 +13,25 @@ Dev-serve on Modal (temporary URL, hot-reload):
     conda activate eye_gaze
     python -m modal serve main.py
 """
-
+#
 import os
 import sys
 import logging
 import time
 
 import modal
+
+# Face enrollment vectors in Redis expire after 3 hours by default.
+# Override by setting FACE_ENROLLMENT_TTL_SECONDS in the deployment environment.
+os.environ.setdefault("FACE_ENROLLMENT_TTL_SECONDS", "10800")
+
+# Modal secret used to inject Upstash Redis credentials at deploy/runtime.
+# Create it with:
+#   modal secret create eduai-upstash-redis \
+#       UPSTASH_REDIS_REST_URL=... \
+#       UPSTASH_REDIS_REST_TOKEN=...
+_upstash_secret_name = os.getenv("MODAL_UPSTASH_SECRET_NAME", "eduai-upstash-redis")
+_upstash_secret = modal.Secret.from_name(_upstash_secret_name)
 
 # ---------------------------------------------------------------------------
 # Path setup — ensure sub-packages can be imported
@@ -61,7 +73,8 @@ def create_app():
         allow_headers=["*"],
     )
 
-    from routes import object_router, gaze_router, face_router, new_object_route
+    from routes import speech_router, gaze_router, object_router, face_router, new_object_route
+    application.include_router(speech_router)
     application.include_router(object_router)
     application.include_router(gaze_router)
     application.include_router(face_router)
@@ -78,6 +91,7 @@ def create_app():
 # Modal deployment
 # ---------------------------------------------------------------------------
 app = modal.App("eduai-proctoring")
+_modal_gpu = os.getenv("MODAL_GPU", "L4")
 
 modal_image = (
     modal.Image.debian_slim(python_version="3.10")
@@ -95,7 +109,12 @@ modal_image = (
 )
 
 
-@app.cls(image=modal_image, gpu="any", scaledown_window=600)
+@app.cls(
+    image=modal_image,
+    gpu=_modal_gpu,
+    scaledown_window=600,
+    secrets=[_upstash_secret],
+)
 class Proctoring:
     """Modal class that keeps models warm in memory between requests."""
 
@@ -113,18 +132,38 @@ class Proctoring:
         logging.basicConfig(level=logging.INFO)
 
         log.info("⏳ Loading YOLO model...")
-        from Models.objectDetectionYolo.objectDetection import yoloDetect  # noqa: F401
+        from Models.objectDetectionYolo.objectDetection import yoloDetect  # noqa: F401        
         log.info("✅ YOLO loaded")
+
+        # log.info("⏳ Loading OWL-ViT model...")
+        # from Models.objectDetectionOWL_VIT.main_detect import load_owl_vit  # noqa: F401
+        # load_owl_vit()
+        # log.info("✅ OWL-ViT loaded")
+
+        #speech detection doesn't require a heavy model load, so we skip preloading it.
 
         log.info("⏳ Loading Eye Gaze model...")
         import Models.EyeGazeDetection.src.Server.localMain  # noqa: F401
         log.info("✅ Eye Gaze loaded")
 
+
+        # log.info("⏳ Loading Face Detection model...")
+        # from Models.FaceDetection.face_detection import FaceDetectionService  # noqa: F401
+        # FaceDetectionService()
+        # log.info("✅ Face Detection loaded")
+
+
+        # log.info("⏳ Loading Face Anti-Spoofing model (MiniFASNetV2)...")
+        # from Models.FaceAntiSpoofing.fas import FaceAntiSpoofingService  # noqa: F401
+        # FaceAntiSpoofingService()
+        # log.info("✅ Face Anti-Spoofing loaded (MiniFASNetV2)")
+
+
         log.info("⏳ Loading Face Recognition model (hybrid + FAS)...")
         from Models.Face_Recognition_Service import FaceRecognition  # noqa: F401
-        # Instantiate once to warm up RetinaFace + ArcFace ONNX + MiniFASNetV2
+        # Instantiate once to warm up SCRDF + ArcFace ONNX + MiniFASNetV2
         FaceRecognition()
-        log.info("✅ Face Recognition loaded (RetinaFace + ArcFace ONNX + MiniFASNetV2 FAS)")
+        log.info("✅ Face Recognition loaded (SCRFD + ArcFace ONNX + MiniFASNetV2 FAS)")
 
         log.info("🚀 All models preloaded — container is warm!")
 

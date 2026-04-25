@@ -8,7 +8,7 @@ namespace Shared.Dtos.AttemptQuiz
 {
     public class QuestionForStudentDto
     {
-       // public int Id { get; set; }
+        public int Id { get; set; }
         public string QuestionText { get; set; }
         public List<ChoiceDto> Choices { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿using DomainLayer.Enums;
+using DomainLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-	public class Course:BaseEntity<int>
+	public class Course : BaseEntity<int>
 	{
 		public string Title { get; set; } = null!;
 		public string Description { get; set; } = null!;
@@ -17,9 +17,6 @@ namespace DomainLayer.Models
 		public bool IsPublished { get; set; }= false;
 		public AcademicYearEnum? AcademicLevel { get; set; }
 		public String LearningOutcomes { get; set; } = null!;
-		// Self RelationShip
-		public int? PrerequisiteCourseId { get; set; }
-		public Course? PrerequisiteCourse { get; set; }
 		// Department RelationShip
 		public ICollection<Department> Departments { get; set; } = [];
 		// Assessment RelationShip
@@ -30,9 +27,8 @@ namespace DomainLayer.Models
 		public ICollection<Assignment>? Assignments { get; set; }
 		// Quiz RelationShip
 		public ICollection<Quiz>? Quizzes { get; set; }
-		public ICollection<InstructorCourse> InstructorCourses { get; set; } = new List<InstructorCourse>();
-
-
-
+		public ICollection<UserCourse> UserCourses { get; set; } = [];
+		// Lecture RelationShip
+		public ICollection<Lecture> Lectures { get; set; } = [];
 	}
 }

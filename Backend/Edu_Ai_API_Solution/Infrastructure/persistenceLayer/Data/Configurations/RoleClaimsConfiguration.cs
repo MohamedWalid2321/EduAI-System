@@ -36,6 +36,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
             // Users(ReadOnly)
             Permissions.GetUsers,
+            // Lecture Managment
+            Permissions.CreateLecture,Permissions.UpdateLecture, Permissions.DeleteLecture,Permissions.JoinLecture,
             // Note: No Role permissions (GetRoles, AddRoles, UpdateRoles, DeleteRoles)
         };
 
@@ -57,11 +59,13 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetAss, Permissions.AddAss, Permissions.UpdateAss, Permissions.DeleteAss,
             // Content - Full management
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
-            // Course - Read only
+            // Course - Read only + can be assigned to teach
             Permissions.GetCourse,
             // Questions/Quiz - Full management
-            Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions
-        };
+            Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
+            // Lecture Managment
+            Permissions.CreateLecture,Permissions.UpdateLecture, Permissions.DeleteLecture,Permissions.JoinLecture,
+		};
 
         foreach (var permission in instructorPermissions)
         {
@@ -77,6 +81,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
         // Student - Read-only access + solve quiz and assignment
         var studentPermissions = new[]
         {
+            // Profile
+             Permissions.LevelUp,
             // Assignment - Read + Solve (submit)
             Permissions.GetAss,
             Permissions.SolveAss,
@@ -86,7 +92,9 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetCourse,
             // Questions/Quiz - Read + Solve
             Permissions.GetQuestions,
-            Permissions.SolveQuiz
+            Permissions.SolveQuiz,
+            // Lecture (Join Only)
+            Permissions.JoinLecture
         };
 
         foreach (var permission in studentPermissions)
