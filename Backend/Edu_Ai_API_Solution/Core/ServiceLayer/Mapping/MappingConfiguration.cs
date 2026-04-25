@@ -26,10 +26,10 @@ namespace ServiceLayer.Mapping
 			config.NewConfig<RegisterRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email);
 			config.NewConfig<ApplicationUser, UserProfileResponse>()
-				.Map(dest => dest.AcademicYear, src => src.AcademicYear.ToString());
+				.Map(dest => dest.AcademicYear, src => src.AcademicYearEnum.ToString());
+
 			config.NewConfig<RoleRequest, ApplicationRole>()
 				.Map(dest => dest.IsEnrollable, src => src.IsEnrollable);
-				.Map(dest => dest.AcademicYear, src => src.AcademicYearEnum.ToString());
 
 			config.NewConfig<(ApplicationUser user, IList<string> roles), UserResponse>()
 			.Map(dest => dest, src => src.user)
@@ -76,11 +76,11 @@ namespace ServiceLayer.Mapping
     .Map(dest => dest.Id, src => src.Id)
     .Map(dest => dest.Name, src => src.Name)
     .Map(dest => dest.fees, src => src.Fees);
-
-        }
 			// Lecture mappings
 			config.NewConfig<Lecture, LectureResponse>()
 				.Map(dest => dest.CreatedByName, src => $"{src.CreatedBy.FirstName} {src.CreatedBy.LastName}");
+
 		}
+	
 	}
 }

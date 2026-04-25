@@ -119,7 +119,7 @@
 				throw new UserNotFound(id);
 
 			var originalDepartmentId = user.DepartmentId;
-			var originalAcademicYear = user.AcademicYear;
+			var originalAcademicYear = user.AcademicYearEnum;
 
 			user = request.Adapt(user);
 			user.AcademicYearEnum = academicYear;
@@ -135,9 +135,9 @@
 				}
 				await _userManager.AddToRolesAsync(user, request.Roles);
 
-			var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+			var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYearEnum != originalAcademicYear;
 
-			if (enrollmentDataChanged && user.DepartmentId.HasValue && user.AcademicYear.HasValue)
+			if (enrollmentDataChanged && user.DepartmentId.HasValue && user.AcademicYearEnum.HasValue)
 				BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(id));
 				return ;
 			}
@@ -206,11 +206,10 @@
 		public async Task UpdateUserProfileAsync(string userId, UpdateUserProfileRequest request, IFormFile? file)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
-			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			if ((!string.IsNullOrWhiteSpace(request.AcademicYear)) && (!await _userManager.IsInRoleAsync(user!,DefaultRoles.Student)) ) {
 				throw new IsNotStudentException();
 			}
-			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
 			}
@@ -223,7 +222,7 @@
 			}
 
 			var originalDepartmentId = user.DepartmentId;
-			var originalAcademicYear = user.AcademicYear;
+			var originalAcademicYear = user.AcademicYearEnum;
 
 			user = request.Adapt(user);
 			user!.AcademicYearEnum = academicYear;
@@ -239,7 +238,7 @@
 				user.ProfilePictureUrl = imagePath;
 			}
 			await _userManager.UpdateAsync(user!);
-		var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+		var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYearEnum != originalAcademicYear;
 		if (enrollmentDataChanged && (await _userManager.IsInRoleAsync(user!, DefaultRoles.Student)))
 			BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(userId));
 		}
