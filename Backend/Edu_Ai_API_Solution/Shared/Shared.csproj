@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.8.23" />
     <PackageReference Include="Hangfire.Core" Version="1.8.23" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
 </Project>

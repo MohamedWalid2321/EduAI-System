@@ -16,12 +16,12 @@ namespace ServiceLayer.Services
 		public async Task AutoEnrollAsync(string userId)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
-			if (user is null || !user.DepartmentId.HasValue || !user.AcademicYear.HasValue)
+			if (user is null || !user.DepartmentId.HasValue || !user.AcademicYearEnum.HasValue)
 				return;
 
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var matchingCourses = await courseRepository.GetAllAsync(
-				new StudentCourseSpecification(user.DepartmentId, user.AcademicYear));
+				new StudentCourseSpecification(user.DepartmentId, user.AcademicYearEnum));
 
 			if (!matchingCourses.Any())
 				return;
@@ -70,7 +70,7 @@ namespace ServiceLayer.Services
 			var matchingUsers = await _userManager.Users
 				.Where(u => u.DepartmentId.HasValue
 						 && departmentIds.Contains(u.DepartmentId.Value)
-						 && u.AcademicYear == course.AcademicLevel)
+						 && u.AcademicYearEnum == course.AcademicLevel)
 				.ToListAsync();
 
 			if (!matchingUsers.Any())
