@@ -67,10 +67,10 @@ namespace ServiceLayer.Mapping
             config.NewConfig<Fee, FeeResponseDto>()
 				.Map(dest => dest.academicYearId, src => src.AcademicYearId)
 				.Map(dest => dest.amount, src => src.Amount)
-				.Map(dest => dest.name, src => src.Name.ToString());
+				.Map(dest => dest.name, src => src.FeeType.ToString());
 
             config.NewConfig<FeeRequestDto, Fee>()
-			      .Map(dest => dest.Name, src => Enum.Parse<FeeType>(src.name, true));
+			      .Map(dest => dest.FeeType, src => Enum.Parse<FeeType>(src.name, true));
 
             config.NewConfig<AcademicYear, AcademicYearDto>()
     .Map(dest => dest.Id, src => src.Id)

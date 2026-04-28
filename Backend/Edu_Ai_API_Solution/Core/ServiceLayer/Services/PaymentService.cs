@@ -39,7 +39,7 @@ namespace ServiceLayer.Services
             if (exists.Any())
                 throw new Exception("Already paid");
 
-            var feeSpecification = new FeeSpecifications(student.AcademicYearId);
+            var feeSpecification = new FeeSpecifications(student.AcademicYearId, student.DepartmentId);
 
             var fees = await feeRepo.GetAllAsync(feeSpecification);
 

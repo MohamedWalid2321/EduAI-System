@@ -12,6 +12,7 @@ namespace ServiceLayer.Specifications.PaymentSpecifications
             : base(p =>
                 p.StudentId == studentId &&
                 p.AcademicYearId == academicYearId &&
+
                 p.Status == PaymentStatus.Paid
             )
         {

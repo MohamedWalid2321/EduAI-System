@@ -101,7 +101,8 @@
 				LastName = request.LastName,
 				DateOfBirth = request.DateOfBirth,
 				DepartmentId = request.DepartmentId,
-                AcademicYearEnum = academicYear,
+				AcademicYearEnum = academicYear,
+				AcademicYearId = (int)academicYear,   // ← ADD THIS
 				IsEnrolled = true,
 				EnrolledAt = DateTime.UtcNow
 			};
