@@ -21,6 +21,9 @@ namespace persistenceLayer.Data
 		public DbSet<QuizAttempt> QuizAttempts { get; set; }
 		public DbSet<StudentAnswer> StudentAnswers { get; set; }
 		public DbSet<UserCourse> UserCourses { get; set; }
+		public DbSet<AcademicYear> AcademicYears { get; set; }   
+		public DbSet<Fee> Fees { get; set; }                     
+		public DbSet<Payment> Payments { get; set; }             
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

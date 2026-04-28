@@ -15,7 +15,13 @@ namespace ServiceLayer.Specifications.FeeSpecifications
 
         public FeeSpecifications(int academicYearId, FeeType feeType)
     : base(p => p.AcademicYearId == academicYearId &&
-                p.Name == feeType)
+                p.FeeType == feeType)
+        {
+            AddInclude(p => p.AcademicYear);
+        }
+
+      public FeeSpecifications(int academicYearId, int? departmentId)
+    : base(p => p.AcademicYearId == academicYearId && p.DepartmentId == departmentId)
         {
             AddInclude(p => p.AcademicYear);
         }

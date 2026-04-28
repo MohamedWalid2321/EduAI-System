@@ -10,8 +10,6 @@ namespace DomainLayer.Models
     public class Payment:BaseEntity<int>
     {
         public string StudentId { get; set; }
-
-        
         public decimal Amount { get; set; }
         public string Currency { get; set; } = null!;
         public PaymentStatus Status { get; set; } = PaymentStatus.Pending;

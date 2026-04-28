@@ -9,12 +9,13 @@ namespace DomainLayer.Models
 {
     public class Fee : BaseEntity<int>
     {
-        
-
         public int AcademicYearId { get; set; }
-        public AcademicYear AcademicYear { get; set; }
+        public AcademicYear AcademicYear { get; set; } = null!;
 
-        public FeeType Name { get; set; } // Tuition / Books
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; } = null!;
+
+        public FeeType FeeType { get; set; }
         public decimal Amount { get; set; }
     }
 }

@@ -57,7 +57,7 @@ namespace ServiceLayer.Services
                 throw new Exception("Fee not found");
 
             feeEntity.Amount = newFee.Amount;
-            feeEntity.Name = Enum.Parse<FeeType>(newFee.name, true);
+            feeEntity.FeeType = Enum.Parse<FeeType>(newFee.name, true);
 
 
             feeRepo.Update(feeEntity);
