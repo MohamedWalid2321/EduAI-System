@@ -1,7 +1,7 @@
 """
 EduAI Proctoring API — FastAPI + Modal entrypoint.
 
-Run locally  (from eye_gaze conda env):
+Run locally:
     conda activate eye_gaze
     uvicorn main:create_app --factory --reload --host 0.0.0.0 --port 8000
 
@@ -13,41 +13,22 @@ Dev-serve on Modal (temporary URL, hot-reload):
     conda activate eye_gaze
     python -m modal serve main.py
 """
-#
 import os
 import sys
 import logging
-import time
 
 import modal
 
-# Face enrollment vectors in Redis expire after 3 hours by default.
-# Override by setting FACE_ENROLLMENT_TTL_SECONDS in the deployment environment.
-os.environ.setdefault("FACE_ENROLLMENT_TTL_SECONDS", "10800")
-
-# Modal secret used to inject Upstash Redis credentials at deploy/runtime.
-# Create it with:
-#   modal secret create eduai-upstash-redis \
-#       UPSTASH_REDIS_REST_URL=... \
-#       UPSTASH_REDIS_REST_TOKEN=...
-_upstash_secret_name = os.getenv("MODAL_UPSTASH_SECRET_NAME", "eduai-upstash-redis")
-_upstash_secret = modal.Secret.from_name(_upstash_secret_name)
-
 # ---------------------------------------------------------------------------
-# Path setup — ensure sub-packages can be imported
+# Path setup
 # ---------------------------------------------------------------------------
 _current_dir = os.path.dirname(os.path.abspath(__file__))
-_server_path = os.path.join(
-    _current_dir, "Models", "EyeGazeDetection", "src", "Server"
-)
-if _server_path not in sys.path:
-    sys.path.insert(0, _server_path)
 if _current_dir not in sys.path:
     sys.path.insert(0, _current_dir)
 
 
 # ---------------------------------------------------------------------------
-# Factory: builds the FastAPI app (heavy imports happen HERE, not at parse time)
+# Factory: builds the FastAPI app
 # ---------------------------------------------------------------------------
 def create_app():
     """Build and return the FastAPI application."""
@@ -61,7 +42,7 @@ def create_app():
 
     application = FastAPI(
         title="EduAI Proctoring API",
-        description="Unified AI proctoring — gaze, object detection & face recognition.",
+        description="AI proctoring — Object detection via OWL-ViT.",
         version="1.0.0",
     )
 
@@ -73,11 +54,7 @@ def create_app():
         allow_headers=["*"],
     )
 
-    from routes import speech_router, gaze_router, object_router, face_router, new_object_route
-    application.include_router(speech_router)
-    application.include_router(object_router)
-    application.include_router(gaze_router)
-    application.include_router(face_router)
+    from routes import new_object_route
     application.include_router(new_object_route)
 
     @application.get("/health", tags=["Health"])
@@ -94,7 +71,10 @@ app = modal.App("eduai-proctoring")
 _modal_gpu = os.getenv("MODAL_GPU", "L4")
 
 modal_image = (
-    modal.Image.debian_slim(python_version="3.10")
+    modal.Image.from_registry(
+        "nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04",
+        add_python="3.10",
+    )
     .apt_install("libgl1", "libglib2.0-0", "ffmpeg")
     .pip_install_from_requirements("requirements.txt")
     .add_local_dir(
@@ -113,64 +93,70 @@ modal_image = (
     image=modal_image,
     gpu=_modal_gpu,
     scaledown_window=600,
-    secrets=[_upstash_secret],
 )
 class Proctoring:
-    """Modal class that keeps models warm in memory between requests."""
+    """Modal class that keeps the OWL-ViT model warm in memory between requests."""
 
     @modal.enter()
     def preload(self):
         import sys as _sys
+        import logging
+        from transformers import pipeline
 
         if "/root/app" not in _sys.path:
             _sys.path.insert(0, "/root/app")
-        _gaze_server = "/root/app/Models/EyeGazeDetection/src/Server"
-        if _gaze_server not in _sys.path:
-            _sys.path.insert(0, _gaze_server)
-
+        
         log = logging.getLogger("preload")
         logging.basicConfig(level=logging.INFO)
 
-        log.info("⏳ Loading YOLO model...")
-        from Models.objectDetectionYolo.objectDetection import yoloDetect  # noqa: F401        
-        log.info("✅ YOLO loaded")
+        log.info("⏳ Loading OWL-ViT model onto GPU...")
+        
+        # Initialize it as an instance variable (self.detector) so it stays warm
+        self.detector = pipeline(
+            task="zero-shot-object-detection", 
+            model="google/owlvit-base-patch32",
+            device=0,
+            framework="pt"  # Forces PyTorch, bypassing the TensorFlow warnings
+        )
+        
+        self.CHEATING_CLASSES = [
+            "Mobile phone", "Earphone", "headset", "smart watch", "sunglasses", "cap"
+        ]
+        log.info("✅ OWL-ViT loaded")
 
-        # log.info("⏳ Loading OWL-ViT model...")
-        # from Models.objectDetectionOWL_VIT.main_detect import load_owl_vit  # noqa: F401
-        # load_owl_vit()
-        # log.info("✅ OWL-ViT loaded")
+    @modal.method()
+    def analyze_proctoring_frame(self, image):
+        predictions = self.detector(
+            image,
+            candidate_labels=self.CHEATING_CLASSES,
+        )
+        
+        max_probability = 0.0
+        detected_items = []
+        for prediction in predictions:
+            score = prediction["score"]
+            if score > 0.1: 
+                detected_items.append(prediction["label"])
+                if score > max_probability:
+                    max_probability = score
 
-        #speech detection doesn't require a heavy model load, so we skip preloading it.
-
-        log.info("⏳ Loading Eye Gaze model...")
-        import Models.EyeGazeDetection.src.Server.localMain  # noqa: F401
-        log.info("✅ Eye Gaze loaded")
-
-
-        # log.info("⏳ Loading Face Detection model...")
-        # from Models.FaceDetection.face_detection import FaceDetectionService  # noqa: F401
-        # FaceDetectionService()
-        # log.info("✅ Face Detection loaded")
-
-
-        # log.info("⏳ Loading Face Anti-Spoofing model (MiniFASNetV2)...")
-        # from Models.FaceAntiSpoofing.fas import FaceAntiSpoofingService  # noqa: F401
-        # FaceAntiSpoofingService()
-        # log.info("✅ Face Anti-Spoofing loaded (MiniFASNetV2)")
-
-
-        log.info("⏳ Loading Face Recognition model (hybrid + FAS)...")
-        from Models.Face_Recognition_Service import FaceRecognition  # noqa: F401
-        # Instantiate once to warm up SCRDF + ArcFace ONNX + MiniFASNetV2
-        FaceRecognition()
-        log.info("✅ Face Recognition loaded (SCRFD + ArcFace ONNX + MiniFASNetV2 FAS)")
-
-        log.info("🚀 All models preloaded — container is warm!")
+        if detected_items:
+            unique_items = list(set(detected_items))
+            evidence_str = f"Detected: {', '.join(unique_items)}"
+        else:
+            evidence_str = "No restricted items detected."
+            
+        import datetime
+        return {
+            "id": 2, 
+            "timestamp": datetime.datetime.now().isoformat(),
+            "probability": round(max_probability, 4) if max_probability > 0 else 0.0,
+            "evidence": evidence_str            
+        }
 
     @modal.asgi_app()
     def serve(self):
         return create_app()
-
 
 
 # ---------------------------------------------------------------------------

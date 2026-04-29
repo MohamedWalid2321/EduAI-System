@@ -6,7 +6,7 @@ print("Loading OWL-ViT model into memory... (This will take a moment)")
 detector = pipeline(
     task="zero-shot-object-detection", 
     model="google/owlvit-base-patch32",
-    device="cpu"
+    device=0
 )
 
 CHEATING_CLASSES = [

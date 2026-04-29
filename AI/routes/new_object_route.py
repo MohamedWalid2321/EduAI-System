@@ -2,14 +2,15 @@ import io
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from PIL import Image
 
-from Models.objectDetectionOWL_VIT.main_detect import analyze_proctoring_frame
+# Import the Modal class from your main file
+from main import Proctoring
 
 router = APIRouter(prefix="/analysis", tags=["detect_objects"])
 
 @router.post("/detect_objects")
 async def detect_objects(file: UploadFile = File(...)):
     """
-    Endpoint to receive a frame, run OWL-ViT detection, and return proctoring evidence.
+    Endpoint to receive a frame, run OWL-ViT detection via Modal GPU, and return proctoring evidence.
     """
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image format (jpeg, png, etc.).")
@@ -17,7 +18,11 @@ async def detect_objects(file: UploadFile = File(...)):
     try:
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        result = analyze_proctoring_frame(image)
+        
+        # Instantiate the Modal class and call the method natively
+        proctor = Proctoring()
+        result = proctor.analyze_proctoring_frame.local(image)
+        
         return result
         
     except Exception as e:
