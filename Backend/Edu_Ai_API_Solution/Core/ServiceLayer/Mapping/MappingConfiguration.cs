@@ -1,4 +1,8 @@
-﻿namespace ServiceLayer.Mapping
+﻿
+using Shared.Dtos.AcademicYearDto;
+using Shared.Dtos.FeeDto;
+
+namespace ServiceLayer.Mapping
 {
 	public class MappingConfiguration : IRegister
 	{
@@ -22,15 +26,19 @@
 			config.NewConfig<RegisterRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email);
 			config.NewConfig<ApplicationUser, UserProfileResponse>()
-				.Map(dest => dest.AcademicYear, src => src.AcademicYear.ToString());
+				.Map(dest => dest.AcademicYear, src => src.AcademicYearEnum.ToString());
+
 			config.NewConfig<RoleRequest, ApplicationRole>()
 				.Map(dest => dest.IsEnrollable, src => src.IsEnrollable);
 
 			config.NewConfig<(ApplicationUser user, IList<string> roles), UserResponse>()
 			.Map(dest => dest, src => src.user)
 			.Map(dest => dest.Roles, src => src.roles)
-			.Map(dest => dest.AcademicYear, src => src.user.AcademicYear.HasValue ? src.user.AcademicYear.Value.ToString() : null)
-			.Map(dest => dest.DepartmentId, src => src.user.DepartmentId ?? 0);
+            .Map(dest => dest.AcademicYear,
+					src => src.user.AcademicYearEnum.HasValue
+							? src.user.AcademicYearEnum.Value.ToString()
+							: "Not Assigned")
+            .Map(dest => dest.DepartmentId , src => src.user.DepartmentId ?? 0);
 
 			config.NewConfig<CreateUserRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email)
@@ -56,9 +64,23 @@
 				.NewConfig()
 				.Map(dest => dest.FullName, src => $"Dr. {src.FirstName} {src.LastName}");
 
+            config.NewConfig<Fee, FeeResponseDto>()
+				.Map(dest => dest.academicYearId, src => src.AcademicYearId)
+				.Map(dest => dest.amount, src => src.Amount)
+				.Map(dest => dest.name, src => src.FeeType.ToString());
+
+            config.NewConfig<FeeRequestDto, Fee>()
+			      .Map(dest => dest.FeeType, src => Enum.Parse<FeeType>(src.name, true));
+
+            config.NewConfig<AcademicYear, AcademicYearDto>()
+    .Map(dest => dest.Id, src => src.Id)
+    .Map(dest => dest.Name, src => src.Name)
+    .Map(dest => dest.fees, src => src.Fees);
 			// Lecture mappings
 			config.NewConfig<Lecture, LectureResponse>()
 				.Map(dest => dest.CreatedByName, src => $"{src.CreatedBy.FirstName} {src.CreatedBy.LastName}");
+
 		}
+	
 	}
 }

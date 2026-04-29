@@ -35,6 +35,11 @@ namespace ServiceLayer
 			services.AddScoped<IAuthunticationService, AuthService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
+            services.AddHttpClient<PaymobService>();
+            services.AddScoped<IPaymobService, PaymobService>();
+
+
+            return services;
 			services.AddScoped<IEnrollmentService, EnrollmentService>();
 			services.AddScoped<ILectureService, LectureService>();
 			return services;

@@ -1,4 +1,5 @@
 using DomainLayer.Models;
+using ServiceLayer.Specifications.CourseSpecifications;
 
 namespace ServiceLayer.Services
 {
@@ -53,15 +54,21 @@ namespace ServiceLayer.Services
 				return await GetAllCourseforDepartmentAsync(departmentId.Value);
 
 			return await GetAllCourseAsync();
+
 		}
 
 		public async Task<IEnumerable<CourseResponseDto>> GetUserEnrolledCoursesAsync(string userId)
-		{
+		{ 
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new UserNotFound(userId);
 
-			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courses = await courseRepository.GetAllAsync(new UserEnrolledCoursesSpecification(userId));
+			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
+			var courseSpecification = new StudentCourseSpecification(user.DepartmentId,user.AcademicYearEnum);
+			var courses = await CourseRepository.GetAllAsync(courseSpecification);
+			if (courses is null || !courses.Any())
+			{
+				throw  new CoursesInDepartmentNotFoundException(user.DepartmentId??0);
+			}
 			return courses.Adapt<IEnumerable<CourseResponseDto>>();
 		}
 

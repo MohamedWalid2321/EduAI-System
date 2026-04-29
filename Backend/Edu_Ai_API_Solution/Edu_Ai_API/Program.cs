@@ -22,6 +22,8 @@ using StackExchange.Redis;
 using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
 using HangfireBasicAuthenticationFilter;
+using System.Diagnostics;
+
 namespace Edu_Ai_API
 {
     public class Program
@@ -118,6 +120,8 @@ namespace Edu_Ai_API
 				options.MultipartHeadersLengthLimit = int.MaxValue;
 			});
 
+			builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+
 			var app = builder.Build();
 
 			// CORS must be FIRST to handle preflight requests
@@ -158,8 +162,9 @@ namespace Edu_Ai_API
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-
+            
             app.Run();
+            
         }
     }
 }

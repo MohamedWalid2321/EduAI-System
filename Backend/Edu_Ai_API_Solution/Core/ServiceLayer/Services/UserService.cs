@@ -30,7 +30,7 @@
 						LastName = user.LastName!,
 						Email = user.Email!,
 						IsDisabled = user.IsDisabled,
-						AcademicYear = user.AcademicYear.ToString()!,
+						AcademicYear = user.AcademicYearEnum.ToString()!,
 						DepartmentId = user.DepartmentId ?? 0,
 						Roles = roles
 					});
@@ -100,7 +100,7 @@
 
 			if (emailIsExists)
 				throw new DuplicatedEmail(request.Email);
-			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
 			}
@@ -119,10 +119,10 @@
 				throw new UserNotFound(id);
 
 			var originalDepartmentId = user.DepartmentId;
-			var originalAcademicYear = user.AcademicYear;
+			var originalAcademicYear = user.AcademicYearEnum;
 
 			user = request.Adapt(user);
-			user.AcademicYear = academicYear;
+			user.AcademicYearEnum = academicYear;
 
 			var result = await _userManager.UpdateAsync(user);
 
@@ -135,9 +135,9 @@
 				}
 				await _userManager.AddToRolesAsync(user, request.Roles);
 
-			var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+			var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYearEnum != originalAcademicYear;
 
-			if (enrollmentDataChanged && user.DepartmentId.HasValue && user.AcademicYear.HasValue)
+			if (enrollmentDataChanged && user.DepartmentId.HasValue && user.AcademicYearEnum.HasValue)
 				BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(id));
 				return ;
 			}
@@ -183,9 +183,9 @@
 		{
 			if (await _userManager.FindByIdAsync(id) is not { } user)
 				throw new UserNotFound(id);
-			if (user.AcademicYear == AcademicYear.Fifth)
+			if (user.AcademicYearEnum == AcademicYearEnum.Fifth)
 				throw new MaxAcademicYearReached();
-			user.AcademicYear += 1;
+			user.AcademicYearEnum += 1;
 			var result = await _userManager.UpdateAsync(user);
 			if (result.Succeeded)
 			{
@@ -209,7 +209,7 @@
 			if ((!string.IsNullOrWhiteSpace(request.AcademicYear)) && (!await _userManager.IsInRoleAsync(user!,DefaultRoles.Student)) ) {
 				throw new IsNotStudentException();
 			}
-			if (!Enum.TryParse<AcademicYear>(request.AcademicYear, true, out var academicYear))
+			if (!Enum.TryParse<AcademicYearEnum>(request.AcademicYear, true, out var academicYear))
 			{
 				throw new InvalidAcademicYear();
 			}
@@ -222,10 +222,10 @@
 			}
 
 			var originalDepartmentId = user.DepartmentId;
-			var originalAcademicYear = user.AcademicYear;
+			var originalAcademicYear = user.AcademicYearEnum;
 
 			user = request.Adapt(user);
-			user!.AcademicYear = academicYear;
+			user!.AcademicYearEnum = academicYear;
 			
 			if (file is not null && file.Length > 0)
 			{
@@ -238,7 +238,7 @@
 				user.ProfilePictureUrl = imagePath;
 			}
 			await _userManager.UpdateAsync(user!);
-		var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYear != originalAcademicYear;
+		var enrollmentDataChanged = user.DepartmentId != originalDepartmentId || user.AcademicYearEnum != originalAcademicYear;
 		if (enrollmentDataChanged && (await _userManager.IsInRoleAsync(user!, DefaultRoles.Student)))
 			BackgroundJob.Enqueue<IEnrollmentService>(s => s.ReEnrollAsync(userId));
 		}

@@ -16,10 +16,10 @@ namespace DomainLayer.Models
 		public DateOnly DateOfBirth { get; set; }
 		public bool IsDisabled { get; set; }
 		public List<RefreshToken> RefreshTokens { get; set; } = [];
-
+		public int AcademicYearId { get; set; }
 		public int? DepartmentId { get; set; }
 		public Department? Department { get; set; }
-		public AcademicYear? AcademicYear { get; set; }
+		public AcademicYearEnum? AcademicYearEnum { get; set; }
 		public bool IsEnrolled { get; set; } = false;
 		public DateTime? EnrolledAt { get; set; }
 

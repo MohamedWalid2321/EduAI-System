@@ -37,6 +37,82 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("CourseDepartment");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.AcademicYear", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AcademicYear", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 357, DateTimeKind.Local).AddTicks(5336),
+                            IsDeleted = false,
+                            Name = "First Year"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 357, DateTimeKind.Local).AddTicks(5386),
+                            IsDeleted = false,
+                            Name = "Second Year"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 357, DateTimeKind.Local).AddTicks(5390),
+                            IsDeleted = false,
+                            Name = "Third Year"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 357, DateTimeKind.Local).AddTicks(5432),
+                            IsDeleted = false,
+                            Name = "Fourth Year"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 357, DateTimeKind.Local).AddTicks(5434),
+                            IsDeleted = false,
+                            Name = "Fifth Year"
+                        });
+                });
+
             modelBuilder.Entity("DomainLayer.Models.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -120,7 +196,10 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AcademicYear")
+                    b.Property<int?>("AcademicYearEnum")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AcademicYearId")
                         .HasColumnType("int");
 
                     b.Property<int>("AccessFailedCount")
@@ -215,6 +294,7 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = "585c8473-10ce-4377-8407-1f64655876c1",
+                            AcademicYearId = 0,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "7d47a4bf-ded7-4642-83fd-7b16df7ac368",
                             DateOfBirth = new DateOnly(1, 1, 1),
@@ -227,7 +307,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMt9ZJ4g5jJbKroRb86bqTCLOaTEhkS1KfhvqjtSlxf4t1/aAk0EbC/exQSh7sovaA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEERtknVH6hOWNtRiMw5W/+Kcc+TiLy3oj4pIy7twBJP1KTjYn3j2h3NSfZw8UfvJIA==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "",
                             SecurityStamp = "911889FEF7B44646B1E278C5C4F7C893",
@@ -237,6 +317,7 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = "6dc6528a-b280-4770-9eae-82671ee81ef7",
+                            AcademicYearId = 0,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "99d2bbc6-bc54-4248-a172-a77de3ae4430",
                             DateOfBirth = new DateOnly(1, 1, 1),
@@ -249,7 +330,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEfbGPcbdhufhwNBfhRLqbITBk24xYBI2z97IxGoaBAeskSwHOb0brqKK+FafMq1vw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG8nK904JtxhuSapyxrUc/8R5TO7ddjuyTIqPqeWA8jtFR0eY9V8AYtBmaocaRmyvg==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "",
                             SecurityStamp = "55BF92C9EF0249CDA210D85D1A851BC9",
@@ -278,8 +359,17 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Hours")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsMandatory")
                         .HasColumnType("bit");
@@ -317,6 +407,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -324,6 +420,9 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -361,6 +460,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -370,6 +475,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -406,12 +514,21 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Feedback")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("Grade")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -453,6 +570,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -462,6 +585,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -504,6 +630,15 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -542,6 +677,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -551,6 +692,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -573,7 +717,7 @@ namespace persistenceLayer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AcademicLevel")
+                    b.Property<int?>("AcademicLevel")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -585,6 +729,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<int>("Credit_Hour")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -594,6 +744,9 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
@@ -609,9 +762,6 @@ namespace persistenceLayer.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("PrerequisiteCourseId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -621,8 +771,6 @@ namespace persistenceLayer.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PrerequisiteCourseId");
 
                     b.ToTable("Courses", (string)null);
                 });
@@ -640,6 +788,15 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -659,32 +816,842 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1000,
-                            CreatedAt = new DateTime(2026, 4, 10, 5, 4, 9, 744, DateTimeKind.Local).AddTicks(8063),
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(3679),
+                            IsDeleted = false,
                             Title = "ComputerEngineering"
                         },
                         new
                         {
                             Id = 1001,
-                            CreatedAt = new DateTime(2026, 4, 10, 5, 4, 9, 744, DateTimeKind.Local).AddTicks(8132),
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(3716),
+                            IsDeleted = false,
                             Title = "ElectricalEngineering"
                         },
                         new
                         {
                             Id = 1003,
-                            CreatedAt = new DateTime(2026, 4, 10, 5, 4, 9, 744, DateTimeKind.Local).AddTicks(8136),
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(3719),
+                            IsDeleted = false,
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1004,
-                            CreatedAt = new DateTime(2026, 4, 10, 5, 4, 9, 744, DateTimeKind.Local).AddTicks(8139),
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(3721),
+                            IsDeleted = false,
                             Title = "BiomedicalEngineering"
                         },
                         new
                         {
                             Id = 1002,
-                            CreatedAt = new DateTime(2026, 4, 10, 5, 4, 9, 744, DateTimeKind.Local).AddTicks(8141),
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(3723),
+                            IsDeleted = false,
                             Title = "MechanicalEngineering"
+                        });
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Fee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FeeType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("AcademicYearId", "DepartmentId", "FeeType")
+                        .IsUnique();
+
+                    b.ToTable("Fee", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AcademicYearId = 1,
+                            Amount = 6000.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8631),
+                            DepartmentId = 1000,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AcademicYearId = 1,
+                            Amount = 800.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8665),
+                            DepartmentId = 1000,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AcademicYearId = 1,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8669),
+                            DepartmentId = 1000,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AcademicYearId = 2,
+                            Amount = 6600.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8672),
+                            DepartmentId = 1000,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AcademicYearId = 2,
+                            Amount = 880.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8674),
+                            DepartmentId = 1000,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AcademicYearId = 2,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8679),
+                            DepartmentId = 1000,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AcademicYearId = 3,
+                            Amount = 7200.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8681),
+                            DepartmentId = 1000,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AcademicYearId = 3,
+                            Amount = 960.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8683),
+                            DepartmentId = 1000,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AcademicYearId = 3,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8685),
+                            DepartmentId = 1000,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AcademicYearId = 4,
+                            Amount = 7800.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8688),
+                            DepartmentId = 1000,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AcademicYearId = 4,
+                            Amount = 1040.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8690),
+                            DepartmentId = 1000,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AcademicYearId = 4,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8692),
+                            DepartmentId = 1000,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AcademicYearId = 5,
+                            Amount = 8400.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8694),
+                            DepartmentId = 1000,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 14,
+                            AcademicYearId = 5,
+                            Amount = 1120.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8696),
+                            DepartmentId = 1000,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 15,
+                            AcademicYearId = 5,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8698),
+                            DepartmentId = 1000,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 16,
+                            AcademicYearId = 1,
+                            Amount = 5500.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8703),
+                            DepartmentId = 1001,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 17,
+                            AcademicYearId = 1,
+                            Amount = 700.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8705),
+                            DepartmentId = 1001,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 18,
+                            AcademicYearId = 1,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8708),
+                            DepartmentId = 1001,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 19,
+                            AcademicYearId = 2,
+                            Amount = 6050.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8710),
+                            DepartmentId = 1001,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 20,
+                            AcademicYearId = 2,
+                            Amount = 770.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8712),
+                            DepartmentId = 1001,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 21,
+                            AcademicYearId = 2,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8713),
+                            DepartmentId = 1001,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 22,
+                            AcademicYearId = 3,
+                            Amount = 6600.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8715),
+                            DepartmentId = 1001,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 23,
+                            AcademicYearId = 3,
+                            Amount = 840.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8717),
+                            DepartmentId = 1001,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 24,
+                            AcademicYearId = 3,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8718),
+                            DepartmentId = 1001,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 25,
+                            AcademicYearId = 4,
+                            Amount = 7150.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8720),
+                            DepartmentId = 1001,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 26,
+                            AcademicYearId = 4,
+                            Amount = 910.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8721),
+                            DepartmentId = 1001,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 27,
+                            AcademicYearId = 4,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8791),
+                            DepartmentId = 1001,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 28,
+                            AcademicYearId = 5,
+                            Amount = 7700.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8794),
+                            DepartmentId = 1001,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 29,
+                            AcademicYearId = 5,
+                            Amount = 980.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8795),
+                            DepartmentId = 1001,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 30,
+                            AcademicYearId = 5,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8797),
+                            DepartmentId = 1001,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 31,
+                            AcademicYearId = 1,
+                            Amount = 5000.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8803),
+                            DepartmentId = 1002,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 32,
+                            AcademicYearId = 1,
+                            Amount = 600.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8805),
+                            DepartmentId = 1002,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 33,
+                            AcademicYearId = 1,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8806),
+                            DepartmentId = 1002,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 34,
+                            AcademicYearId = 2,
+                            Amount = 5500.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8810),
+                            DepartmentId = 1002,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 35,
+                            AcademicYearId = 2,
+                            Amount = 660.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8812),
+                            DepartmentId = 1002,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 36,
+                            AcademicYearId = 2,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8813),
+                            DepartmentId = 1002,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 37,
+                            AcademicYearId = 3,
+                            Amount = 6000.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8815),
+                            DepartmentId = 1002,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 38,
+                            AcademicYearId = 3,
+                            Amount = 720.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8817),
+                            DepartmentId = 1002,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 39,
+                            AcademicYearId = 3,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8818),
+                            DepartmentId = 1002,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 40,
+                            AcademicYearId = 4,
+                            Amount = 6500.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8820),
+                            DepartmentId = 1002,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 41,
+                            AcademicYearId = 4,
+                            Amount = 780.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8822),
+                            DepartmentId = 1002,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 42,
+                            AcademicYearId = 4,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8823),
+                            DepartmentId = 1002,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 43,
+                            AcademicYearId = 5,
+                            Amount = 7000.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8825),
+                            DepartmentId = 1002,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 44,
+                            AcademicYearId = 5,
+                            Amount = 840.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8827),
+                            DepartmentId = 1002,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 45,
+                            AcademicYearId = 5,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8828),
+                            DepartmentId = 1002,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 46,
+                            AcademicYearId = 1,
+                            Amount = 5800.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8834),
+                            DepartmentId = 1003,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 47,
+                            AcademicYearId = 1,
+                            Amount = 750.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8835),
+                            DepartmentId = 1003,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 48,
+                            AcademicYearId = 1,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8837),
+                            DepartmentId = 1003,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 49,
+                            AcademicYearId = 2,
+                            Amount = 6380.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8838),
+                            DepartmentId = 1003,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 50,
+                            AcademicYearId = 2,
+                            Amount = 825.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8840),
+                            DepartmentId = 1003,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 51,
+                            AcademicYearId = 2,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8842),
+                            DepartmentId = 1003,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 52,
+                            AcademicYearId = 3,
+                            Amount = 6960.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8843),
+                            DepartmentId = 1003,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 53,
+                            AcademicYearId = 3,
+                            Amount = 900.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8845),
+                            DepartmentId = 1003,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 54,
+                            AcademicYearId = 3,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8846),
+                            DepartmentId = 1003,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 55,
+                            AcademicYearId = 4,
+                            Amount = 7540.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8848),
+                            DepartmentId = 1003,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 56,
+                            AcademicYearId = 4,
+                            Amount = 975.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8850),
+                            DepartmentId = 1003,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 57,
+                            AcademicYearId = 4,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8851),
+                            DepartmentId = 1003,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 58,
+                            AcademicYearId = 5,
+                            Amount = 8120.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8853),
+                            DepartmentId = 1003,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 59,
+                            AcademicYearId = 5,
+                            Amount = 1050.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8855),
+                            DepartmentId = 1003,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 60,
+                            AcademicYearId = 5,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8856),
+                            DepartmentId = 1003,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 61,
+                            AcademicYearId = 1,
+                            Amount = 6500.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8861),
+                            DepartmentId = 1004,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 62,
+                            AcademicYearId = 1,
+                            Amount = 900.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8862),
+                            DepartmentId = 1004,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 63,
+                            AcademicYearId = 1,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8864),
+                            DepartmentId = 1004,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 64,
+                            AcademicYearId = 2,
+                            Amount = 7150.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8866),
+                            DepartmentId = 1004,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 65,
+                            AcademicYearId = 2,
+                            Amount = 990.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8867),
+                            DepartmentId = 1004,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 66,
+                            AcademicYearId = 2,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8870),
+                            DepartmentId = 1004,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 67,
+                            AcademicYearId = 3,
+                            Amount = 7800.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8872),
+                            DepartmentId = 1004,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 68,
+                            AcademicYearId = 3,
+                            Amount = 1080.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8873),
+                            DepartmentId = 1004,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 69,
+                            AcademicYearId = 3,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8875),
+                            DepartmentId = 1004,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 70,
+                            AcademicYearId = 4,
+                            Amount = 8450.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8876),
+                            DepartmentId = 1004,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 71,
+                            AcademicYearId = 4,
+                            Amount = 1170.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8878),
+                            DepartmentId = 1004,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 72,
+                            AcademicYearId = 4,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8879),
+                            DepartmentId = 1004,
+                            FeeType = "Activities",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 73,
+                            AcademicYearId = 5,
+                            Amount = 9100.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8929),
+                            DepartmentId = 1004,
+                            FeeType = "Tuition",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 74,
+                            AcademicYearId = 5,
+                            Amount = 1260.00m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8931),
+                            DepartmentId = 1004,
+                            FeeType = "Books",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 75,
+                            AcademicYearId = 5,
+                            Amount = 300m,
+                            CreatedAt = new DateTime(2026, 4, 27, 2, 12, 32, 360, DateTimeKind.Local).AddTicks(8932),
+                            DepartmentId = 1004,
+                            FeeType = "Activities",
+                            IsDeleted = false
                         });
                 });
 
@@ -706,12 +1673,21 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -742,6 +1718,78 @@ namespace persistenceLayer.Data.Migrations
                     b.ToTable("Lecture");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("Payments", (string)null);
+                });
+
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
                 {
                     b.Property<int>("Id")
@@ -761,7 +1809,16 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -798,6 +1855,12 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -807,6 +1870,9 @@ namespace persistenceLayer.Data.Migrations
                         .HasColumnType("time");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -854,6 +1920,15 @@ namespace persistenceLayer.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsSubmitted")
                         .HasColumnType("bit");
@@ -910,7 +1985,16 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -955,7 +2039,16 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -1001,11 +2094,20 @@ namespace persistenceLayer.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("EnrolledAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EnrolledBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -1881,14 +2983,23 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Content");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Course", b =>
+            modelBuilder.Entity("DomainLayer.Models.Fee", b =>
                 {
-                    b.HasOne("DomainLayer.Models.Course", "PrerequisiteCourse")
-                        .WithMany()
-                        .HasForeignKey("PrerequisiteCourseId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("DomainLayer.Models.AcademicYear", "AcademicYear")
+                        .WithMany("Fees")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("PrerequisiteCourse");
+                    b.HasOne("DomainLayer.Models.Department", "Department")
+                        .WithMany("Fees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Lecture", b =>
@@ -1908,6 +3019,23 @@ namespace persistenceLayer.Data.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Payment", b =>
+                {
+                    b.HasOne("DomainLayer.Models.AcademicYear", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.QuestionChoices", b =>
@@ -2057,6 +3185,13 @@ namespace persistenceLayer.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.AcademicYear", b =>
+                {
+                    b.Navigation("Fees");
+
+                    b.Navigation("Payments");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.ApplicationUser", b =>
                 {
                     b.Navigation("UserCourses");
@@ -2096,6 +3231,8 @@ namespace persistenceLayer.Data.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.Department", b =>
                 {
+                    b.Navigation("Fees");
+
                     b.Navigation("Users");
                 });
 

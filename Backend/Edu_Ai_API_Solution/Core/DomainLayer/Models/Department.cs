@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-	public class Department: BaseEntity<int>
+	public class Department : BaseEntity<int>
 	{
 		public string Title { get; set; } = null!;
 		public ICollection<Course>? courses { get; set; }
-        public ICollection<ApplicationUser>? Users { get; set; }
+		public ICollection<ApplicationUser>? Users { get; set; }
+		public ICollection<Fee>? Fees { get; set; }
 	}
 }

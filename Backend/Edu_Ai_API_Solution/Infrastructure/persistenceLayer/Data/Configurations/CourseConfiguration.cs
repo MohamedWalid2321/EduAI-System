@@ -17,10 +17,6 @@
 					.WithOne(q => q.Course)
 				   .HasForeignKey(q => q.CourseId)
 				   .OnDelete(DeleteBehavior.Cascade);
-			builder.HasOne(c => c.PrerequisiteCourse)
-				   .WithMany()
-				   .HasForeignKey(c => c.PrerequisiteCourseId)
-				   .OnDelete(DeleteBehavior.Restrict);
 			builder.HasMany(c => c.Departments)
 				   .WithMany(d => d.courses);
 			builder.HasMany(c => c.Assessments)

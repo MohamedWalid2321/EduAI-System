@@ -6,7 +6,11 @@
 		=> await _context.Set<Tentity>().AddAsync(entity);
 
 		public void Delete(Tentity entity)
-			=> _context.Set<Tentity>().Remove(entity);
+		{
+			entity.IsDeleted = true;
+			entity.DeletedAt = DateTime.UtcNow;
+			_context.Set<Tentity>().Update(entity); // ✅ Mark modified, not removed
+		}
 
 		public async Task<IEnumerable<Tentity>> GetAllAsync()
 			=> await Task.FromResult(_context.Set<Tentity>().AsEnumerable());
