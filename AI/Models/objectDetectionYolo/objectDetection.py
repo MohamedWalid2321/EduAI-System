@@ -4,8 +4,9 @@ from ultralytics import YOLO
 import os
 
 # model = YOLO("C:\\Youssif Mohamed\\Graduation Project\\edu_ai\\AI\\models\\objectDetectionYolo\\best.pt")
-model = YOLO(os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.pt"))
+model = YOLO(os.path.join(os.path.dirname(os.path.abspath(__file__)), "updated_yolo.pt"))
 CHEATING_CLASSES = [
+    "Book",
     "Mobile_phone", 
     "Earphone", 
     "headset", 
