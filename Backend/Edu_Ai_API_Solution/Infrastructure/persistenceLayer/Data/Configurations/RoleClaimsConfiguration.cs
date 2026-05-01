@@ -10,8 +10,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
         var claims = new List<IdentityRoleClaim<string>>();
         var id = 1;
 
-        // SuperAdmin - All Permissions
-        foreach (var permission in Permissions.GetAllPermissions())
+        // SuperAdmin - All Permissions except Course:read
+        foreach (var permission in Permissions.GetAllPermissions().Where(p => p != Permissions.GetCourse))
         {
             claims.Add(new IdentityRoleClaim<string>
             {
