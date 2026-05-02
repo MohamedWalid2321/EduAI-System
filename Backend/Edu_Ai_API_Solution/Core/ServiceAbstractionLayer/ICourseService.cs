@@ -8,13 +8,13 @@ namespace ServiceAbstractionLayer
 		Task<IEnumerable<CourseResponseDto>> GetUserEnrolledCoursesAsync(string userId, CancellationToken cancellationToken = default);
 		Task<FullCourseResponse> GetCourseByIdAsync(int departmentId, int courseId, CancellationToken cancellationToken = default);
 		Task<CourseResponseDto> AddCourseAsync(int departmentId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default);
-		Task UpdateCourseAsync(int departmentId, int courseId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default);
+		Task UpdateCourseAsync(int courseId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default);
 		Task ToggleCouresStatus(int CourseId, CancellationToken cancellationToken = default);
 		Task<FullCourseResponse> AddAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken = default);
 		Task UpdateAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken = default);
 		Task DeleteCourseAsync(int courseId, CancellationToken cancellationToken = default);
-        Task<UserCourseResponse> ManualEnrollUserAsync(int courseId, string userId, string enrolledBy, CancellationToken cancellationToken = default);
-        Task ManualUnenrollUserAsync(int courseId, string userId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<UserCourseResponse>> GetCourseEnrolledUsersAsync(int courseId, CancellationToken cancellationToken = default);
-    }
+		Task<UserCourseResponse> ManualEnrollUserAsync(int courseId, string userId, string enrolledBy, CancellationToken cancellationToken = default);
+		Task ManualUnenrollUserAsync(int courseId, string userId, CancellationToken cancellationToken = default);
+		Task<IEnumerable<UserCourseResponse>> GetCourseEnrolledUsersAsync(int courseId, CancellationToken cancellationToken = default);
+	}
 }
