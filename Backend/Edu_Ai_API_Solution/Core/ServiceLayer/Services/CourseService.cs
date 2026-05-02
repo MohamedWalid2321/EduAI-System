@@ -107,21 +107,18 @@ namespace ServiceLayer.Services
 			return courseEntity.Adapt<CourseResponseDto>();
 		}
 
-		public async Task UpdateCourseAsync(int departmentId, int courseId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default)
+		public async Task UpdateCourseAsync(int courseId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(departmentId, courseId), cancellationToken);
+			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(courseId), cancellationToken);
 			if (courseEntity is null)
-			{
-				var courseExists = await courseRepository.GetByIdAsync(courseId, cancellationToken);
-				if (courseExists is null)
-					throw new CourseNotFoundException(courseId);
-				throw new CourseDepartmentNotFoundException(courseId, departmentId);
-			}
+				throw new CourseNotFoundException(courseId);
+
 			if (!string.IsNullOrEmpty(courseEntity.ImageUrl))
 				await _fileStorageService.DeleteFileAsync(courseEntity.ImageUrl);
 
 			courseEntity = request.Adapt(courseEntity);
+
 			if (ImageFile is not null && ImageFile.Length > 0)
 			{
 				using var stream = ImageFile.OpenReadStream();

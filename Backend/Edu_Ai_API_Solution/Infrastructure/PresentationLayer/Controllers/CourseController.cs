@@ -41,11 +41,11 @@ namespace PresentationLayer.Controllers
             return CreatedAtAction(nameof(GetCourseById), new { departmentId, Courseid = createdCourse.Id }, createdCourse);
         }
 
-        [HttpPut("{departmentId}/{id}")]
+        [HttpPut("{id}")]
         [HasPermission(Permissions.UpdateCourse)]
-        public async Task<IActionResult> UpdateCourse(int departmentId, int id, [FromForm] CourseRequestDto courseDto, IFormFile? ImageFile, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCourse(int id, [FromForm] CourseRequestDto courseDto, IFormFile? ImageFile, CancellationToken cancellationToken)
         {
-            await serviceManager.CourseService.UpdateCourseAsync(departmentId, id, courseDto, ImageFile, cancellationToken);
+            await serviceManager.CourseService.UpdateCourseAsync(id, courseDto, ImageFile, cancellationToken);
             await _cacheService.RemoveByPatternAsync(CoursesPatternCacheKey);
             return Ok();
         }
