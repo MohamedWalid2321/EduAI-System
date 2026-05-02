@@ -12,7 +12,7 @@ namespace ServiceLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<AcademicYearDto> CreateAsync(string name)
+        public async Task<AcademicYearDto> CreateAsync(string name, CancellationToken cancellationToken = default)
         {
             var academicYearRepo = _unitOfWork.GetRepository<AcademicYear, int>();
 
@@ -24,27 +24,27 @@ namespace ServiceLayer.Services
                 Name = name
             };
 
-            await  academicYearRepo.AddAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
+            await  academicYearRepo.AddAsync(entity, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return entity.Adapt< AcademicYearDto>();
         }
 
-        public async Task<List<AcademicYearDto>> GetAllAsync()
+        public async Task<List<AcademicYearDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var academicYearRepo = _unitOfWork.GetRepository<AcademicYear, int>();
 
             var academicYearSpecification = new AcademicYearSpecifications();
-            var years = await academicYearRepo.GetAllAsync(academicYearSpecification);
+            var years = await academicYearRepo.GetAllAsync(academicYearSpecification, cancellationToken);
 
             return years.Adapt<List<AcademicYearDto>>();
         }
 
-        public async Task<AcademicYearDto> GetByIdAsync(int id)
+        public async Task<AcademicYearDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var academicYearRepo = _unitOfWork.GetRepository<AcademicYear, int>();
             var academicYearSpecification = new AcademicYearSpecifications(id);
-            var entity =await academicYearRepo.GetByIdAsync(academicYearSpecification);
+            var entity = await academicYearRepo.GetByIdAsync(academicYearSpecification, cancellationToken);
 
             if (entity == null)
                 throw new Exception("Academic year not found");

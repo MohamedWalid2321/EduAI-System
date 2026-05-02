@@ -9,9 +9,8 @@ namespace ServiceAbstractionLayer
 {
     public interface IPaymentService
     {
-        Task<string> CreatePaymentAsync(string studentId );
+        Task<string> CreatePaymentAsync(string studentId, CancellationToken cancellationToken = default);
 
-        Task<WebhookResultDto> HandleWebhookAsync(string body, string sentHmac);
+        Task<WebhookResultDto> HandleWebhookAsync(string body, string sentHmac, CancellationToken cancellationToken = default);
     }
-
 }

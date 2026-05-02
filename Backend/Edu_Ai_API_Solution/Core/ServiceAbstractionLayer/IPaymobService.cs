@@ -9,7 +9,7 @@ namespace ServiceAbstractionLayer
 {
     public interface IPaymobService
     {
-        Task<string> CreatePaymentUrlAsync(CreatePaymentRequestDto request);
+        Task<string> CreatePaymentUrlAsync(CreatePaymentRequestDto request, CancellationToken cancellationToken = default);
         string CalculateHmac(WebhookObj obj);
     }
 }

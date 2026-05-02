@@ -13,27 +13,27 @@ namespace ServiceLayer.Services
 		private readonly string _jitsiDomain = configuration["Jitsi:Domain"] ?? "meet.jit.si";
 		
 
-		public async Task<IEnumerable<LectureResponse>> GetAllByCourseAsync(int courseId)
+		public async Task<IEnumerable<LectureResponse>> GetAllByCourseAsync(int courseId, CancellationToken cancellationToken = default)
 		{
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			var lectures = await repo.GetAllAsync(new LecturesByCourseSpecification(courseId));
+			var lectures = await repo.GetAllAsync(new LecturesByCourseSpecification(courseId), cancellationToken);
 			return lectures.Adapt<IEnumerable<LectureResponse>>();
 		}
 
-		public async Task<LectureResponse> GetByIdAsync(int courseId, int lectureId)
+		public async Task<LectureResponse> GetByIdAsync(int courseId, int lectureId, CancellationToken cancellationToken = default)
 		{
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId));
+			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId), cancellationToken);
 			if (lecture is null)
 				throw new LectureNotFoundException(lectureId);
 
 			return lecture.Adapt<LectureResponse>();
 		}
 
-		public async Task<LectureResponse> CreateAsync(int courseId, string createdById, CreateLectureRequest request)
+		public async Task<LectureResponse> CreateAsync(int courseId, string createdById, CreateLectureRequest request, CancellationToken cancellationToken = default)
 		{
 			var courseRepo = _unitOfWork.GetRepository<Course, int>();
-			var courseExists = await courseRepo.GetByIdAsync(courseId);
+			var courseExists = await courseRepo.GetByIdAsync(courseId, cancellationToken);
 			if (courseExists is null)
 				throw new CourseNotFoundException(courseId);
 
@@ -49,18 +49,18 @@ namespace ServiceLayer.Services
 			};
 
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			await repo.AddAsync(lecture);
-			await _unitOfWork.SaveChangesAsync();
+			await repo.AddAsync(lecture, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 			// Reload with CreatedBy navigation
-			var created = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lecture.Id));
+			var created = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lecture.Id), cancellationToken);
 			return created!.Adapt<LectureResponse>();
 		}
 
-		public async Task UpdateAsync(int courseId, int lectureId, UpdateLectureRequest request)
+		public async Task UpdateAsync(int courseId, int lectureId, UpdateLectureRequest request, CancellationToken cancellationToken = default)
 		{
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId));
+			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId), cancellationToken);
 			if (lecture is null)
 				throw new LectureNotFoundException(lectureId);
 
@@ -70,36 +70,36 @@ namespace ServiceLayer.Services
 			lecture.RoomName = GenerateRoomName(courseId, request.Title);
 
 			repo.Update(lecture);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task DeleteAsync(int courseId, int lectureId)
+		public async Task DeleteAsync(int courseId, int lectureId, CancellationToken cancellationToken = default)
 		{
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId));
+			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId), cancellationToken);
 			if (lecture is null)
 				throw new LectureNotFoundException(lectureId);
 
 			repo.Delete(lecture);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task ToggleActiveAsync(int courseId, int lectureId)
+		public async Task ToggleActiveAsync(int courseId, int lectureId, CancellationToken cancellationToken = default)
 		{
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId));
+			var lecture = await repo.GetByIdAsync(new LecturesByCourseSpecification(courseId, lectureId), cancellationToken);
 			if (lecture is null)
 				throw new LectureNotFoundException(lectureId);
 
 			lecture.IsActive = !lecture.IsActive;
 			repo.Update(lecture);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task<LectureJoinResponse> JoinAsync(int lectureId, string userId)
+		public async Task<LectureJoinResponse> JoinAsync(int lectureId, string userId, CancellationToken cancellationToken = default)
 		{
 			var repo = _unitOfWork.GetRepository<Lecture, int>();
-			var lecture = await repo.GetByIdAsync(lectureId);
+			var lecture = await repo.GetByIdAsync(lectureId, cancellationToken);
 			if (lecture is null)
 				throw new LectureNotFoundException(lectureId);
 
@@ -112,7 +112,7 @@ namespace ServiceLayer.Services
 				? $"{joiningUser.FirstName} {joiningUser.LastName}".Trim()
 				: "Student";
 
-			// Resolve the room creator — their email is the Jitsi moderator identity
+			// Resolve the room creator ï¿½ their email is the Jitsi moderator identity
 			var creator = await _userManager.FindByIdAsync(lecture.CreatedById);
 			var moderatorEmail = creator?.Email ?? string.Empty;
 

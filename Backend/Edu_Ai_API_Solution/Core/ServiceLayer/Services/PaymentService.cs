@@ -19,7 +19,7 @@ namespace ServiceLayer.Services
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IPaymobService _paymobService = paymobService;
 
-        public async Task<string> CreatePaymentAsync(string studentId )
+        public async Task<string> CreatePaymentAsync(string studentId, CancellationToken cancellationToken = default)
         {
             
             var feeRepo = _unitOfWork.GetRepository<Fee, int>();
@@ -34,14 +34,14 @@ namespace ServiceLayer.Services
             var spec = new PaidFeeSpecification(studentId, student.AcademicYearId);
 
 
-            var exists = await paymentRepo.GetAllAsync(spec);
+            var exists = await paymentRepo.GetAllAsync(spec, cancellationToken);
 
             if (exists.Any())
                 throw new Exception("Already paid");
 
             var feeSpecification = new FeeSpecifications(student.AcademicYearId, student.DepartmentId);
 
-            var fees = await feeRepo.GetAllAsync(feeSpecification);
+            var fees = await feeRepo.GetAllAsync(feeSpecification, cancellationToken);
 
             var totalAmount = fees.Sum(f => f.Amount);
 
@@ -56,10 +56,10 @@ namespace ServiceLayer.Services
                 TransactionId = "NA"
             };
 
-            await paymentRepo.AddAsync(payment);
+            await paymentRepo.AddAsync(payment, cancellationToken);
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -82,14 +82,14 @@ namespace ServiceLayer.Services
                 PhoneNumber = string.IsNullOrEmpty(student.PhoneNumber) ? "NA" : student.PhoneNumber,
             };
 
-            var url = await _paymobService.CreatePaymentUrlAsync(dto);
+            var url = await _paymobService.CreatePaymentUrlAsync(dto, cancellationToken);
 
             return url;
         }
 
         
 
-        public async Task<WebhookResultDto> HandleWebhookAsync(string body , string sentHmac)
+        public async Task<WebhookResultDto> HandleWebhookAsync(string body, string sentHmac, CancellationToken cancellationToken = default)
         {
             var data = JsonConvert.DeserializeObject<PaymobWebhookDto>(body);
 
@@ -107,7 +107,7 @@ namespace ServiceLayer.Services
 
             var spec = new PaymentByOrderIdSpec(orderId);
 
-            var payment = await paymentRepo.GetFirstOrDefaultAsync(spec);
+            var payment = await paymentRepo.GetFirstOrDefaultAsync(spec, cancellationToken);
 
             if (payment == null)
                 throw new Exception("Payment not found");
@@ -129,7 +129,7 @@ namespace ServiceLayer.Services
                 : PaymentStatus.Failed;
 
             _unitOfWork.GetRepository<Payment, int>().Update(payment);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new WebhookResultDto
             {

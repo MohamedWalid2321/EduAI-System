@@ -17,14 +17,14 @@ namespace ServiceLayer.Services
 {
     public class QuizAttemptService(IUnitOfWork _unitOfWork) : IQuizAttemptService
     {
-        public async Task<StartQuizResponseDto> StartQuizAsync(string quizCode, string studentId)
+        public async Task<StartQuizResponseDto> StartQuizAsync(string quizCode, string studentId, CancellationToken cancellationToken = default)
         {
             var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
             
 
             var quizSpecification = new QuizSpecification(quizCode);
-            var quizEntity = await quizRepository.GetFirstOrDefaultAsync(quizSpecification);
+            var quizEntity = await quizRepository.GetFirstOrDefaultAsync(quizSpecification, cancellationToken);
 
             if (quizEntity is null)
             {
@@ -32,7 +32,7 @@ namespace ServiceLayer.Services
             }
 
             var hasAttemptedQuizSpecification = new HasAttemptedQuizSpecification(quizEntity.Id, studentId);
-            var hasAttemptedQuiz = await attemptRepository.GetCountAsync(hasAttemptedQuizSpecification) > 0;
+            var hasAttemptedQuiz = await attemptRepository.GetCountAsync(hasAttemptedQuizSpecification, cancellationToken) > 0;
             if (hasAttemptedQuiz)
             {
                 throw new QuizAlreadyAttemptedException(quizCode, studentId);
@@ -52,8 +52,8 @@ namespace ServiceLayer.Services
             quizAttemptEntity.Quiz = quizEntity; // set the navigation property to the quiz entity
             
 
-            await attemptRepository.AddAsync(quizAttemptEntity);
-            await _unitOfWork.SaveChangesAsync();
+            await attemptRepository.AddAsync(quizAttemptEntity, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var response = new StartQuizResponseDto
             {
@@ -78,7 +78,8 @@ namespace ServiceLayer.Services
         public async Task<SubmitQuizResponseDto> SubmitQuizAsync(
             int attemptId,
             SubmitQuizRequestDto request,
-            string studentId)
+            string studentId,
+            CancellationToken cancellationToken = default)
         {
             var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
@@ -87,7 +88,7 @@ namespace ServiceLayer.Services
 
             var quizAttemptSpecification = new QuizAttemptSpecification(attemptId, studentId);
 
-            var attemptedQuiz = await attemptRepository.GetFirstOrDefaultAsync(quizAttemptSpecification);
+            var attemptedQuiz = await attemptRepository.GetFirstOrDefaultAsync(quizAttemptSpecification, cancellationToken);
 
             if (attemptedQuiz is null)
                 throw new QuizAttemptNotFoundException(studentId);
@@ -96,7 +97,7 @@ namespace ServiceLayer.Services
 
             var quizSpecification = new QuizSpecification(attemptedQuiz.QuizId);
 
-            var quizEntity = await quizRepository.GetFirstOrDefaultAsync(quizSpecification);
+            var quizEntity = await quizRepository.GetFirstOrDefaultAsync(quizSpecification, cancellationToken);
 
             if (quizEntity is null)
                 throw new QuizNotFoundException(attemptedQuiz.QuizId);
@@ -152,7 +153,7 @@ namespace ServiceLayer.Services
 
             foreach (var studentAnswer in studentAnswers)
             {
-                await studentAnswerRepository.AddAsync(studentAnswer);
+                await studentAnswerRepository.AddAsync(studentAnswer, cancellationToken);
             }
 
 
@@ -162,7 +163,7 @@ namespace ServiceLayer.Services
 
 
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 
             var answersDict = studentAnswers.ToDictionary(a => a.QuizQuestionId);
@@ -197,7 +198,7 @@ namespace ServiceLayer.Services
             return response;
         }
 
-        public async Task<SubmitQuizResponseDto> GetQuizResultAsync(int attemptId, string studentId)
+        public async Task<SubmitQuizResponseDto> GetQuizResultAsync(int attemptId, string studentId, CancellationToken cancellationToken = default)
         {
             var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
@@ -206,7 +207,7 @@ namespace ServiceLayer.Services
 
             var quizAttemptSpecification = new QuizAttemptSpecification(attemptId, studentId);
 
-            var attemptedQuiz = await attemptRepository.GetFirstOrDefaultAsync(quizAttemptSpecification);
+            var attemptedQuiz = await attemptRepository.GetFirstOrDefaultAsync(quizAttemptSpecification, cancellationToken);
 
             if (attemptedQuiz is null)
                 throw new QuizAttemptNotFoundException(studentId);
@@ -215,7 +216,7 @@ namespace ServiceLayer.Services
 
             var quizSpecification = new QuizSpecification(attemptedQuiz.QuizId);
 
-            var quizEntity = await quizRepository.GetFirstOrDefaultAsync(quizSpecification);
+            var quizEntity = await quizRepository.GetFirstOrDefaultAsync(quizSpecification, cancellationToken);
 
             if (quizEntity is null)
                 throw new QuizNotFoundException(attemptedQuiz.QuizId);
@@ -230,7 +231,7 @@ namespace ServiceLayer.Services
 
             var existingAnswersSpecification = new ExistingStudentAnswersSpecification(attemptId);
 
-            var studentAnswers = await studentAnswerRepository.GetAllAsync(existingAnswersSpecification);
+            var studentAnswers = await studentAnswerRepository.GetAllAsync(existingAnswersSpecification, cancellationToken);
 
             var answersDict = studentAnswers.ToDictionary(a => a.QuizQuestionId);
 
@@ -264,13 +265,13 @@ namespace ServiceLayer.Services
             return response;
         }
 
-        public async Task<List<StudentAttemptDto>> GetStudentsByQuizAsync(string quizCode)
+        public async Task<List<StudentAttemptDto>> GetStudentsByQuizAsync(string quizCode, CancellationToken cancellationToken = default)
         {
             var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
 
             var spec = new QuizAttemptsByQuizSpecification(quizCode);
 
-            var attempts = await attemptRepository.GetAllAsync(spec);
+            var attempts = await attemptRepository.GetAllAsync(spec, cancellationToken);
 
             var result = attempts.Select(a => new StudentAttemptDto
             {
@@ -282,13 +283,13 @@ namespace ServiceLayer.Services
             return result;
         }
 
-        public async Task<List<StudentQuizDto>> GetStudentQuizzesAsync(string studentId)
+        public async Task<List<StudentQuizDto>> GetStudentQuizzesAsync(string studentId, CancellationToken cancellationToken = default)
         {
             var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
 
             var spec = new StudentAttemptsSpecification(studentId);
 
-            var attempts = await attemptRepository.GetAllAsync(spec);
+            var attempts = await attemptRepository.GetAllAsync(spec, cancellationToken);
 
             var result = attempts.Select(a => new StudentQuizDto
             {

@@ -6,13 +6,13 @@ namespace ServiceLayer.Services
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IFileStorageService _fileStorageService = fileStorageService;
 
-		public async Task<AssigmentResponseDto> CreateOrUpdateAssigmentForCourse(int courseId, AssigmentRequestDto assigmentRequest)
+		public async Task<AssigmentResponseDto> CreateOrUpdateAssigmentForCourse(int courseId, AssigmentRequestDto assigmentRequest, CancellationToken cancellationToken = default)
 		{
 			var assignmentRepository = _unitOfWork.GetRepository<Assignment, int>();
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			
 			// Verify course exists
-			var course = await courseRepository.GetByIdAsync(courseId);
+			var course = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 			if (course is null)
 			{
 				throw new CourseNotFoundException(courseId);
@@ -21,7 +21,7 @@ namespace ServiceLayer.Services
 			if (assigmentRequest.Id > 0)
 			{
 				//Update 
-				var foundedAssignmentEntity = await assignmentRepository.GetByIdAsync(assigmentRequest.Id);
+				var foundedAssignmentEntity = await assignmentRepository.GetByIdAsync(assigmentRequest.Id, cancellationToken);
 				if (foundedAssignmentEntity is null)
 				{
 					throw new AssignmentNotFoundException(assigmentRequest.Id);
@@ -41,23 +41,23 @@ namespace ServiceLayer.Services
 				//Create
 				var assignmentEntity = assigmentRequest.Adapt<Assignment>();
 				assignmentEntity.CourseId = courseId;
-				await assignmentRepository.AddAsync(assignmentEntity);
+				await assignmentRepository.AddAsync(assignmentEntity, cancellationToken);
 			}
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 			// Reload with attachments for the response
 			var assignmentSpec = new AssignmentSpecification(assigmentRequest.Id > 0 ? assigmentRequest.Id : course.Assignments?.LastOrDefault()?.Id ?? 0);
-			var updatedAssignment = await assignmentRepository.GetByIdAsync(assignmentSpec);
+			var updatedAssignment = await assignmentRepository.GetByIdAsync(assignmentSpec, cancellationToken);
 			return updatedAssignment!.Adapt<AssigmentResponseDto>();
 		}
 
-		public async Task<AssigmentResponseDto> AddAttachmentToAssigment(int AssigmentId, List<IFormFile?> Files)
+		public async Task<AssigmentResponseDto> AddAttachmentToAssigment(int AssigmentId, List<IFormFile?> Files, CancellationToken cancellationToken = default)
 		{
 			var assignmentRepository = _unitOfWork.GetRepository<Assignment, int>();
 			var attachmentRepository = _unitOfWork.GetRepository<AssignmentAttachment, Guid>();
 			
-			var assignmentEntity = await assignmentRepository.GetByIdAsync(AssigmentId);
+			var assignmentEntity = await assignmentRepository.GetByIdAsync(AssigmentId, cancellationToken);
 			if (assignmentEntity is null)
 			{
                 throw new AssignmentNotFoundException(AssigmentId);
@@ -83,35 +83,35 @@ namespace ServiceLayer.Services
 						AssignmentId = AssigmentId
 					};
 
-					await attachmentRepository.AddAsync(attachment);
+					await attachmentRepository.AddAsync(attachment, cancellationToken);
 				}
 			}
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			
 			// Reload with attachments
 			var assignmentSpec = new AssignmentSpecification(AssigmentId);
-			var updatedAssignment = await assignmentRepository.GetByIdAsync(assignmentSpec);
+			var updatedAssignment = await assignmentRepository.GetByIdAsync(assignmentSpec, cancellationToken);
 			return updatedAssignment!.Adapt<AssigmentResponseDto>();
 		}
 
-		public async Task DeleteAssigmentAsync(int AssigmentId)
+		public async Task DeleteAssigmentAsync(int AssigmentId, CancellationToken cancellationToken = default)
 		{
 			var assignmentRepository = _unitOfWork.GetRepository<Assignment, int>();
-			var assignmentEntity = await assignmentRepository.GetByIdAsync(AssigmentId);
+			var assignmentEntity = await assignmentRepository.GetByIdAsync(AssigmentId, cancellationToken);
 			if (assignmentEntity is null)
 			{
                 throw new AssignmentNotFoundException(AssigmentId);
             }
 			assignmentRepository.Delete(assignmentEntity!);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task<IEnumerable<AssigmentResponseDto>> GetAllAssigmentsByCourseIdAsync(int courseId)
+		public async Task<IEnumerable<AssigmentResponseDto>> GetAllAssigmentsByCourseIdAsync(int courseId, CancellationToken cancellationToken = default)
 		{
 			var assignmentRepository = _unitOfWork.GetRepository<Assignment, int>();
 			var assignmentSpecification = new AssignmentByCourseIdSpecification(courseId);
-			var assignmentEntities = await assignmentRepository.GetAllAsync(assignmentSpecification);
+			var assignmentEntities = await assignmentRepository.GetAllAsync(assignmentSpecification, cancellationToken);
 			if (assignmentEntities is null || !assignmentEntities.Any())
 			{
 				throw new AssignmentInCourseNotFoundException(courseId);
@@ -122,11 +122,11 @@ namespace ServiceLayer.Services
 			}
 		}
 
-		public async Task<AssigmentResponseDto> GetAssigmentByIdAsync(int AssigmentId)
+		public async Task<AssigmentResponseDto> GetAssigmentByIdAsync(int AssigmentId, CancellationToken cancellationToken = default)
 		{
 			var assignmentRepository = _unitOfWork.GetRepository<Assignment, int>();
 			var assignmentSpec = new AssignmentSpecification(AssigmentId);
-			var assignmentEntity = await assignmentRepository.GetByIdAsync(assignmentSpec);
+			var assignmentEntity = await assignmentRepository.GetByIdAsync(assignmentSpec, cancellationToken);
 			if (assignmentEntity is null)
 			{
                 throw new AssignmentNotFoundException(AssigmentId);
@@ -134,16 +134,16 @@ namespace ServiceLayer.Services
 			return assignmentEntity.Adapt<AssigmentResponseDto>();
 		}
 
-		public async Task RemoveAttachment(Guid AttachmentId)
+		public async Task RemoveAttachment(Guid AttachmentId, CancellationToken cancellationToken = default)
 		{
 			var attachmentRepository = _unitOfWork.GetRepository<AssignmentAttachment, Guid>();
-			var attachmentEntity = await attachmentRepository.GetByIdAsync(AttachmentId);
+			var attachmentEntity = await attachmentRepository.GetByIdAsync(AttachmentId, cancellationToken);
 			if (attachmentEntity is null)
 			{
 				throw new AssignmentAttachmentNotFoundException(AttachmentId);
 			}
 			attachmentRepository.Delete(attachmentEntity!);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 	}
 }
