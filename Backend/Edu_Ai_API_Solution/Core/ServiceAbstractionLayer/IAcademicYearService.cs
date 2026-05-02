@@ -10,8 +10,8 @@ namespace ServiceAbstractionLayer
 {
     public interface IAcademicYearService
     {
-        Task<List<AcademicYearDto>> GetAllAsync();
-        Task<AcademicYearDto> GetByIdAsync(int Id);
-        Task<AcademicYearDto> CreateAsync(string name);
+        Task<List<AcademicYearDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<AcademicYearDto> GetByIdAsync(int Id, CancellationToken cancellationToken = default);
+        Task<AcademicYearDto> CreateAsync(string name, CancellationToken cancellationToken = default);
     }
 }

@@ -10,6 +10,6 @@ namespace DomainLayer.Contracts
 	public interface IUnitOfWork
 	{
 		public IGenericRepository<Tentity, TKey> GetRepository<Tentity, TKey>() where Tentity : BaseEntity<TKey>;
-		Task<int> SaveChangesAsync();
+		Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 	}
 }

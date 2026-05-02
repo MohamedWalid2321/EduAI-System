@@ -13,7 +13,7 @@ namespace ServiceLayer.Services
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-		public async Task AutoEnrollAsync(string userId)
+		public async Task AutoEnrollAsync(string userId, CancellationToken cancellationToken = default)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null || !user.DepartmentId.HasValue || !user.AcademicYearEnum.HasValue)
@@ -21,13 +21,13 @@ namespace ServiceLayer.Services
 
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var matchingCourses = await courseRepository.GetAllAsync(
-				new StudentCourseSpecification(user.DepartmentId, user.AcademicYearEnum));
+				new StudentCourseSpecification(user.DepartmentId, user.AcademicYearEnum), cancellationToken);
 
 			if (!matchingCourses.Any())
 				return;
 
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
-			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByUserSpecification(userId));
+			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByUserSpecification(userId), cancellationToken);
 			var alreadyEnrolledCourseIds = existing.Select(uc => uc.CourseId).ToHashSet();
 
 			foreach (var course in matchingCourses.Where(c => !alreadyEnrolledCourseIds.Contains(c.Id)))
@@ -38,28 +38,28 @@ namespace ServiceLayer.Services
 					CourseId = course.Id,
 					EnrolledAt = DateTime.UtcNow,
 					Status = EnrollmentStatus.Active
-				});
+				}, cancellationToken);
 			}
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task ReEnrollAsync(string userId)
+		public async Task ReEnrollAsync(string userId, CancellationToken cancellationToken = default)
 		{
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
-			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByUserSpecification(userId));
+			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByUserSpecification(userId), cancellationToken);
 
 			foreach (var enrollment in existing)
 				userCourseRepo.Delete(enrollment);
 
-			await _unitOfWork.SaveChangesAsync();
-			await AutoEnrollAsync(userId);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			await AutoEnrollAsync(userId, cancellationToken);
 		}
 
-		public async Task EnrollNewCourseAsync(int courseId)
+		public async Task EnrollNewCourseAsync(int courseId, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var course = await courseRepository.GetByIdAsync(new CourseSpecification(courseId));
+			var course = await courseRepository.GetByIdAsync(new CourseSpecification(courseId), cancellationToken);
 			if (course is null || !course.IsPublished)
 				return;
 
@@ -71,13 +71,13 @@ namespace ServiceLayer.Services
 				.Where(u => u.DepartmentId.HasValue
 						 && departmentIds.Contains(u.DepartmentId.Value)
 						 && u.AcademicYearEnum == course.AcademicLevel)
-				.ToListAsync();
+				.ToListAsync(cancellationToken);
 
 			if (!matchingUsers.Any())
 				return;
 
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
-			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByCourseSpecification(courseId));
+			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByCourseSpecification(courseId), cancellationToken);
 			var alreadyEnrolledUserIds = existing.Select(uc => uc.UserId).ToHashSet();
    			foreach (var user in matchingUsers.Where(u => !alreadyEnrolledUserIds.Contains(u.Id)))
 			{
@@ -87,10 +87,10 @@ namespace ServiceLayer.Services
 					CourseId = courseId,
 					EnrolledAt = DateTime.UtcNow,
 					Status = EnrollmentStatus.Active
-				});
+				}, cancellationToken);
 			}
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 	}
 }

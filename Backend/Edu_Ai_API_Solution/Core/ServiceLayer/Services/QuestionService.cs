@@ -11,13 +11,13 @@ namespace ServiceLayer.Services
 {
     public class QuestionService(IUnitOfWork _unitOfWork) : IQuestionService
     {
-        public async Task<QuestionResponseDto> CreateQuestionForQuiz(int quizId, QuestionRequestDto questionRequest)
+        public async Task<QuestionResponseDto> CreateQuestionForQuiz(int quizId, QuestionRequestDto questionRequest, CancellationToken cancellationToken = default)
         {
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
             var QuestionRepository = _unitOfWork.GetRepository<QuizQuestion, int>();
 
             // Verify quiz exists
-            var quizEntity = await quizRepository.GetByIdAsync(quizId);
+            var quizEntity = await quizRepository.GetByIdAsync(quizId, cancellationToken);
             if (quizEntity is null)
             {
                 throw new QuizNotFoundException(quizId);
@@ -25,7 +25,7 @@ namespace ServiceLayer.Services
             var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText);
 
             //check the duplicate of question in the same quiz
-            var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications);
+            var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications, cancellationToken);
             if (count > 0)
             {
                 throw new QuestionAlreadyExistsException(questionRequest.QuestionText);
@@ -55,19 +55,19 @@ namespace ServiceLayer.Services
 
             var questionEntity = questionRequest.Adapt<QuizQuestion>();
             questionEntity.QuizId = quizId;
-            await QuestionRepository.AddAsync(questionEntity);
-            await _unitOfWork.SaveChangesAsync();
+            await QuestionRepository.AddAsync(questionEntity, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return questionEntity.Adapt<QuestionResponseDto>();
         }
 
 
-        public async Task<QuestionResponseDto> ToggleQuestionAsync(int quizId, int questionId)
+        public async Task<QuestionResponseDto> ToggleQuestionAsync(int quizId, int questionId, CancellationToken cancellationToken = default)
         {
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
             var QuestionRepository = _unitOfWork.GetRepository<QuizQuestion, int>();
 
             // Verify quiz exists
-            var quizEntity = await quizRepository.GetByIdAsync(quizId);
+            var quizEntity = await quizRepository.GetByIdAsync(quizId, cancellationToken);
             if (quizEntity is null)
             {
                 throw new QuizNotFoundException(quizId);
@@ -76,7 +76,7 @@ namespace ServiceLayer.Services
             // Verify question exists
             var questionSpecifications = new QuestionInQuizSpecifications(quizId, questionId);
 
-            var questionEntity = await QuestionRepository.GetByIdAsync(questionSpecifications);
+            var questionEntity = await QuestionRepository.GetByIdAsync(questionSpecifications, cancellationToken);
             if (questionEntity is null)
             {
                 throw new QuestionNotFoundException(questionId);
@@ -86,18 +86,18 @@ namespace ServiceLayer.Services
             // Toggle the IsActive status of the question
             questionEntity.IsActive = !questionEntity.IsActive;
             QuestionRepository.Update(questionEntity);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return questionEntity.Adapt<QuestionResponseDto>();
 
         }
 
-        public async Task<QuestionResponseDto> UpdateQuestionAsync(int quizId, QuestionRequestDto questionRequest)
+        public async Task<QuestionResponseDto> UpdateQuestionAsync(int quizId, QuestionRequestDto questionRequest, CancellationToken cancellationToken = default)
         {
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
             var QuestionRepository = _unitOfWork.GetRepository<QuizQuestion, int>();
 
             // Verify quiz exists
-            var quizEntity = await quizRepository.GetByIdAsync(quizId);
+            var quizEntity = await quizRepository.GetByIdAsync(quizId, cancellationToken);
 
             if (quizEntity is null)
             {
@@ -107,7 +107,7 @@ namespace ServiceLayer.Services
             // Verify question exists
             var questionSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.Id);
 
-            var questionEntity = await QuestionRepository.GetByIdAsync(questionSpecifications);
+            var questionEntity = await QuestionRepository.GetByIdAsync(questionSpecifications, cancellationToken);
 
             if (questionEntity is null)
             {
@@ -116,7 +116,7 @@ namespace ServiceLayer.Services
 
             var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText);
             //check the duplicate of question in the same quiz
-            var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications);
+            var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications, cancellationToken);
             if (count > 0)
             {
                 throw new QuestionAlreadyExistsException(questionRequest.QuestionText);
@@ -157,7 +157,7 @@ namespace ServiceLayer.Services
                 }).ToList();
 
             QuestionRepository.Update(questionEntity);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return questionEntity.Adapt<QuestionResponseDto>();
 
 

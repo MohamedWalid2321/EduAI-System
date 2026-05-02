@@ -2,12 +2,10 @@
 {
 	public interface IQuizService
 	{
-		Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId,QuizRequestDto quizRequest);
-        Task<QuizResponseDto> GetQuizByIdAsync(int quizId);
-		Task<IEnumerable<QuizResponseDto>> GetAllQuizzesAsync();
-		Task<IEnumerable<QuizResponseDto>> GetAllQuizzesForCourse(int CourseId);
-		Task DeleteQuizAsync(int quizId);
-		
-		
+		Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizRequestDto quizRequest, CancellationToken cancellationToken = default);
+        Task<QuizResponseDto> GetQuizByIdAsync(int quizId, CancellationToken cancellationToken = default);
+		Task<IEnumerable<QuizResponseDto>> GetAllQuizzesAsync(CancellationToken cancellationToken = default);
+		Task<IEnumerable<QuizResponseDto>> GetAllQuizzesForCourse(int CourseId, CancellationToken cancellationToken = default);
+		Task DeleteQuizAsync(int quizId, CancellationToken cancellationToken = default);
 	}
 }

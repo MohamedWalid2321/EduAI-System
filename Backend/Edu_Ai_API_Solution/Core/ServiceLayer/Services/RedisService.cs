@@ -69,16 +69,12 @@
         {
             try
             {
-                // URL encode key to handle special characters
-                var encodedKey = Uri.EscapeDataString(key);
+                // Use JSON-body pipeline POST to avoid %2F path-segment blocking
+                // (nginx/Cloudflare reject encoded slashes in URL path segments)
+                var commandJson = JsonSerializer.Serialize(new object[] { "DEL", key });
+                var content = new StringContent(commandJson, Encoding.UTF8, "application/json");
 
-                // Upstash REST endpoint for deleting a key
-                var url = $"{_baseUrl}/del/{encodedKey}";
-
-                // Send POST request to delete the key
-                var response = await _client.PostAsync(url, null);
-
-                // Throw exception if request failed
+                var response = await _client.PostAsync(_baseUrl, content);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)

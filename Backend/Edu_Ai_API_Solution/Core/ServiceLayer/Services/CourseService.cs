@@ -14,23 +14,23 @@ namespace ServiceLayer.Services
 		private readonly UserManager<ApplicationUser> _userManager = userManager;
 		private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
 
-		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseforDepartmentAsync(int departmentId)
+		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseforDepartmentAsync(int departmentId, CancellationToken cancellationToken = default)
 		{
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courses = await CourseRepository.GetAllAsync(new CourseByDepartmentSpecification(departmentId));
+			var courses = await CourseRepository.GetAllAsync(new CourseByDepartmentSpecification(departmentId), cancellationToken);
 			if (courses is null || !courses.Any())
 				throw new CoursesInDepartmentNotFoundException(departmentId);
 			return courses.Adapt<IEnumerable<CourseResponseDto>>();
 		}
 
-		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseAsync()
+		public async Task<IEnumerable<CourseResponseDto>> GetAllCourseAsync(CancellationToken cancellationToken = default)
 		{
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courses = await CourseRepository.GetAllAsync();
+			var courses = await CourseRepository.GetAllAsync(cancellationToken);
 			return courses.Adapt<IEnumerable<CourseResponseDto>>();
 		}
 
-		public async Task<IEnumerable<CourseResponseDto>> GetCoursesAsync(string userId, int? departmentId)
+		public async Task<IEnumerable<CourseResponseDto>> GetCoursesAsync(string userId, int? departmentId, CancellationToken cancellationToken = default)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new UserNotFound(userId);
@@ -48,49 +48,46 @@ namespace ServiceLayer.Services
 			}
 
 			if (isEnrolledRole)
-				return await GetUserEnrolledCoursesAsync(userId);
+				return await GetUserEnrolledCoursesAsync(userId, cancellationToken);
 
 			if (departmentId.HasValue)
-				return await GetAllCourseforDepartmentAsync(departmentId.Value);
+				return await GetAllCourseforDepartmentAsync(departmentId.Value, cancellationToken);
 
-			return await GetAllCourseAsync();
-
+			return await GetAllCourseAsync(cancellationToken);
 		}
 
-		public async Task<IEnumerable<CourseResponseDto>> GetUserEnrolledCoursesAsync(string userId)
-		{ 
+		public async Task<IEnumerable<CourseResponseDto>> GetUserEnrolledCoursesAsync(string userId, CancellationToken cancellationToken = default)
+		{
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new UserNotFound(userId);
 
 			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseSpecification = new StudentCourseSpecification(user.DepartmentId,user.AcademicYearEnum);
-			var courses = await CourseRepository.GetAllAsync(courseSpecification);
+			var courseSpecification = new StudentCourseSpecification(user.DepartmentId, user.AcademicYearEnum);
+			var courses = await CourseRepository.GetAllAsync(courseSpecification, cancellationToken);
 			if (courses is null || !courses.Any())
-			{
-				throw  new CoursesInDepartmentNotFoundException(user.DepartmentId??0);
-			}
+				throw new CoursesInDepartmentNotFoundException(user.DepartmentId ?? 0);
 			return courses.Adapt<IEnumerable<CourseResponseDto>>();
 		}
 
-		public async Task<FullCourseResponse> GetCourseByIdAsync(int departmentId, int courseId)
+		public async Task<FullCourseResponse> GetCourseByIdAsync(int departmentId, int courseId, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseExists = await courseRepository.GetByIdAsync(courseId);
+			var courseExists = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 			if (courseExists is null)
 				throw new CourseNotFoundException(courseId);
 
-			var course = await courseRepository.GetByIdAsync(new CourseSpecification(departmentId, courseId));
+			var course = await courseRepository.GetByIdAsync(new CourseSpecification(departmentId, courseId), cancellationToken);
 			if (course is null)
 				throw new CourseDepartmentNotFoundException(courseId, departmentId);
 
 			return course.Adapt<FullCourseResponse>();
 		}
 
-		public async Task<CourseResponseDto> AddCourseAsync(int departmentId, CourseRequestDto request, IFormFile? ImageFile)
+		public async Task<CourseResponseDto> AddCourseAsync(int departmentId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var departmentRepository = _unitOfWork.GetRepository<Department, int>();
-			var departmentExists = await departmentRepository.GetByIdAsync(departmentId);
+			var departmentExists = await departmentRepository.GetByIdAsync(departmentId, cancellationToken);
 			if (departmentExists is null)
 				throw new DepartmentNotFoundException(departmentId);
 
@@ -104,20 +101,19 @@ namespace ServiceLayer.Services
 				courseEntity.ImageUrl = imagePath;
 			}
 			courseEntity.Departments.Add(departmentExists);
-			await courseRepository.AddAsync(courseEntity);
-			await _unitOfWork.SaveChangesAsync();
-			BackgroundJob.Enqueue<IEnrollmentService>(s => s.EnrollNewCourseAsync(courseEntity.Id));
+			await courseRepository.AddAsync(courseEntity, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			BackgroundJob.Enqueue<IEnrollmentService>(s => s.EnrollNewCourseAsync(courseEntity.Id, default));
 			return courseEntity.Adapt<CourseResponseDto>();
 		}
 
-		public async Task UpdateCourseAsync(int departmentId, int courseId, CourseRequestDto request, IFormFile? ImageFile)
+		public async Task UpdateCourseAsync(int departmentId, int courseId, CourseRequestDto request, IFormFile? ImageFile, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(departmentId, courseId));
-
+			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(departmentId, courseId), cancellationToken);
 			if (courseEntity is null)
 			{
-				var courseExists = await courseRepository.GetByIdAsync(courseId);
+				var courseExists = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 				if (courseExists is null)
 					throw new CourseNotFoundException(courseId);
 				throw new CourseDepartmentNotFoundException(courseId, departmentId);
@@ -126,7 +122,6 @@ namespace ServiceLayer.Services
 				await _fileStorageService.DeleteFileAsync(courseEntity.ImageUrl);
 
 			courseEntity = request.Adapt(courseEntity);
-
 			if (ImageFile is not null && ImageFile.Length > 0)
 			{
 				using var stream = ImageFile.OpenReadStream();
@@ -136,27 +131,27 @@ namespace ServiceLayer.Services
 				courseEntity.ImageUrl = imagePath;
 			}
 			courseRepository.Update(courseEntity);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task ToggleCouresStatus(int CourseId)
+		public async Task ToggleCouresStatus(int CourseId, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseEntity = await courseRepository.GetByIdAsync(CourseId);
+			var courseEntity = await courseRepository.GetByIdAsync(CourseId, cancellationToken);
 			if (courseEntity is null)
 				throw new CourseNotFoundException(CourseId);
 
 			courseEntity.IsPublished = !courseEntity.IsPublished;
 			courseRepository.Update(courseEntity);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			if (courseEntity.IsPublished)
-				BackgroundJob.Enqueue<IEnrollmentService>(s => s.EnrollNewCourseAsync(CourseId));
+				BackgroundJob.Enqueue<IEnrollmentService>(s => s.EnrollNewCourseAsync(CourseId, default));
 		}
 
-		public async Task<FullCourseResponse> AddAssesment(int CourseId, List<AssesmentDto> assesments)
+		public async Task<FullCourseResponse> AddAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(CourseId));
+			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(CourseId), cancellationToken);
 			if (courseEntity is null)
 				throw new CourseNotFoundException(CourseId);
 
@@ -167,14 +162,14 @@ namespace ServiceLayer.Services
 				courseEntity.Assessments.Add(assesment);
 			}
 			courseRepository.Update(courseEntity);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			return courseEntity.Adapt<FullCourseResponse>();
 		}
 
-		public async Task UpdateAssesment(int CourseId, List<AssesmentDto> assesments)
+		public async Task UpdateAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(CourseId));
+			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(CourseId), cancellationToken);
 			if (courseEntity is null)
 				throw new CourseNotFoundException(CourseId);
 
@@ -186,13 +181,13 @@ namespace ServiceLayer.Services
 				courseEntity.Assessments.Add(assesment);
 			}
 			courseRepository.Update(courseEntity);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task DeleteCourseAsync(int courseId)
+		public async Task DeleteCourseAsync(int courseId, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseEntity = await courseRepository.GetByIdAsync(courseId);
+			var courseEntity = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 			if (courseEntity is null)
 				throw new CourseNotFoundException(courseId);
 
@@ -200,21 +195,20 @@ namespace ServiceLayer.Services
 				await _fileStorageService.DeleteFileAsync(courseEntity.ImageUrl);
 
 			courseRepository.Delete(courseEntity!);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task<UserCourseResponse> ManualEnrollUserAsync(int courseId, string userId, string enrolledBy)
+		public async Task<UserCourseResponse> ManualEnrollUserAsync(int courseId, string userId, string enrolledBy, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
 
-			var course = await courseRepository.GetByIdAsync(courseId);
+			var course = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 			if (course is null) throw new CourseNotFoundException(courseId);
 
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new UserNotFound(userId);
 
-			// Verify user's role is an enrolled role
 			var userRoles = await _userManager.GetRolesAsync(user);
 			var isEnrolledRole = false;
 			foreach (var roleName in userRoles)
@@ -229,9 +223,8 @@ namespace ServiceLayer.Services
 			if (!isEnrolledRole)
 				throw new IsNotInstructorException(userId);
 
-			// Check for duplicate enrollment
 			var existing = await userCourseRepo.GetAllAsync(
-				new UserCourseByUserAndCourseSpecification(userId, courseId));
+				new UserCourseByUserAndCourseSpecification(userId, courseId), cancellationToken);
 			if (existing.Any())
 				throw new DuplicatedInstructorEnrollmentException(userId, courseId);
 
@@ -244,8 +237,8 @@ namespace ServiceLayer.Services
 				EnrolledBy = enrolledBy
 			};
 
-			await userCourseRepo.AddAsync(userCourse);
-			await _unitOfWork.SaveChangesAsync();
+			await userCourseRepo.AddAsync(userCourse, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 			return new UserCourseResponse
 			{
@@ -260,30 +253,29 @@ namespace ServiceLayer.Services
 			};
 		}
 
-		public async Task ManualUnenrollUserAsync(int courseId, string userId)
+		public async Task ManualUnenrollUserAsync(int courseId, string userId, CancellationToken cancellationToken = default)
 		{
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
-
 			var enrollments = await userCourseRepo.GetAllAsync(
-				new UserCourseByUserAndCourseSpecification(userId, courseId));
+				new UserCourseByUserAndCourseSpecification(userId, courseId), cancellationToken);
 
 			var enrollment = enrollments.FirstOrDefault();
 			if (enrollment is null)
 				throw new DuplicatedInstructorEnrollmentException(userId, courseId);
 
 			userCourseRepo.Delete(enrollment);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
-		public async Task<IEnumerable<UserCourseResponse>> GetCourseEnrolledUsersAsync(int courseId)
+		public async Task<IEnumerable<UserCourseResponse>> GetCourseEnrolledUsersAsync(int courseId, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
 
-			var course = await courseRepository.GetByIdAsync(courseId);
+			var course = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 			if (course is null) throw new CourseNotFoundException(courseId);
 
-			var enrollments = await userCourseRepo.GetAllAsync(new UserCoursesByCourseSpecification(courseId));
+			var enrollments = await userCourseRepo.GetAllAsync(new UserCoursesByCourseSpecification(courseId), cancellationToken);
 
 			return enrollments.Select(e => new UserCourseResponse
 			{

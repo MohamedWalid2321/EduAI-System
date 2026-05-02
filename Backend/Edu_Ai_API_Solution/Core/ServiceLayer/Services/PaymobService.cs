@@ -30,34 +30,34 @@ namespace ServiceLayer.Services
 
         }
 
-        public async Task<string> CreatePaymentUrlAsync(CreatePaymentRequestDto request)
+        public async Task<string> CreatePaymentUrlAsync(CreatePaymentRequestDto request, CancellationToken cancellationToken = default)
         {
-            var token = await GetAuthToken();
+            var token = await GetAuthToken(cancellationToken);
 
-            var orderId = await CreateOrder(token, request);
+            var orderId = await CreateOrder(token, request, cancellationToken);
 
-            var paymentKey = await GetPaymentKey(token, orderId, request);
+            var paymentKey = await GetPaymentKey(token, orderId, request, cancellationToken);
 
             var url = $"{_settings.BaseUrl}/acceptance/iframes/{_settings.IframeId}?payment_token={paymentKey}";
 
             return url;
         }
 
-        private async Task<string> GetAuthToken()
+        private async Task<string> GetAuthToken(CancellationToken cancellationToken = default)
         {
             var response = await _httpClient.PostAsJsonAsync(
                 $"{_settings.BaseUrl}/auth/tokens",
-                new { api_key = _settings.ApiKey });
+                new { api_key = _settings.ApiKey }, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception("Auth failed");
 
-            var data = await response.Content.ReadFromJsonAsync<AuthResponse>();
+            var data = await response.Content.ReadFromJsonAsync<AuthResponse>(cancellationToken: cancellationToken);
 
             return data.token;
         }
 
-        private async Task<int> CreateOrder(string token, CreatePaymentRequestDto request)
+        private async Task<int> CreateOrder(string token, CreatePaymentRequestDto request, CancellationToken cancellationToken = default)
         {
             var response = await _httpClient.PostAsJsonAsync(
                 $"{_settings.BaseUrl}/ecommerce/orders",
@@ -69,17 +69,17 @@ namespace ServiceLayer.Services
                     currency = request.Currency,
                     merchant_order_id = request.OrderId.ToString(),
 
-                });
+                }, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
                 throw new Exception($"Payment key failed: {error}");
             }
 
 
 
-            var data = await response.Content.ReadFromJsonAsync<OrderResponse>();
+            var data = await response.Content.ReadFromJsonAsync<OrderResponse>(cancellationToken: cancellationToken);
 
             return data.Id;
         }
@@ -98,7 +98,7 @@ namespace ServiceLayer.Services
             };
         }
 
-        private async Task<string> GetPaymentKey(string token, int orderId, CreatePaymentRequestDto request)
+        private async Task<string> GetPaymentKey(string token, int orderId, CreatePaymentRequestDto request, CancellationToken cancellationToken = default)
         {
             if (request.Student == null)
                 throw new Exception("Student data is required");
@@ -137,15 +137,15 @@ namespace ServiceLayer.Services
                     merchant_order_id = request.OrderId.ToString(),
                     currency = request.Currency,
                     integration_id = int.Parse(_settings.IntegrationId)
-                });
+                }, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
                 throw new Exception($"Payment key failed: {error}");
             }
 
-            var data = await response.Content.ReadFromJsonAsync<PaymentKeyResponse>();
+            var data = await response.Content.ReadFromJsonAsync<PaymentKeyResponse>(cancellationToken: cancellationToken);
 
             return data.Token;
         }
