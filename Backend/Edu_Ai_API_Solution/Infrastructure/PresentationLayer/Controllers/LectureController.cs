@@ -3,10 +3,13 @@ using System.Threading;
 
 namespace PresentationLayer.Controllers
 {
-	public class LectureController(IServiceManager serviceManager) : ApiControllerBase
+	public class LectureController(IServiceManager serviceManager, ICacheService cacheService) : ApiControllerBase
 	{
+		private const string LecturesPattern = "/api/lecture*";
+
 		// GET /api/lecture/course/{courseId}
 		[HttpGet("course/{courseId}")]
+		[Cache(300)]
 		[HasPermission(Permissions.GetCourse)]
 		public async Task<IActionResult> GetAllByCourse(int courseId, CancellationToken cancellationToken)
 		{
@@ -16,6 +19,7 @@ namespace PresentationLayer.Controllers
 
 		// GET /api/lecture/{lectureId}/course/{courseId}
 		[HttpGet("{lectureId}/course/{courseId}")]
+		[Cache(300)]
 		[HasPermission(Permissions.GetCourse)]
 		public async Task<IActionResult> GetById(int courseId, int lectureId, CancellationToken cancellationToken)
 		{
@@ -30,6 +34,7 @@ namespace PresentationLayer.Controllers
 		{
 			var createdById = User.GetUserId()!;
 			var result = await serviceManager.LectureService.CreateAsync(courseId, createdById, request, cancellationToken);
+			await cacheService.RemoveByPatternAsync(LecturesPattern);
 			return CreatedAtAction(nameof(GetById), new { courseId, lectureId = result.Id }, result);
 		}
 
@@ -39,6 +44,7 @@ namespace PresentationLayer.Controllers
 		public async Task<IActionResult> Update(int courseId, int lectureId, [FromBody] UpdateLectureRequest request, CancellationToken cancellationToken)
 		{
 			await serviceManager.LectureService.UpdateAsync(courseId, lectureId, request, cancellationToken);
+			await cacheService.RemoveByPatternAsync(LecturesPattern);
 			return NoContent();
 		}
 
@@ -48,6 +54,7 @@ namespace PresentationLayer.Controllers
 		public async Task<IActionResult> Delete(int courseId, int lectureId, CancellationToken cancellationToken)
 		{
 			await serviceManager.LectureService.DeleteAsync(courseId, lectureId, cancellationToken);
+			await cacheService.RemoveByPatternAsync(LecturesPattern);
 			return NoContent();
 		}
 
@@ -57,6 +64,7 @@ namespace PresentationLayer.Controllers
 		public async Task<IActionResult> ToggleActive(int courseId, int lectureId, CancellationToken cancellationToken)
 		{
 			await serviceManager.LectureService.ToggleActiveAsync(courseId, lectureId, cancellationToken);
+			await cacheService.RemoveByPatternAsync(LecturesPattern);
 			return NoContent();
 		}
 

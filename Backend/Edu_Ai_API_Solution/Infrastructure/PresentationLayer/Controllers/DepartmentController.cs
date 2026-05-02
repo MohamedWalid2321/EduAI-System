@@ -3,10 +3,12 @@ using System.Threading;
 
 namespace PresentationLayer.Controllers
 {
-    // [Authorize]
-    public class DepartmentController(IServiceManager serviceManager) : ApiControllerBase
+    public class DepartmentController(IServiceManager serviceManager, ICacheService cacheService) : ApiControllerBase
     {
+        private const string DepartmentsPattern = "/api/department*";
+
         [HttpGet]
+        [Cache(600)]
         public async Task<IActionResult> GetDepartments(CancellationToken cancellationToken)
         {
             var departments = await serviceManager.DepartmentService.GetAllDepartmentsAsync(cancellationToken);
@@ -14,6 +16,7 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpGet("{id}")]
+        [Cache(600)]
         public async Task<IActionResult> GetDepartmentById(int id, CancellationToken cancellationToken)
         {
             var department = await serviceManager.DepartmentService.GetDepartmentByIdAsync(id, cancellationToken);
@@ -24,6 +27,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> AddDepartment([FromBody] DepartmentRequest request, CancellationToken cancellationToken)
         {
             var createdDepartment = await serviceManager.DepartmentService.AddDepartmentAsync(request, cancellationToken);
+            await cacheService.RemoveByPatternAsync(DepartmentsPattern);
             return CreatedAtAction(nameof(GetDepartmentById), new { id = createdDepartment.Id }, createdDepartment);
         }
 
@@ -31,6 +35,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] DepartmentRequest request, CancellationToken cancellationToken)
         {
             await serviceManager.DepartmentService.UpdateDepartmentAsync(id, request, cancellationToken);
+            await cacheService.RemoveByPatternAsync(DepartmentsPattern);
             return Ok();
         }
 
@@ -38,6 +43,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> DeleteDepartment(int id, CancellationToken cancellationToken)
         {
             await serviceManager.DepartmentService.DeleteDepartmentAsync(id, cancellationToken);
+            await cacheService.RemoveByPatternAsync(DepartmentsPattern);
             return Ok();
         }
 
@@ -45,6 +51,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> AssignCourseToDepartment(int departmentId, int courseId, CancellationToken cancellationToken)
         {
             await serviceManager.DepartmentService.AssignCourseToDepartmentAsync(departmentId, courseId, cancellationToken);
+            await cacheService.RemoveByPatternAsync(DepartmentsPattern);
             return Ok();
         }
 
@@ -52,6 +59,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> RemoveCourseFromDepartment(int departmentId, int courseId, CancellationToken cancellationToken)
         {
             await serviceManager.DepartmentService.RemoveCourseFromDepartmentAsync(departmentId, courseId, cancellationToken);
+            await cacheService.RemoveByPatternAsync(DepartmentsPattern);
             return Ok();
         }
     }
