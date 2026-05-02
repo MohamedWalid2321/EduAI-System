@@ -4,11 +4,13 @@ namespace PresentationLayer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RolesController(IServiceManager serviceManager) : ControllerBase
+    public class RolesController(IServiceManager serviceManager, ICacheService cacheService) : ControllerBase
     {
         private readonly IServiceManager _serviceManager = serviceManager;
+        private const string RolesPattern = "/api/roles*";
 
         [HttpGet("")]
+        [Cache(600)]
         [HasPermission(Permissions.GetRoles)]
         public async Task<IActionResult> GetAll([FromQuery] bool includeDisabled, CancellationToken cancellationToken)
         {
@@ -17,6 +19,7 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpGet("{id}")]
+        [Cache(600)]
         [HasPermission(Permissions.GetRoles)]
         public async Task<IActionResult> Get([FromRoute] string id, CancellationToken cancellationToken)
         {
@@ -29,6 +32,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Add([FromBody] RoleRequest request, CancellationToken cancellationToken)
         {
             var result = await _serviceManager.RoleService.AddAsync(request, cancellationToken);
+            await cacheService.RemoveByPatternAsync(RolesPattern);
             return CreatedAtAction(nameof(Get), new { result.Id }, result);
         }
 
@@ -37,6 +41,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Update([FromRoute] string id, [FromBody] RoleRequest request, CancellationToken cancellationToken)
         {
             await _serviceManager.RoleService.UpdateAsync(id, request, cancellationToken);
+            await cacheService.RemoveByPatternAsync(RolesPattern);
             return NoContent();
         }
 
@@ -45,6 +50,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> ToggleStatus([FromRoute] string id, CancellationToken cancellationToken)
         {
             await _serviceManager.RoleService.ToggleStatusAsync(id, cancellationToken);
+            await cacheService.RemoveByPatternAsync(RolesPattern);
             return NoContent();
         }
 
@@ -55,7 +61,6 @@ namespace PresentationLayer.Controllers
                 .Where(p => p != null)
                 .OrderBy(p => p)
                 .ToList();
-
             return Ok(new { count = permissions.Count, permissions });
         }
     }

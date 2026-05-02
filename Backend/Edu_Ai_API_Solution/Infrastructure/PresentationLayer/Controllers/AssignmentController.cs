@@ -1,12 +1,23 @@
 namespace PresentationLayer.Controllers
 {
-	public class AssignmentController(IServiceManager serviceManager) : ApiControllerBase
+	public class AssignmentController(IServiceManager serviceManager, ICacheService cacheService) : ApiControllerBase
 	{
+		private const string AssignmentsPattern = "/api/assignment*";
+
 		[HttpGet("course/{courseId}")]
+		[Cache(300)]
 		public async Task<IActionResult> GetAllAssignmentsByCourseId(int courseId, CancellationToken cancellationToken)
 		{
 			var assignments = await serviceManager.AssignmentService.GetAllAssigmentsByCourseIdAsync(courseId, cancellationToken);
 			return Ok(assignments);
+		}
+
+		[HttpGet("{id}")]
+		[Cache(300)]
+		public async Task<IActionResult> GetAssignmentById(int id, CancellationToken cancellationToken)
+		{
+			var assignment = await serviceManager.AssignmentService.GetAssigmentByIdAsync(id, cancellationToken);
+			return Ok(assignment);
 		}
 
 		[HttpPost("course/{courseId}")]
@@ -16,6 +27,7 @@ namespace PresentationLayer.Controllers
 		{
 			var createdOrUpdatedAssignment = await serviceManager.AssignmentService
 				.CreateOrUpdateAssigmentForCourse(courseId, assignmentDto, cancellationToken);
+			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok(createdOrUpdatedAssignment);
 		}
 
@@ -23,14 +35,8 @@ namespace PresentationLayer.Controllers
 		public async Task<IActionResult> DeleteAssignment(int id, CancellationToken cancellationToken)
 		{
 			await serviceManager.AssignmentService.DeleteAssigmentAsync(id, cancellationToken);
+			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok();
-		}
-
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetAssignmentById(int id, CancellationToken cancellationToken)
-		{
-			var assignment = await serviceManager.AssignmentService.GetAssigmentByIdAsync(id, cancellationToken);
-			return Ok(assignment);
 		}
 
 		[HttpPost("{assignmentId}/attachments")]
@@ -40,6 +46,7 @@ namespace PresentationLayer.Controllers
 		{
 			var updatedAssignment = await serviceManager.AssignmentService
 				.AddAttachmentToAssigment(assignmentId, attachmentFiles, cancellationToken);
+			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok(updatedAssignment);
 		}
 
@@ -47,6 +54,7 @@ namespace PresentationLayer.Controllers
 		public async Task<IActionResult> RemoveAttachment(Guid attachmentId, CancellationToken cancellationToken)
 		{
 			await serviceManager.AssignmentService.RemoveAttachment(attachmentId, cancellationToken);
+			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok();
 		}
 	}
