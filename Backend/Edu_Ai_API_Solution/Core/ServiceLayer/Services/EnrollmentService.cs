@@ -48,9 +48,8 @@ namespace ServiceLayer.Services
 		{
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
 			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByUserSpecification(userId), cancellationToken);
-
 			foreach (var enrollment in existing)
-				userCourseRepo.Delete(enrollment);
+				userCourseRepo.HardDelete(enrollment);
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await AutoEnrollAsync(userId, cancellationToken);
@@ -79,7 +78,8 @@ namespace ServiceLayer.Services
 			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
 			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByCourseSpecification(courseId), cancellationToken);
 			var alreadyEnrolledUserIds = existing.Select(uc => uc.UserId).ToHashSet();
-   			foreach (var user in matchingUsers.Where(u => !alreadyEnrolledUserIds.Contains(u.Id)))
+
+			foreach (var user in matchingUsers.Where(u => !alreadyEnrolledUserIds.Contains(u.Id)))
 			{
 				await userCourseRepo.AddAsync(new UserCourse
 				{
