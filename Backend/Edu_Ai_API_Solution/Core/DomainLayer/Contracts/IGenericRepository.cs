@@ -14,6 +14,7 @@ namespace DomainLayer.Contracts
 		Task AddAsync(Tentity entity, CancellationToken cancellationToken = default);
 		void Update(Tentity entity);
 		void Delete(Tentity entity);
+		void HardDelete(Tentity entity);
 		// With Specifications
 		Task<Tentity?> GetByIdAsync(ISpecifications<Tentity, TKey> specification, CancellationToken cancellationToken = default);
 		Task<IEnumerable<Tentity>> GetAllAsync(ISpecifications<Tentity, TKey> specification, CancellationToken cancellationToken = default);

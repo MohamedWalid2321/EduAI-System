@@ -12,6 +12,14 @@
 			_context.Set<Tentity>().Update(entity);
 		}
 
+		/// <summary>
+		/// Permanently removes the row from the database.
+		/// Use instead of <see cref="Delete"/> when the entity has a unique index
+		/// that does not filter on IsDeleted (e.g. UserCourses).
+		/// </summary>
+		public void HardDelete(Tentity entity)
+			=> _context.Set<Tentity>().Remove(entity);
+
 		public async Task<IEnumerable<Tentity>> GetAllAsync(CancellationToken cancellationToken = default)
 			=> await _context.Set<Tentity>().ToListAsync(cancellationToken);
 
