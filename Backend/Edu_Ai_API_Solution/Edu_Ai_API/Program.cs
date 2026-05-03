@@ -1,28 +1,20 @@
-using DomainLayer.Contracts;
 using DomainLayer.Models;
 using Edu_Ai_API.CustomMiddleWares;
 using Edu_Ai_API.Factories;
 using Hangfire;
+using HangfireBasicAuthenticationFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using persistenceLayer;
 using persistenceLayer.Data;
-using persistenceLayer.Repository;
 using PresentationLayer.Authorization;
 using Serilog;
 using ServiceAbstractionLayer;
 using ServiceLayer;
-using ServiceLayer.Services;
-using Shared.ErrorModels;
-using StackExchange.Redis;
-using Hangfire;
-using Hangfire.Dashboard.BasicAuthorization;
-using HangfireBasicAuthenticationFilter;
-using System.Diagnostics;
+using ServiceLayer.Jobs;
 
 namespace Edu_Ai_API
 {
@@ -36,9 +28,7 @@ namespace Edu_Ai_API
             builder.Host.UseSerilog((context, configuration) =>
                 configuration.ReadFrom.Configuration(context.Configuration));
 
-            // Add services to the container.
             builder.Services.AddControllers();
-            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
@@ -54,7 +44,6 @@ namespace Edu_Ai_API
                     }
                 });
 
-                // JWT Authentication
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -88,83 +77,80 @@ namespace Edu_Ai_API
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices(builder.Environment, builder.Configuration);
 
-            // Authorization Services
+            // Authorization
             builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
-            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
 
-			builder.Services.AddCors(options =>
-			{
-				options.AddPolicy("AllowAngular", corsBuilder =>
-				{
-					corsBuilder.WithOrigins(
-                     "http://localhost:4200", 
-                     "https://localhost:4200",  
-                     "http://localhost:4201",
-                     "https://localhost:4201"
-        )
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials(); 
-				});
-			});
-			// Configure form options
-			builder.Services.Configure<FormOptions>(options =>
-			{
-				options.MultipartBodyLengthLimit = 524288000; // 500 MB
-				options.ValueLengthLimit = int.MaxValue;
-				options.MultipartHeadersLengthLimit = int.MaxValue;
-			});
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular", corsBuilder =>
+                {
+                    corsBuilder.WithOrigins(
+                        "http://localhost:4200",
+                        "https://localhost:4200",
+                        "http://localhost:4201",
+                        "https://localhost:4201"
+                    )
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+                });
+            });
 
-			builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 524288000; // 500 MB
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
 
-			var app = builder.Build();
+            var app = builder.Build();
 
-			// CORS must be FIRST to handle preflight requests
-			app.UseCors("AllowAngular");
+            // CORS must be first to handle preflight requests
+            app.UseCors("AllowAngular");
+            app.UseSerilogRequestLogging();
+            app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
 
-			// Add Serilog request logging
-			app.UseSerilogRequestLogging();
-
-			// Then exception handler
-			app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
-
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Lumino API V1");
-                    
-                    // c.RoutePrefix = string.Empty;
                 });
-				app.UseHangfireDashboard("/jobs", new DashboardOptions
-				{
-					Authorization =
-	                [
-		                new HangfireCustomBasicAuthenticationFilter
-		                {
-			                User = app.Configuration.GetValue<string>("HangfireSettings:Username"),
-			                Pass = app.Configuration.GetValue<string>("HangfireSettings:Password")
-		                }
-	                ],
-					DashboardTitle = "Lumina Dashboard",
-					//IsReadOnlyFunc = (DashboardContext conext) => true
-				});
-			}
+
+                app.UseHangfireDashboard("/jobs", new DashboardOptions
+                {
+                    Authorization =
+                    [
+                        new HangfireCustomBasicAuthenticationFilter
+                        {
+                            User = app.Configuration.GetValue<string>("HangfireSettings:Username"),
+                            Pass = app.Configuration.GetValue<string>("HangfireSettings:Password")
+                        }
+                    ],
+                    DashboardTitle = "Lumina Dashboard",
+                });
+            }
+
+            // Schedule recurring background job: runs every hour
+            var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+            recurringJobManager.AddOrUpdate<AssignmentDeadlineReminderJob>(
+                "assignment-deadline-reminder",
+                job => job.SendDeadlineRemindersAsync(),
+                Cron.Daily);
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-            
+
             app.Run();
-            
         }
     }
 }

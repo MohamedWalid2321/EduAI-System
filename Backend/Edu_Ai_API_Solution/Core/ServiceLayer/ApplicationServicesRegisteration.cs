@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Microsoft.Extensions.Hosting;
+using ServiceLayer.Jobs;
 using System.Net.Http;
 
 namespace ServiceLayer
@@ -15,8 +16,7 @@ namespace ServiceLayer
 			.ConfigurePrimaryHttpMessageHandler(() =>
 			{
 				var handler = new HttpClientHandler();
-				
-				// Only disable SSL validation in development
+
 				if (environment.IsDevelopment())
 				{
 					handler.CheckCertificateRevocationList = false;
@@ -35,13 +35,14 @@ namespace ServiceLayer
 			services.AddScoped<IAuthunticationService, AuthService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IRoleService, RoleService>();
-            services.AddHttpClient<PaymobService>();
-            services.AddScoped<IPaymobService, PaymobService>();
-
-
-            return services;
+			services.AddScoped<INotificationService, NotificationService>();
+			services.AddScoped<AssignmentDeadlineReminderJob>();
+			services.AddScoped<WelcomeNotificationJob>();           // ← add this
+			services.AddHttpClient<PaymobService>();
+			services.AddScoped<IPaymobService, PaymobService>();
 			services.AddScoped<IEnrollmentService, EnrollmentService>();
 			services.AddScoped<ILectureService, LectureService>();
+
 			return services;
 		}
 

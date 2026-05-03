@@ -20,5 +20,6 @@ namespace ServiceAbstractionLayer
 		IPaymobService PaymentGateway { get; }
 		IAuthunticationService AuthunticationService { get; }
 		ILectureService LectureService { get; }
+		INotificationService NotificationService { get; }
 	}
 }
