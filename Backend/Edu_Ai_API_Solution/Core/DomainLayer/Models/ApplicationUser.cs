@@ -1,10 +1,5 @@
 using DomainLayer.Enums;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
@@ -24,5 +19,6 @@ namespace DomainLayer.Models
 		public DateTime? EnrolledAt { get; set; }
 
 		public ICollection<UserCourse> UserCourses { get; set; } = [];
+		public NotificationBox? NotificationBox { get; set; }
 	}
 }

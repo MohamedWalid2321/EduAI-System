@@ -1,4 +1,6 @@
-﻿namespace ServiceLayer.Services
+﻿using ServiceLayer.Jobs;
+
+namespace ServiceLayer.Services
 {
 	public class AuthService(UserManager<ApplicationUser> userManager,
 		SignInManager<ApplicationUser> signInManager,
@@ -9,7 +11,8 @@
 		IEmailBodyBuilder EmailBodyBuilder,
 		RoleManager<ApplicationRole> roleManager,
 		IUnitOfWork unitOfWork,
-		ILogger<AuthService> logger) : IAuthunticationService
+		ILogger<AuthService> logger,
+		IBackgroundJobClient backgroundJobClient) : IAuthunticationService
 	{
 		private readonly UserManager<ApplicationUser> _userManager = userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
@@ -21,6 +24,7 @@
 		private readonly IEmailBodyBuilder _emailBodyBuilder = EmailBodyBuilder;
 		private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
+		private readonly IBackgroundJobClient _backgroundJobClient = backgroundJobClient;
 		private readonly int _RefreshTokenExpirationDays = 14;
 
 		public async Task<AuthResponse> GetTokenAsync(string email, string password, CancellationToken cancellationToken = default)
@@ -92,6 +96,7 @@
 				IsEnrolled = true,
 				EnrolledAt = DateTime.UtcNow
 			};
+
 			if (file is not null && file.Length > 0)
 			{
 				using var stream = file.OpenReadStream();
@@ -109,6 +114,7 @@
 				var error = result.Errors.FirstOrDefault();
 				throw new Exception(error != null ? error.Description : "User registration failed");
 			}
+
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 			_logger.LogInformation("User registered successfully. UserId: {UserId}, Email: {Email}, ConfirmationCode: {ConfirmationCode}", user.Id, user.Email, code);
@@ -208,6 +214,8 @@
 			}
 			await _userManager.AddToRoleAsync(user, DefaultRoles.Student);
 			BackgroundJob.Enqueue<IEnrollmentService>(s => s.AutoEnrollAsync(user.Id, default));
+			_backgroundJobClient.Enqueue<WelcomeNotificationJob>(
+				job => job.SendWelcomeNotificationAsync(user.Id, user.FirstName!));
 		}
 
 		public async Task ResendConfirmEmailAsync(ResendConfirmEmailRequest request, CancellationToken cancellationToken = default)

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using ServiceAbstractionLayer;
 using ServiceLayer.Services;
 
-
 namespace ServiceLayer
 {
     public class ServiceManager(
@@ -20,19 +19,20 @@ namespace ServiceLayer
         IEmailSender _emailSender,
         IHttpContextAccessor _httpContextAccessor,
         IEmailBodyBuilder _emailBodyBuilder,
-        IRoleService _roleService,  
+        IRoleService _roleService,
         IUserService _userService,
         IPaymobService _paymentGateway,
 		IEnrollmentService _enrollmentService,
 		IConfiguration _configuration,
-		ILogger<AuthService> _authLogger) : IServiceManager
+		ILogger<AuthService> _authLogger,
+		IBackgroundJobClient _backgroundJobClient) : IServiceManager
     {
 		#region Department
 		private readonly Lazy<IDepartmentService> _departmentService =
             new Lazy<IDepartmentService>(() => new Services.DepartmentService(_unitOfWork));
-		
 		public IDepartmentService DepartmentService => _departmentService.Value;
 		#endregion
+
 		#region Course
 		private readonly Lazy<ICourseService> _courseService =
 			new Lazy<ICourseService>(() => new Services.CourseService(_unitOfWork, _fileStorageService, _userManager, _roleManager));
@@ -46,12 +46,11 @@ namespace ServiceLayer
 		#endregion
 
 		#region Assignment
-
 		private readonly Lazy<IAssigmentService> _assignmentService =
 			new Lazy<IAssigmentService>(() => new Services.AssignmentService(_unitOfWork, _fileStorageService));
 		public IAssigmentService AssignmentService => _assignmentService.Value;
-
 		#endregion
+
 		#region Quiz
 		private readonly Lazy<IQuizService> _quizService =
 			new Lazy<IQuizService>(() => new Services.QuizService(_unitOfWork));
@@ -71,26 +70,18 @@ namespace ServiceLayer
 		public IAssignmentSubmissionService AssignmentSubmissionService => assignmentSubmissionService.Value;
 
         private readonly Lazy<IAcademicYearService> academicYearService =
-            new Lazy<IAcademicYearService>(()=>new Services.AcademicYearService(_unitOfWork));
-
+            new Lazy<IAcademicYearService>(() => new Services.AcademicYearService(_unitOfWork));
         public IAcademicYearService AcademicYearService => academicYearService.Value;
 
         private readonly Lazy<IFeesService> feesService =
             new Lazy<IFeesService>(() => new Services.FeesService(_unitOfWork));
-
         public IFeesService FeesService => feesService.Value;
-
 
         public IPaymobService PaymentGateway => _paymentGateway;
 
         private readonly Lazy<IPaymentService> paymentService =
-            new Lazy<IPaymentService>(() => new Services.PaymentService(_unitOfWork , _userManager, _paymentGateway));
-
+            new Lazy<IPaymentService>(() => new Services.PaymentService(_unitOfWork, _userManager, _paymentGateway));
         public IPaymentService PaymentService => paymentService.Value;
-
-
-		public IAuthunticationService AuthunticationService => _authunticationService.Value;
-
 
 		private readonly Lazy<IAuthunticationService> _authunticationService =
 			new Lazy<IAuthunticationService>(() => new Services.AuthService(
@@ -103,18 +94,25 @@ namespace ServiceLayer
 				_emailBodyBuilder,
 				_roleManager,
 				_unitOfWork,
-				_authLogger));
-		
+				_authLogger,
+				_backgroundJobClient));
+		public IAuthunticationService AuthunticationService => _authunticationService.Value;
 
         public IRoleService RoleService => _roleService;
         public IUserService UserService => _userService;
+
 		private readonly Lazy<ILectureService> _lectureService =
 			new Lazy<ILectureService>(() => new Services.LectureService(_unitOfWork, _configuration, _userManager));
 		public ILectureService LectureService => _lectureService.Value;
 
-		private readonly Lazy<IEnrollmentService> _enrollmentService =
+		private readonly Lazy<IEnrollmentService> _lazyEnrollmentService =
 			new Lazy<IEnrollmentService>(() => new Services.EnrollmentService(_unitOfWork, _userManager));
-		public IEnrollmentService EnrollmentService => _enrollmentService.Value;
+		public IEnrollmentService EnrollmentService => _lazyEnrollmentService.Value;
 
+		#region Notification
+		private readonly Lazy<INotificationService> _notificationService =
+			new Lazy<INotificationService>(() => new Services.NotificationService(_unitOfWork));
+		public INotificationService NotificationService => _notificationService.Value;
+		#endregion
 	}
 }
