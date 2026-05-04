@@ -7,8 +7,9 @@ namespace PresentationLayer.Controllers
     public class CourseController(IServiceManager serviceManager, ICacheService _cacheService) : ApiControllerBase
     {
         private const string CoursesPatternCacheKey = "/api/course*|user:*";
+        private const string AssessmentsPatternCacheKey = "/api/course*/assessments*";
 
-        [HttpGet("")]
+		[HttpGet("")]
         [Cache(300)]
         [HasPermission(Permissions.GetCourse)]
         public async Task<IActionResult> GetCourses(CancellationToken cancellationToken)
@@ -65,7 +66,8 @@ namespace PresentationLayer.Controllers
         [HasPermission(Permissions.AddCourse)]
         public async Task<IActionResult> AddAssesment(int CourseId, List<AssesmentRequest> assesments, CancellationToken cancellationToken)
         {
-            var updatedCourse = await serviceManager.CourseService.AddAssesment(CourseId, assesments, cancellationToken);
+			await _cacheService.RemoveByPatternAsync(AssessmentsPatternCacheKey);
+			var updatedCourse = await serviceManager.CourseService.AddAssesment(CourseId, assesments, cancellationToken);
             return Ok(updatedCourse);
         }
 
@@ -73,7 +75,8 @@ namespace PresentationLayer.Controllers
         [HasPermission(Permissions.UpdateCourse)]
         public async Task<IActionResult> UpdateAssesment(int CourseId, List<AssesmentRequest> assesments, CancellationToken cancellationToken)
         {
-            await serviceManager.CourseService.UpdateAssesment(CourseId, assesments, cancellationToken);
+			await _cacheService.RemoveByPatternAsync(AssessmentsPatternCacheKey);
+			await serviceManager.CourseService.UpdateAssesment(CourseId, assesments, cancellationToken);
             return Ok();
         }
 
