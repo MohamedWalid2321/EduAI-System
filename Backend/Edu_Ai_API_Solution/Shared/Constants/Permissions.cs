@@ -34,6 +34,7 @@ namespace Shared.Constants
 		public const string DeleteCourse = "Course:delete";
 		public const string EnrollInstructor = "Course:enrollInstructor";
 		public const string UnenrollInstructor = "Course:unenrollInstructor";
+		public const string GetAssesment = "Course:readAssesment"; // Permission to read course assessments (for students)
 
 		public const string GetDepartment = "Department:read";
 		public const string AddDepartment = "Department:add";

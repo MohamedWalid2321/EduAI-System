@@ -1,4 +1,5 @@
 using DomainLayer.Models;
+using Shared.Dtos.AssesmentDto;
 
 namespace PresentationLayer.Controllers
 {
@@ -61,7 +62,7 @@ namespace PresentationLayer.Controllers
 
         [HttpPost("{CourseId}/AddAssesment")]
         [HasPermission(Permissions.AddCourse)]
-        public async Task<IActionResult> AddAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddAssesment(int CourseId, List<AssesmentRequest> assesments, CancellationToken cancellationToken)
         {
             var updatedCourse = await serviceManager.CourseService.AddAssesment(CourseId, assesments, cancellationToken);
             return Ok(updatedCourse);
@@ -69,7 +70,7 @@ namespace PresentationLayer.Controllers
 
         [HttpPut("{CourseId}/UpdateAssesment")]
         [HasPermission(Permissions.UpdateCourse)]
-        public async Task<IActionResult> UpdateAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAssesment(int CourseId, List<AssesmentRequest> assesments, CancellationToken cancellationToken)
         {
             await serviceManager.CourseService.UpdateAssesment(CourseId, assesments, cancellationToken);
             return Ok();
@@ -117,6 +118,15 @@ namespace PresentationLayer.Controllers
         {
             var courses = await serviceManager.CourseService.GetUserEnrolledCoursesAsync(userId, cancellationToken);
             return Ok(courses);
+        }
+
+        [HttpGet("{courseId}/assessments")]
+        [Cache(300)]
+        [HasPermission(Permissions.GetAssesment)]
+        public async Task<IActionResult> GetAssessmentsByCourseId(int courseId, CancellationToken cancellationToken)
+        {
+            var assessments = await serviceManager.CourseService.GetAssessmentsByCourseIdAsync(courseId, cancellationToken);
+            return Ok(assessments);
         }
     }
 }
