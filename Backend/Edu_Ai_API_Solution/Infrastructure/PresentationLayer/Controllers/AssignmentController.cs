@@ -4,6 +4,7 @@ namespace PresentationLayer.Controllers
 	{
 		private const string AssignmentsPattern = "/api/assignment*";
 
+		[HasPermission(Permissions.GetAss)]
 		[HttpGet("course/{courseId}")]
 		[Cache(300)]
 		public async Task<IActionResult> GetAllAssignmentsByCourseId(int courseId, CancellationToken cancellationToken)
@@ -12,6 +13,7 @@ namespace PresentationLayer.Controllers
 			return Ok(assignments);
 		}
 
+		[HasPermission(Permissions.GetAss)]
 		[HttpGet("{id}")]
 		[Cache(300)]
 		public async Task<IActionResult> GetAssignmentById(int id, CancellationToken cancellationToken)
@@ -20,6 +22,7 @@ namespace PresentationLayer.Controllers
 			return Ok(assignment);
 		}
 
+		[HasPermission(Permissions.AddOrUpdateAss)]
 		[HttpPost("course/{courseId}")]
 		public async Task<IActionResult> CreateOrUpdateAssignmentForCourse(
 			int courseId,
@@ -30,7 +33,7 @@ namespace PresentationLayer.Controllers
 			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok(createdOrUpdatedAssignment);
 		}
-
+		[HasPermission(Permissions.DeleteAss)]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAssignment(int id, CancellationToken cancellationToken)
 		{
@@ -38,7 +41,7 @@ namespace PresentationLayer.Controllers
 			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok();
 		}
-
+		[HasPermission(Permissions.AddOrUpdateAss)]
 		[HttpPost("{assignmentId}/attachments")]
 		public async Task<IActionResult> AddAttachmentToAssignment(
 			int assignmentId,
@@ -49,7 +52,7 @@ namespace PresentationLayer.Controllers
 			await cacheService.RemoveByPatternAsync(AssignmentsPattern);
 			return Ok(updatedAssignment);
 		}
-
+		[HasPermission(Permissions.DeleteAss)]
 		[HttpDelete("attachments/{attachmentId}")]
 		public async Task<IActionResult> RemoveAttachment(Guid attachmentId, CancellationToken cancellationToken)
 		{
