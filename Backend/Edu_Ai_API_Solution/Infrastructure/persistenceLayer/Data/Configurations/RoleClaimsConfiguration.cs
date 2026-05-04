@@ -1,110 +1,124 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Shared.Constants;
 
 namespace persistenceLayer.Data.Configurations;
 
 public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClaim<string>>
 {
+    // ─── ID Blocks ──────────────────────────────────────────
+    // SuperAdmin : 1001 – 1050
+    // Admin      : 1051 – 1100
+    // Instructor : 1101 – 1150
+    // Student    : 1151 – 1200
+    // ────────────────────────────────────────────────────────
+
     public void Configure(EntityTypeBuilder<IdentityRoleClaim<string>> builder)
     {
         var claims = new List<IdentityRoleClaim<string>>();
-        var id = 1;
 
-        // SuperAdmin - All Permissions except Course:read
-        foreach (var permission in Permissions.GetAllPermissions().Where(p => p != Permissions.GetCourse))
+        // ── SuperAdmin — all permissions except Course:read ─────────────────
+        var superAdminPermissions = Permissions.GetAllPermissions()
+            .Where(p => p != Permissions.GetCourse)
+            .ToArray();
+
+        var superAdminStartId = 1001;
+        for (var i = 0; i < superAdminPermissions.Length; i++)
         {
             claims.Add(new IdentityRoleClaim<string>
             {
-                Id = id++,
+                Id = superAdminStartId + i,
                 RoleId = DefaultRoles.SuperAdminRoleId,
                 ClaimType = Permissions.Type,
-                ClaimValue = permission
+                ClaimValue = superAdminPermissions[i]!
             });
         }
 
+        // ── Admin ────────────────────────────────────────────────────────────
         var adminPermissions = new[]
         {
             // Assignment
-            Permissions.GetAss, Permissions.AddAss, Permissions.UpdateAss, Permissions.DeleteAss,
+            Permissions.GetAss, Permissions.AddOrUpdateAss, Permissions.DeleteAss,
+            Permissions.GradeAss,
+            // Assignment Submission
+            Permissions.GetAssSubmission, Permissions.GetAllAssSubmissions, Permissions.DeleteAssSubmission,
             // Content
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
             // Course
-            Permissions.GetCourse, Permissions.AddCourse, Permissions.UpdateCourse, Permissions.DeleteCourse,Permissions.EnrollInstructor, Permissions.UnenrollInstructor,
-            // Department (ReadOnly)
-            Permissions.GetDepartment, 
+            Permissions.GetCourse, Permissions.AddCourse, Permissions.UpdateCourse, Permissions.DeleteCourse,
+            Permissions.EnrollInstructor, Permissions.UnenrollInstructor,
             // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
-            // Users(ReadOnly)
-            Permissions.GetUsers,
-            // Lecture Managment
-            Permissions.CreateLecture,Permissions.UpdateLecture, Permissions.DeleteLecture,Permissions.JoinLecture,
-            // Note: No Role permissions (GetRoles, AddRoles, UpdateRoles, DeleteRoles)
+            // Lecture
+            Permissions.CreateLecture, Permissions.UpdateLecture, Permissions.DeleteLecture, Permissions.JoinLecture,
         };
 
-        foreach (var permission in adminPermissions)
+        for (var i = 0; i < adminPermissions.Length; i++)
         {
             claims.Add(new IdentityRoleClaim<string>
             {
-                Id = id++,
+                Id = 1051 + i,
                 RoleId = DefaultRoles.AdminRoleId,
                 ClaimType = Permissions.Type,
-                ClaimValue = permission
+                ClaimValue = adminPermissions[i]
             });
         }
 
-        // Instructor - Course, Content, Assignment, Quiz management
+        // ── Instructor ───────────────────────────────────────────────────────
         var instructorPermissions = new[]
         {
-            // Assignment - Full management
-            Permissions.GetAss, Permissions.AddAss, Permissions.UpdateAss, Permissions.DeleteAss,
-            // Content - Full management
+            // Assignment
+            Permissions.GetAss, Permissions.AddOrUpdateAss, Permissions.DeleteAss,
+            Permissions.GradeAss,
+            // Assignment Submission (view only — no delete)
+            Permissions.GetAssSubmission, Permissions.GetAllAssSubmissions,
+            // Content
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
-            // Course - Read only + can be assigned to teach
+            // Course (read only)
             Permissions.GetCourse,
-            // Questions/Quiz - Full management
+            // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
-            // Lecture Managment
-            Permissions.CreateLecture,Permissions.UpdateLecture, Permissions.DeleteLecture,Permissions.JoinLecture,
-		};
+            // Lecture
+            Permissions.CreateLecture, Permissions.UpdateLecture, Permissions.DeleteLecture, Permissions.JoinLecture,
+        };
 
-        foreach (var permission in instructorPermissions)
+        for (var i = 0; i < instructorPermissions.Length; i++)
         {
             claims.Add(new IdentityRoleClaim<string>
             {
-                Id = id++,
+                Id = 1101 + i,
                 RoleId = DefaultRoles.InstructorRoleId,
                 ClaimType = Permissions.Type,
-                ClaimValue = permission
+                ClaimValue = instructorPermissions[i]
             });
         }
 
-        // Student - Read-only access + solve quiz and assignment
+        // ── Student ──────────────────────────────────────────────────────────
         var studentPermissions = new[]
         {
             // Profile
-             Permissions.LevelUp,
-            // Assignment - Read + Solve (submit)
-            Permissions.GetAss,
-            Permissions.SolveAss,
-            // Content - Read only
+            Permissions.LevelUp,
+            // Assignment
+            Permissions.GetAss, Permissions.SolveAss,
+            // Assignment Submission (view own only)
+            Permissions.GetAssSubmission,Permissions.DeleteAssSubmission,
+            // Content
             Permissions.GetContent,
-            // Course - Read only
+            // Course
             Permissions.GetCourse,
-            // Questions/Quiz - Read + Solve
-            Permissions.GetQuestions,
-            Permissions.SolveQuiz,
-            // Lecture (Join Only)
-            Permissions.JoinLecture
+            // Questions/Quiz
+            Permissions.GetQuestions, Permissions.SolveQuiz,
+            // Lecture
+            Permissions.JoinLecture,
         };
 
-        foreach (var permission in studentPermissions)
+        for (var i = 0; i < studentPermissions.Length; i++)
         {
             claims.Add(new IdentityRoleClaim<string>
             {
-                Id = id++,
+                Id = 1151 + i,
                 RoleId = DefaultRoles.StudentRoleId,
                 ClaimType = Permissions.Type,
-                ClaimValue = permission
+                ClaimValue = studentPermissions[i]
             });
         }
 

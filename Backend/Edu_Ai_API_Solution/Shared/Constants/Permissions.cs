@@ -12,10 +12,15 @@ namespace Shared.Constants
 		public const string LevelUp = "Profile:levelUp";
 
 		public const string GetAss = "Ass:read";
-		public const string AddAss = "Ass:add";
-		public const string UpdateAss = "Ass:update";
+		public const string AddOrUpdateAss = "Ass:addOrUpdate";
 		public const string DeleteAss = "Ass:delete";
-		public const string SolveAss = "Ass:solve";       // Student can submit assignment
+		public const string GradeAss = "Ass:Grade";
+		public const string SolveAss = "Ass:solve";                          // Student submits assignment
+
+		// Assignment Submission Permissions
+		public const string GetAssSubmission = "AssSubmission:read";         // View a single submission (student + instructor)
+		public const string GetAllAssSubmissions = "AssSubmission:readAll";  // View all submissions for an assignment (instructor)
+		public const string DeleteAssSubmission = "AssSubmission:delete";    // Delete a submission (instructor / admin)
 
 		public const string GetContent = "Content:read";
 		public const string AddContent = "Content:add";
@@ -35,15 +40,11 @@ namespace Shared.Constants
 		public const string UpdateDepartment = "Department:update";
 		public const string DeleteDepartment = "Department:delete";
 
-		// reminder to Also make permissions for Quiz or SomeThing Like Question Below 
-
-		// Reminder To me (Mohannad) : Just For Now unImplement Permissions Until Communicate With Marawan
-
 		public const string GetQuestions = "questions:read";
 		public const string AddQuestions = "questions:add";
 		public const string UpdateQuestions = "questions:update";
 		public const string DeleteQuestions = "questions:delete";
-		public const string SolveQuiz = "questions:solve"; // Student can solve quiz
+		public const string SolveQuiz = "questions:solve";                   // Student can solve quiz
 
 		public const string GetUsers = "users:read";
 		public const string AddUsers = "users:add";
