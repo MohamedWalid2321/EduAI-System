@@ -60,3 +60,4 @@ global using DomainLayer.Exceptions.Roles;
 global using Shared.Dtos.RolesDto.Request;
 global using Shared.Dtos.RolesDto.Response;
 global using System.Security.Claims;
+global using Shared.Dtos.AssesmentDto.AssesmentDto;

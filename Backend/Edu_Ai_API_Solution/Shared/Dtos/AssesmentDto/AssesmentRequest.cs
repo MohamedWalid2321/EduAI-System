@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Dtos
+namespace Shared.Dtos.AssesmentDto
 {
-	public class AssesmentDto
+	public class AssesmentRequest
 	{
 		[Range(0, 5)]
 		public int AssType { get; set; }

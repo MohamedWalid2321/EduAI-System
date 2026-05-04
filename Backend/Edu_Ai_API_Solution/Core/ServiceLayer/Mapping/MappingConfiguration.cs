@@ -1,5 +1,5 @@
-﻿
-using Shared.Dtos.AcademicYearDto;
+﻿using Shared.Dtos.AcademicYearDto;
+using Shared.Dtos.AssesmentDto;
 using Shared.Dtos.FeeDto;
 
 namespace ServiceLayer.Mapping
@@ -18,10 +18,14 @@ namespace ServiceLayer.Mapping
 
 			TypeAdapterConfig<Course, FullCourseResponse>
 			.NewConfig()
-			.Map(dest => dest.Assesment, src => src.Assessments);
+			.Map(dest => dest.Assesment, src => src.Assessments.Adapt<List<AssesmentRequest>>());
 			// Configure AssesmentDto to Assessment mapping with enum conversion
-			config.NewConfig<AssesmentDto, Assessment>()
+			config.NewConfig<AssesmentRequest, Assessment>()
 				.Map(dest => dest.AssType, src => src.AssType);
+
+			// Map Assessment → AssessmentResponseDto with enum name as string
+			config.NewConfig<Assessment, AssessmentResponseDto>()
+				.Map(dest => dest.AssType, src => src.AssType.ToString());
 			// Mapping Email To UserName in ApplicationUser
 			config.NewConfig<RegisterRequest, ApplicationUser>()
 			.Map(dest => dest.UserName, src => src.Email);

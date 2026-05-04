@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Dtos.AssesmentDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,6 @@ namespace Shared.Dtos
 		public int Credit_Hour { get; set; }
 		public string CourseStatus { get; set; } = null!;
 		public string LearningOutcomes { get; set; } = null!;
-		public AssesmentDto Assesment { get; set; } = null!;
+		public AssesmentRequest Assesment { get; set; } = null!;
 	}
 }

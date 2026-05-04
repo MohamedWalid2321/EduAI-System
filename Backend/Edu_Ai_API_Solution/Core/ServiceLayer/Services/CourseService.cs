@@ -1,5 +1,6 @@
 using DomainLayer.Models;
 using ServiceLayer.Specifications.CourseSpecifications;
+using Shared.Dtos.AssesmentDto;
 
 namespace ServiceLayer.Services
 {
@@ -145,7 +146,7 @@ namespace ServiceLayer.Services
 				BackgroundJob.Enqueue<IEnrollmentService>(s => s.EnrollNewCourseAsync(CourseId, default));
 		}
 
-		public async Task<FullCourseResponse> AddAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken = default)
+		public async Task<FullCourseResponse> AddAssesment(int CourseId, List<AssesmentRequest> assesments, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(CourseId), cancellationToken);
@@ -163,7 +164,7 @@ namespace ServiceLayer.Services
 			return courseEntity.Adapt<FullCourseResponse>();
 		}
 
-		public async Task UpdateAssesment(int CourseId, List<AssesmentDto> assesments, CancellationToken cancellationToken = default)
+		public async Task UpdateAssesment(int CourseId, List<AssesmentRequest> assesments, CancellationToken cancellationToken = default)
 		{
 			var courseRepository = _unitOfWork.GetRepository<Course, int>();
 			var courseEntity = await courseRepository.GetByIdAsync(new CourseSpecification(CourseId), cancellationToken);
@@ -285,6 +286,17 @@ namespace ServiceLayer.Services
 				EnrolledAt = e.EnrolledAt,
 				EnrolledBy = e.EnrolledBy
 			});
+		}
+
+		public async Task<IEnumerable<AssessmentResponseDto>> GetAssessmentsByCourseIdAsync(int courseId, CancellationToken cancellationToken = default)
+		{
+			var courseRepository = _unitOfWork.GetRepository<Course, int>();
+			var course = await courseRepository.GetByIdAsync(new CourseSpecification(courseId), cancellationToken);
+
+			if (course is null)
+				throw new CourseNotFoundException(courseId);
+
+			return course.Assessments.Adapt<IEnumerable<AssessmentResponseDto>>();
 		}
 	}
 }
