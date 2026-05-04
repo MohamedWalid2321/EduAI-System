@@ -1,3 +1,4 @@
+using DomainLayer.Enums;
 using DomainLayer.Models;
 using Shared.Dtos.AssesmentDto;
 
@@ -127,6 +128,14 @@ namespace PresentationLayer.Controllers
         {
             var assessments = await serviceManager.CourseService.GetAssessmentsByCourseIdAsync(courseId, cancellationToken);
             return Ok(assessments);
+        }
+
+        [HttpGet("assessment-types")]
+        public IActionResult GetAssessmentTypes()
+        {
+            var assTypes = Enum.GetValues<AssTypes>()
+                .Select(a => new { name = a.ToString(), value = (int)a });
+            return Ok(assTypes);
         }
     }
 }
