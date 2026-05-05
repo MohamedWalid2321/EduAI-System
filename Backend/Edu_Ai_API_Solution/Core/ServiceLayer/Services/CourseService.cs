@@ -261,7 +261,7 @@ namespace ServiceLayer.Services
 			if (enrollment is null)
 				throw new DuplicatedInstructorEnrollmentException(userId, courseId);
 
-			userCourseRepo.Delete(enrollment);
+			userCourseRepo.HardDelete(enrollment);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}
 
