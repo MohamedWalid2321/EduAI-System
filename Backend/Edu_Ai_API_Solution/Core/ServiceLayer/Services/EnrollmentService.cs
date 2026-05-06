@@ -79,16 +79,21 @@ namespace ServiceLayer.Services
 			var existing = await userCourseRepo.GetAllAsync(new UserCoursesByCourseSpecification(courseId), cancellationToken);
 			var alreadyEnrolledUserIds = existing.Select(uc => uc.UserId).ToHashSet();
 
-			foreach (var user in matchingUsers.Where(u => !alreadyEnrolledUserIds.Contains(u.Id)))
-			{
-				await userCourseRepo.AddAsync(new UserCourse
+			var newEnrollments = matchingUsers
+				.Where(u => !alreadyEnrolledUserIds.Contains(u.Id))
+				.Select(user => new UserCourse
 				{
 					UserId = user.Id,
 					CourseId = courseId,
 					EnrolledAt = DateTime.UtcNow,
 					Status = EnrollmentStatus.Active
-				}, cancellationToken);
-			}
+				}).ToList();
+
+			if (!newEnrollments.Any())
+				return;
+
+			foreach (var enrollment in newEnrollments)
+				await userCourseRepo.AddAsync(enrollment, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 		}

@@ -1,6 +1,7 @@
 using DomainLayer.Models;
 using ServiceLayer.Specifications.CourseSpecifications;
 using Shared.Dtos.AssesmentDto;
+using ServiceLayer.Specifications.UserCourseSpecifications;
 
 namespace ServiceLayer.Services
 {
@@ -62,12 +63,13 @@ namespace ServiceLayer.Services
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new UserNotFound(userId);
 
-			var CourseRepository = _unitOfWork.GetRepository<Course, int>();
-			var courseSpecification = new StudentCourseSpecification(user.DepartmentId, user.AcademicYearEnum);
-			var courses = await CourseRepository.GetAllAsync(courseSpecification, cancellationToken);
-			if (courses is null || !courses.Any())
-				throw new CoursesInDepartmentNotFoundException(user.DepartmentId ?? 0);
-			return courses.Adapt<IEnumerable<CourseResponseDto>>();
+			var userCourseRepo = _unitOfWork.GetRepository<UserCourse, int>();
+			var enrollments = await userCourseRepo.GetAllAsync(new UserCoursesByUserSpecification(userId), cancellationToken);
+
+			if (enrollments is null || !enrollments.Any())
+				throw new UserNotEnrolledInAnyCoursesException(userId);
+
+			return enrollments.Select(e => e.Course).Adapt<IEnumerable<CourseResponseDto>>();
 		}
 
 		public async Task<FullCourseResponse> GetCourseByIdAsync(int departmentId, int courseId, CancellationToken cancellationToken = default)

@@ -72,9 +72,14 @@
 
             // Build final storage path
             // If folder is empty → upload file to root
-            var path = string.IsNullOrEmpty(cleanFolder)
+            var rawPath = string.IsNullOrEmpty(cleanFolder)
                 ? fileName.TrimStart('/')
                 : $"{cleanFolder}/{fileName.TrimStart('/')}";
+
+            // URL-encode each path segment so spaces, @, and other special
+            // characters are transmitted correctly to Bunny Storage
+            var path = string.Join("/",
+                rawPath.Split('/').Select(Uri.EscapeDataString));
 
             // Ensure stream starts from the beginning
             // Important if the stream was read before uploading
@@ -127,8 +132,15 @@
             if (string.IsNullOrWhiteSpace(relativePath))
                 throw new ArgumentException("Could not extract file path from URL", nameof(fileUrl));
 
+            // Normalize then encode each segment: first unescape to handle URLs
+            // already stored encoded in the DB (prevents double-encoding),
+            // then re-encode so raw characters (@, spaces) are always transmitted
+            // correctly to Bunny Storage
+            var encodedPath = string.Join("/",
+                relativePath.Split('/').Select(s => Uri.EscapeDataString(Uri.UnescapeDataString(s))));
+
             // Send DELETE request to Bunny Storage
-            var response = await _httpClient.DeleteAsync(relativePath);
+            var response = await _httpClient.DeleteAsync(encodedPath);
 
             // If deletion fails, read the error response
             // Note: 404 is acceptable (file already deleted)
