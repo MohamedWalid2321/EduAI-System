@@ -1,5 +1,6 @@
-using DomainLayer.Models;
+﻿using DomainLayer.Models;
 using Mapster;
+using ServiceLayer.Specifications.AttemptedQuizSpecification;
 using ServiceLayer.Specifications.CheatingReportSpecifications;
 using Shared.Dtos.CheatingReportDto.Request;
 using Shared.Dtos.CheatingReportDto.Response;
@@ -30,7 +31,8 @@ namespace ServiceLayer.Services
         public async Task<CheatingReportResponse> CreateAsync(int attemptId, CancellationToken cancellationToken = default)
         {
             var attemptRepo = _unitOfWork.GetRepository<QuizAttempt, int>();
-            var attempt = await attemptRepo.GetByIdAsync(attemptId, cancellationToken)
+            var attempt = await attemptRepo.GetFirstOrDefaultAsync(
+                new AttemptWithUserSpecification(attemptId), cancellationToken)
                 ?? throw new KeyNotFoundException($"Quiz attempt {attemptId} not found");
 
             var repo = _unitOfWork.GetRepository<CheatingReport, int>();
@@ -45,7 +47,8 @@ namespace ServiceLayer.Services
             var report = new CheatingReport
             {
                 QuizAttemptId = attemptId,
-                StudentId = attempt.StudentId
+                StudentId = attempt.StudentId,
+                Student = attempt.User   // ← carry the loaded user so MapToResponse has it
             };
 
             await repo.AddAsync(report, cancellationToken);

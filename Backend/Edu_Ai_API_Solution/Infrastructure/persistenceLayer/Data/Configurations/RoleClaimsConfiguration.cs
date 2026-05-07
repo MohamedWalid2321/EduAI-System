@@ -45,11 +45,13 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
             // Course
             Permissions.GetCourse, Permissions.AddCourse, Permissions.UpdateCourse, Permissions.DeleteCourse,
-            Permissions.EnrollInstructor, Permissions.UnenrollInstructor,Permissions.GetAssesment,
+            Permissions.EnrollInstructor, Permissions.UnenrollInstructor, Permissions.GetAssesment,
             // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
             // Lecture
             Permissions.CreateLecture, Permissions.UpdateLecture, Permissions.DeleteLecture, Permissions.JoinLecture,
+            // Cheating Report — admin can read, add and delete
+            Permissions.GetCheatingReport, Permissions.AddCheatingReport, Permissions.DeleteCheatingReport,
         };
 
         for (var i = 0; i < adminPermissions.Length; i++)
@@ -74,11 +76,13 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             // Content
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
             // Course (read only)
-            Permissions.GetCourse,Permissions.GetAssesment,
+            Permissions.GetCourse, Permissions.GetAssesment,
             // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
             // Lecture
             Permissions.CreateLecture, Permissions.UpdateLecture, Permissions.DeleteLecture, Permissions.JoinLecture,
+            // Cheating Report — instructor can read, add and delete
+            Permissions.GetCheatingReport, Permissions.AddCheatingReport, Permissions.DeleteCheatingReport,
         };
 
         for (var i = 0; i < instructorPermissions.Length; i++)
@@ -100,15 +104,17 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             // Assignment
             Permissions.GetAss, Permissions.SolveAss,
             // Assignment Submission (view own only)
-            Permissions.GetAssSubmission,Permissions.DeleteAssSubmission,
+            Permissions.GetAssSubmission, Permissions.DeleteAssSubmission,
             // Content
             Permissions.GetContent,
             // Course
-            Permissions.GetCourse,Permissions.GetAssesment,
+            Permissions.GetCourse, Permissions.GetAssesment,
             // Questions/Quiz
             Permissions.GetQuestions, Permissions.SolveQuiz,
             // Lecture
             Permissions.JoinLecture,
+            // Cheating Report — student can only add (submit evidence during exam)
+            Permissions.AddCheatingReport,
         };
 
         for (var i = 0; i < studentPermissions.Length; i++)
