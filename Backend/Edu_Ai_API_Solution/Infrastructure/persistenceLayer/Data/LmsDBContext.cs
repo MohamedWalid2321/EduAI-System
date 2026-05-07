@@ -26,6 +26,8 @@ namespace persistenceLayer.Data
 		public DbSet<Payment> Payments { get; set; }
 		public DbSet<NotificationBox> NotificationBoxes { get; set; }
 		public DbSet<Notification> Notifications { get; set; }
+		public DbSet<CheatingReport> CheatingReports { get; set; }
+		public DbSet<CheatingViolation> CheatingViolations { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

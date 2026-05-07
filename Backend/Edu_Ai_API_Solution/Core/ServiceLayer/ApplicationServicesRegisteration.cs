@@ -42,6 +42,7 @@ namespace ServiceLayer
 			services.AddScoped<IPaymobService, PaymobService>();
 			services.AddScoped<IEnrollmentService, EnrollmentService>();
 			services.AddScoped<ILectureService, LectureService>();
+			services.AddScoped<ICheatingReportService, CheatingReportService>();
 
 			return services;
 		}
