@@ -15,7 +15,7 @@ namespace Shared.Constants
 		public const string AddOrUpdateAss = "Ass:addOrUpdate";
 		public const string DeleteAss = "Ass:delete";
 		public const string GradeAss = "Ass:Grade";
-		public const string SolveAss = "Ass:solve";                          // Student submits assignment
+		public const string SolveAss = "Ass:solve";
 
 		// Assignment Submission Permissions
 		public const string GetAssSubmission = "AssSubmission:read";         // View a single submission (student + instructor)
@@ -62,6 +62,11 @@ namespace Shared.Constants
 		public const string UpdateLecture = "Lecture:update";
 		public const string DeleteLecture = "Lecture:delete";
 		public const string JoinLecture = "Lecture:join";
+
+		// Cheating Report Permissions
+		public const string GetCheatingReport = "CheatingReport:read";
+		public const string AddCheatingReport = "CheatingReport:add";
+		public const string DeleteCheatingReport = "CheatingReport:delete";
 
 		public static IList<string?> GetAllPermissions() =>
 			typeof(Permissions).GetFields().Select(x => x.GetValue(x) as string).ToList();
