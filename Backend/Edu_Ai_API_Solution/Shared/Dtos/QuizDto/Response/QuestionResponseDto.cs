@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,7 @@ namespace Shared.Dtos.QuizDto.Response
         public bool IsActive { get; set; }  
         public string QuestionText { get; set; }
         public string QuestionType { get; set; } // e.g. "MultipleChoice" or "TrueFalse"
+        public bool IsAllowableToLookDown { get; set; }
         public List<QuestionChoiceResponseDto> QuestionChoices { get; set; }
     }
 }
