@@ -1,4 +1,4 @@
-﻿using DomainLayer.Exceptions.Question;
+using DomainLayer.Exceptions.Question;
 using DomainLayer.Models;
 using ServiceLayer.Specifications.QuestionSpecifications;
 using System;
@@ -147,6 +147,7 @@ namespace ServiceLayer.Services
             questionEntity.QuestionText = questionRequest.QuestionText;
             questionEntity.QuestionType = (QuestionTypes)questionRequest.QuestionType;
             questionEntity.Marks = questionRequest.Marks;
+            questionEntity.IsAllowableToLookDown = questionRequest.IsAllowableToLookDown;
 
             questionEntity.QuestionChoices.Clear();
             questionEntity.QuestionChoices = questionRequest.QuestionChoices

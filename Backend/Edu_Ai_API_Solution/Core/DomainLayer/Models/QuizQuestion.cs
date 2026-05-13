@@ -1,4 +1,4 @@
-﻿using DomainLayer.Enums;
+using DomainLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace DomainLayer.Models
 		public QuestionTypes QuestionType { get; set; } 
 		public double Marks { get; set; } // marks or points allocated for the question
 		public bool IsActive { get; set; } = true; // indicates if the question is currently active or not
+		public bool IsAllowableToLookDown { get; set; } = false; // indicates if the student can look down during this question
         // Quiz RelationShip
         public int QuizId { get; set; }
 		public Quiz Quiz { get; set; }
