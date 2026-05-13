@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using System.Text;
@@ -23,3 +23,5 @@ global using Shared.Dtos.UserDto.Request;
 global using Shared.Constants;
 global using Microsoft.Extensions.Options;
 global using System.Security.Claims;
+global using Shared.Dtos.RiskAnalysisDto.Request;
+global using Shared.Dtos.RiskAnalysisDto.Response;

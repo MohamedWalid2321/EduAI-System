@@ -9,5 +9,11 @@ namespace DomainLayer.Models
         public ApplicationUser Student { get; set; }
 
         public ICollection<CheatingViolation> Violations { get; set; } = [];
+
+        /// <summary>
+        /// Final normalized risk score (0–N) calculated by the background job
+        /// after cohort min-max normalization. Null until the job completes.
+        /// </summary>
+        public decimal? RiskScore { get; set; }
     }
 }

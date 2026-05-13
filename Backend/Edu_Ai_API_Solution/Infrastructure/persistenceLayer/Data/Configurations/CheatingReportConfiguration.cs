@@ -27,6 +27,11 @@ namespace persistenceLayer.Data.Configurations
                 .WithOne(v => v.CheatingReport)
                 .HasForeignKey(v => v.CheatingReportId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // RiskScore: 6 digits total, 4 after the decimal point (range 0–99.9999)
+            builder.Property(r => r.RiskScore)
+                .HasPrecision(6, 4)
+                .IsRequired(false);
         }
     }
 }
