@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Microsoft.Extensions.Hosting;
 using ServiceLayer.Jobs;
 using System.Net.Http;
@@ -43,6 +43,10 @@ namespace ServiceLayer
 			services.AddScoped<IEnrollmentService, EnrollmentService>();
 			services.AddScoped<ILectureService, LectureService>();
 			services.AddScoped<ICheatingReportService, CheatingReportService>();
+
+			// Risk Analysis
+			services.AddScoped<IRiskAnalysisService, RiskAnalysisService>();
+			services.AddScoped<RiskScoreCalculationJob>();
 
 			return services;
 		}
