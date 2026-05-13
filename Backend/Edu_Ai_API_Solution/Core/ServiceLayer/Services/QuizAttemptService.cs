@@ -65,7 +65,8 @@ namespace ServiceLayer.Services
                                     {
                                         Id = q.Id,
                                         QuestionText = q.QuestionText,
-                                        Choices = q.QuestionChoices.Select(c => new ChoiceDto
+                                        IsAllowableToLookDown = q.IsAllowableToLookDown,
+										Choices = q.QuestionChoices.Select(c => new ChoiceDto
                                         {
                                             Id = c.Id,
                                             ChoiceText = c.ChoiceText
