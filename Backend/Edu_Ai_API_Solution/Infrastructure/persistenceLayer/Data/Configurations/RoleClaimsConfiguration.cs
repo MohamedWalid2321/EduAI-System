@@ -46,6 +46,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             // Course
             Permissions.GetCourse, Permissions.AddCourse, Permissions.UpdateCourse, Permissions.DeleteCourse,
             Permissions.EnrollInstructor, Permissions.UnenrollInstructor, Permissions.GetAssesment,
+            // Quiz 
+            Permissions.GetQuizzes, Permissions.AddOrUpdateQuiz, Permissions.DeleteQuiz,
             // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
             // Lecture
@@ -77,6 +79,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetContent, Permissions.AddContent, Permissions.UpdateContent, Permissions.DeleteContent,
             // Course (read only)
             Permissions.GetCourse, Permissions.GetAssesment,
+            // Quiz 
+            Permissions.GetQuizzes, Permissions.AddOrUpdateQuiz, Permissions.DeleteQuiz,
             // Questions
             Permissions.GetQuestions, Permissions.AddQuestions, Permissions.UpdateQuestions,
             // Lecture
@@ -109,7 +113,9 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.GetContent,
             // Course
             Permissions.GetCourse, Permissions.GetAssesment,
-            // Questions/Quiz
+            // Quiz
+            Permissions.GetQuizzes,
+            // Questions
             Permissions.GetQuestions, Permissions.SolveQuiz,
             // Lecture
             Permissions.JoinLecture,

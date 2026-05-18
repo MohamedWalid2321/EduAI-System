@@ -10,6 +10,7 @@ namespace PresentationLayer.Controllers
         private const string QuizzesPattern = "/api/quiz*";
 
         [HttpGet("course/{courseId}")]
+        [HasPermission(Permissions.GetQuizzes)]
         [Cache(300)]
         public async Task<IActionResult> GetAllQuizzesByCourseId(int courseId, CancellationToken cancellationToken)
         {
