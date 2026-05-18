@@ -96,7 +96,7 @@ public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizReq
             return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
 		}
 
-		public async Task<QuizResponseDto> GetQuizByIdAsync(int quizId, CancellationToken cancellationToken = default)
+		public async Task<QuizResponseInDetailsDto> GetQuizByIdAsync(int quizId, CancellationToken cancellationToken = default)
 		{
 			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
 			var quizSpec = new QuizSpecification(quizId);
@@ -105,7 +105,7 @@ public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizReq
 			{
 				throw new QuizNotFoundException(quizId);
 			}
-			return quizEntity.Adapt<QuizResponseDto>();
+			return quizEntity.Adapt<QuizResponseInDetailsDto>();
 		}
 	}
 }
