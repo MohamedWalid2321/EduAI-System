@@ -19,7 +19,7 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpGet("{id}")]
-        [Cache(300)]
+        [HasPermission(Permissions.GetQuestions)]
         public async Task<IActionResult> GetQuizById(int id, CancellationToken cancellationToken)
         {
             var quiz = await serviceManager.QuizService.GetQuizByIdAsync(id, cancellationToken);
@@ -27,7 +27,8 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpPost("course/{courseId}")]
-        public async Task<IActionResult> CreateOrUpdateQuizForCourse(int courseId, [FromBody] QuizRequestDto quizDto, CancellationToken cancellationToken)
+        [HasPermission(Permissions.AddOrUpdateQuiz)]
+		public async Task<IActionResult> CreateOrUpdateQuizForCourse(int courseId, [FromBody] QuizRequestDto quizDto, CancellationToken cancellationToken)
         {
             var createdOrUpdatedQuiz = await serviceManager.QuizService.CreateOrUpdateQuizAsync(courseId, quizDto, cancellationToken);
             await cacheService.RemoveByPatternAsync(QuizzesPattern);
@@ -35,7 +36,8 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuiz(int id, CancellationToken cancellationToken)
+        [HasPermission(Permissions.DeleteQuiz)]
+		public async Task<IActionResult> DeleteQuiz(int id, CancellationToken cancellationToken)
         {
             await serviceManager.QuizService.DeleteQuizAsync(id, cancellationToken);
             await cacheService.RemoveByPatternAsync(QuizzesPattern);
