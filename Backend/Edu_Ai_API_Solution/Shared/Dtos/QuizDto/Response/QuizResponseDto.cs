@@ -11,7 +11,10 @@ namespace Shared.Dtos.QuizDto.Response
 	{
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<QuestionResponseDto> QuizQuestions { get; set; } = [];
+		public DateTime ScheduledDate { get; set; }
+		public TimeSpan Duration { get; set; } // duration of the quiz
+
+		public List<QuestionResponseDto> QuizQuestions { get; set; } = [];
         public string QuizCode { get; set; } = null!; // a unique code for the quiz that students can use to access it (New) ##
         
     }
