@@ -1,4 +1,4 @@
-﻿global using DomainLayer.Contracts;
+global using DomainLayer.Contracts;
 global using DomainLayer.Exceptions;
 global using DomainLayer.Exceptions.Assigment;
 global using DomainLayer.Exceptions.Content;
@@ -61,3 +61,7 @@ global using Shared.Dtos.RolesDto.Request;
 global using Shared.Dtos.RolesDto.Response;
 global using System.Security.Claims;
 global using Shared.Dtos.AssesmentDto.AssesmentDto;
+global using Shared.Dtos.RiskAnalysisDto.Request;
+global using Shared.Dtos.RiskAnalysisDto.Response;
+global using ServiceLayer.Jobs;
+

@@ -123,7 +123,7 @@ namespace ServiceLayer.Services
             if (submission == null)
                 throw new AssignmentSubmissionNotFoundException(submissionId);
 
-            submissionRepo.Delete(submission);
+            submissionRepo.HardDelete(submission);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 

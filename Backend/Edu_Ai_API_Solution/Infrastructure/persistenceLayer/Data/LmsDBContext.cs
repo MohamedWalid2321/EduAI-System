@@ -28,6 +28,9 @@ namespace persistenceLayer.Data
 		public DbSet<Notification> Notifications { get; set; }
 		public DbSet<CheatingReport> CheatingReports { get; set; }
 		public DbSet<CheatingViolation> CheatingViolations { get; set; }
+		public DbSet<RiskAnalysis> RiskAnalyses { get; set; }
+		public DbSet<RiskAssessmentResult> RiskAssessmentResults { get; set; }
+		public DbSet<RiskQuestionResult> RiskQuestionResults { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

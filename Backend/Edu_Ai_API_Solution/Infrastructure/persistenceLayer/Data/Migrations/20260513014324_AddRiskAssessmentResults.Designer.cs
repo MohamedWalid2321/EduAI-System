@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistenceLayer.Data;
 
@@ -11,9 +12,11 @@ using persistenceLayer.Data;
 namespace persistenceLayer.Data.Migrations
 {
     [DbContext(typeof(LmsDBContext))]
-    partial class LmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260513014324_AddRiskAssessmentResults")]
+    partial class AddRiskAssessmentResults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,35 +82,35 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 553, DateTimeKind.Local).AddTicks(5248),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 630, DateTimeKind.Local).AddTicks(1395),
                             IsDeleted = false,
                             Name = "First Year"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 553, DateTimeKind.Local).AddTicks(5312),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 630, DateTimeKind.Local).AddTicks(1459),
                             IsDeleted = false,
                             Name = "Second Year"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 553, DateTimeKind.Local).AddTicks(5316),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 630, DateTimeKind.Local).AddTicks(1463),
                             IsDeleted = false,
                             Name = "Third Year"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 553, DateTimeKind.Local).AddTicks(5320),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 630, DateTimeKind.Local).AddTicks(1466),
                             IsDeleted = false,
                             Name = "Fourth Year"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 553, DateTimeKind.Local).AddTicks(5322),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 630, DateTimeKind.Local).AddTicks(1468),
                             IsDeleted = false,
                             Name = "Fifth Year"
                         });
@@ -307,7 +310,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@LUMINO.COM",
                             NormalizedUserName = "SUPERADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHZw/IgtxNLGHzjQoIRw+XV7a113Th1g85amLE33S/iost4dCGhrYlllfHX85fo1VQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENXgS7Jnzas2xJYpNuCq8AB/ycRe1hsvqNId4/51mJDO3MeoSkiP2HGXg1D0tlS0pA==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "",
                             SecurityStamp = "911889FEF7B44646B1E278C5C4F7C893",
@@ -330,7 +333,7 @@ namespace persistenceLayer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LUMINO.COM",
                             NormalizedUserName = "ADMIN@LUMINO.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEExqDcNGp8A/5nXduBOmcxwhsPoLDhdFJK0X8Ee00lWzYaDri9jnm90QD9252+aI8Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKG+5DXwEXwbF5ff3qfS/ngNY7kip4ioppRmru6h/XPFMBJbqjdPWkp5tp1JEVVJKQ==",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "",
                             SecurityStamp = "55BF92C9EF0249CDA210D85D1A851BC9",
@@ -918,35 +921,35 @@ namespace persistenceLayer.Data.Migrations
                         new
                         {
                             Id = 1000,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 557, DateTimeKind.Local).AddTicks(7697),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 634, DateTimeKind.Local).AddTicks(4546),
                             IsDeleted = false,
                             Title = "ComputerEngineering"
                         },
                         new
                         {
                             Id = 1001,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 557, DateTimeKind.Local).AddTicks(7733),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 634, DateTimeKind.Local).AddTicks(4747),
                             IsDeleted = false,
                             Title = "ElectricalEngineering"
                         },
                         new
                         {
                             Id = 1003,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 557, DateTimeKind.Local).AddTicks(7737),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 634, DateTimeKind.Local).AddTicks(4753),
                             IsDeleted = false,
                             Title = "CommunicationEngineering"
                         },
                         new
                         {
                             Id = 1004,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 557, DateTimeKind.Local).AddTicks(7825),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 634, DateTimeKind.Local).AddTicks(4756),
                             IsDeleted = false,
                             Title = "BiomedicalEngineering"
                         },
                         new
                         {
                             Id = 1002,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 557, DateTimeKind.Local).AddTicks(7828),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 634, DateTimeKind.Local).AddTicks(4758),
                             IsDeleted = false,
                             Title = "MechanicalEngineering"
                         });
@@ -1010,7 +1013,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 1,
                             AcademicYearId = 1,
                             Amount = 6000.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3743),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(151),
                             DepartmentId = 1000,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1020,7 +1023,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 2,
                             AcademicYearId = 1,
                             Amount = 800.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3781),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(207),
                             DepartmentId = 1000,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1030,7 +1033,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 3,
                             AcademicYearId = 1,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3786),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(213),
                             DepartmentId = 1000,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1040,7 +1043,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 4,
                             AcademicYearId = 2,
                             Amount = 6600.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3790),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(217),
                             DepartmentId = 1000,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1050,7 +1053,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 5,
                             AcademicYearId = 2,
                             Amount = 880.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3793),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(219),
                             DepartmentId = 1000,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1060,7 +1063,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 6,
                             AcademicYearId = 2,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3798),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(224),
                             DepartmentId = 1000,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1070,7 +1073,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 7,
                             AcademicYearId = 3,
                             Amount = 7200.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3800),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(227),
                             DepartmentId = 1000,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1080,7 +1083,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 8,
                             AcademicYearId = 3,
                             Amount = 960.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3802),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(229),
                             DepartmentId = 1000,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1090,7 +1093,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 9,
                             AcademicYearId = 3,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3805),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(231),
                             DepartmentId = 1000,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1100,7 +1103,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 10,
                             AcademicYearId = 4,
                             Amount = 7800.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3808),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(287),
                             DepartmentId = 1000,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1110,7 +1113,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 11,
                             AcademicYearId = 4,
                             Amount = 1040.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3810),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(289),
                             DepartmentId = 1000,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1120,7 +1123,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 12,
                             AcademicYearId = 4,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3813),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(292),
                             DepartmentId = 1000,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1130,7 +1133,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 13,
                             AcademicYearId = 5,
                             Amount = 8400.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3815),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(294),
                             DepartmentId = 1000,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1140,7 +1143,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 14,
                             AcademicYearId = 5,
                             Amount = 1120.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3817),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(297),
                             DepartmentId = 1000,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1150,7 +1153,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 15,
                             AcademicYearId = 5,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3819),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(299),
                             DepartmentId = 1000,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1160,7 +1163,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 16,
                             AcademicYearId = 1,
                             Amount = 5500.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3826),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(305),
                             DepartmentId = 1001,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1170,7 +1173,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 17,
                             AcademicYearId = 1,
                             Amount = 700.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3828),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(307),
                             DepartmentId = 1001,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1180,7 +1183,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 18,
                             AcademicYearId = 1,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3831),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(310),
                             DepartmentId = 1001,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1190,7 +1193,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 19,
                             AcademicYearId = 2,
                             Amount = 6050.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3833),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(313),
                             DepartmentId = 1001,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1200,7 +1203,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 20,
                             AcademicYearId = 2,
                             Amount = 770.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3835),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(315),
                             DepartmentId = 1001,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1210,7 +1213,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 21,
                             AcademicYearId = 2,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3837),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(317),
                             DepartmentId = 1001,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1220,7 +1223,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 22,
                             AcademicYearId = 3,
                             Amount = 6600.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3839),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(320),
                             DepartmentId = 1001,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1230,7 +1233,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 23,
                             AcademicYearId = 3,
                             Amount = 840.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3841),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(322),
                             DepartmentId = 1001,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1240,7 +1243,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 24,
                             AcademicYearId = 3,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3843),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(324),
                             DepartmentId = 1001,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1250,7 +1253,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 25,
                             AcademicYearId = 4,
                             Amount = 7150.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3845),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(326),
                             DepartmentId = 1001,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1260,7 +1263,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 26,
                             AcademicYearId = 4,
                             Amount = 910.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3847),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(328),
                             DepartmentId = 1001,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1270,7 +1273,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 27,
                             AcademicYearId = 4,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3848),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(330),
                             DepartmentId = 1001,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1280,7 +1283,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 28,
                             AcademicYearId = 5,
                             Amount = 7700.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3850),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(332),
                             DepartmentId = 1001,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1290,7 +1293,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 29,
                             AcademicYearId = 5,
                             Amount = 980.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3852),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(335),
                             DepartmentId = 1001,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1300,7 +1303,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 30,
                             AcademicYearId = 5,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3854),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(339),
                             DepartmentId = 1001,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1310,7 +1313,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 31,
                             AcademicYearId = 1,
                             Amount = 5000.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3860),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(345),
                             DepartmentId = 1002,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1320,7 +1323,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 32,
                             AcademicYearId = 1,
                             Amount = 600.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3862),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(348),
                             DepartmentId = 1002,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1330,7 +1333,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 33,
                             AcademicYearId = 1,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3863),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(350),
                             DepartmentId = 1002,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1340,7 +1343,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 34,
                             AcademicYearId = 2,
                             Amount = 5500.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3866),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(354),
                             DepartmentId = 1002,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1350,7 +1353,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 35,
                             AcademicYearId = 2,
                             Amount = 660.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3868),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(356),
                             DepartmentId = 1002,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1360,7 +1363,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 36,
                             AcademicYearId = 2,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3870),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(358),
                             DepartmentId = 1002,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1370,7 +1373,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 37,
                             AcademicYearId = 3,
                             Amount = 6000.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3872),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(361),
                             DepartmentId = 1002,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1380,7 +1383,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 38,
                             AcademicYearId = 3,
                             Amount = 720.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3955),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(363),
                             DepartmentId = 1002,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1390,7 +1393,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 39,
                             AcademicYearId = 3,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3958),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(365),
                             DepartmentId = 1002,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1400,7 +1403,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 40,
                             AcademicYearId = 4,
                             Amount = 6500.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3960),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(367),
                             DepartmentId = 1002,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1410,7 +1413,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 41,
                             AcademicYearId = 4,
                             Amount = 780.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3962),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(369),
                             DepartmentId = 1002,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1420,7 +1423,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 42,
                             AcademicYearId = 4,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3965),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(371),
                             DepartmentId = 1002,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1430,7 +1433,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 43,
                             AcademicYearId = 5,
                             Amount = 7000.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3968),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(373),
                             DepartmentId = 1002,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1440,7 +1443,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 44,
                             AcademicYearId = 5,
                             Amount = 840.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3970),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(375),
                             DepartmentId = 1002,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1450,7 +1453,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 45,
                             AcademicYearId = 5,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3972),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(377),
                             DepartmentId = 1002,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1460,7 +1463,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 46,
                             AcademicYearId = 1,
                             Amount = 5800.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3979),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(384),
                             DepartmentId = 1003,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1470,7 +1473,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 47,
                             AcademicYearId = 1,
                             Amount = 750.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3981),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(386),
                             DepartmentId = 1003,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1480,7 +1483,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 48,
                             AcademicYearId = 1,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3983),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(388),
                             DepartmentId = 1003,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1490,7 +1493,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 49,
                             AcademicYearId = 2,
                             Amount = 6380.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3986),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(390),
                             DepartmentId = 1003,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1500,7 +1503,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 50,
                             AcademicYearId = 2,
                             Amount = 825.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3988),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(391),
                             DepartmentId = 1003,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1510,7 +1513,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 51,
                             AcademicYearId = 2,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3990),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(393),
                             DepartmentId = 1003,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1520,7 +1523,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 52,
                             AcademicYearId = 3,
                             Amount = 6960.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3992),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(395),
                             DepartmentId = 1003,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1530,7 +1533,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 53,
                             AcademicYearId = 3,
                             Amount = 900.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3994),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(397),
                             DepartmentId = 1003,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1540,7 +1543,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 54,
                             AcademicYearId = 3,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3996),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(399),
                             DepartmentId = 1003,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1550,7 +1553,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 55,
                             AcademicYearId = 4,
                             Amount = 7540.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(3998),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(402),
                             DepartmentId = 1003,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1560,7 +1563,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 56,
                             AcademicYearId = 4,
                             Amount = 975.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4000),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(403),
                             DepartmentId = 1003,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1570,7 +1573,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 57,
                             AcademicYearId = 4,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4001),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(405),
                             DepartmentId = 1003,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1580,7 +1583,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 58,
                             AcademicYearId = 5,
                             Amount = 8120.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4003),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(407),
                             DepartmentId = 1003,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1590,7 +1593,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 59,
                             AcademicYearId = 5,
                             Amount = 1050.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4005),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(409),
                             DepartmentId = 1003,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1600,7 +1603,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 60,
                             AcademicYearId = 5,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4007),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(444),
                             DepartmentId = 1003,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1610,7 +1613,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 61,
                             AcademicYearId = 1,
                             Amount = 6500.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4013),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(450),
                             DepartmentId = 1004,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1620,7 +1623,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 62,
                             AcademicYearId = 1,
                             Amount = 900.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4015),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(453),
                             DepartmentId = 1004,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1630,7 +1633,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 63,
                             AcademicYearId = 1,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4016),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(455),
                             DepartmentId = 1004,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1640,7 +1643,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 64,
                             AcademicYearId = 2,
                             Amount = 7150.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4019),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(457),
                             DepartmentId = 1004,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1650,7 +1653,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 65,
                             AcademicYearId = 2,
                             Amount = 990.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4020),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(459),
                             DepartmentId = 1004,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1660,7 +1663,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 66,
                             AcademicYearId = 2,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4024),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(463),
                             DepartmentId = 1004,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1670,7 +1673,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 67,
                             AcademicYearId = 3,
                             Amount = 7800.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4026),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(466),
                             DepartmentId = 1004,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1680,7 +1683,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 68,
                             AcademicYearId = 3,
                             Amount = 1080.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4028),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(468),
                             DepartmentId = 1004,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1690,7 +1693,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 69,
                             AcademicYearId = 3,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4029),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(470),
                             DepartmentId = 1004,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1700,7 +1703,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 70,
                             AcademicYearId = 4,
                             Amount = 8450.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4032),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(472),
                             DepartmentId = 1004,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1710,7 +1713,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 71,
                             AcademicYearId = 4,
                             Amount = 1170.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4033),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(474),
                             DepartmentId = 1004,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1720,7 +1723,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 72,
                             AcademicYearId = 4,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4035),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(476),
                             DepartmentId = 1004,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -1730,7 +1733,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 73,
                             AcademicYearId = 5,
                             Amount = 9100.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4037),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(478),
                             DepartmentId = 1004,
                             FeeType = "Tuition",
                             IsDeleted = false
@@ -1740,7 +1743,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 74,
                             AcademicYearId = 5,
                             Amount = 1260.00m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4039),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(480),
                             DepartmentId = 1004,
                             FeeType = "Books",
                             IsDeleted = false
@@ -1750,7 +1753,7 @@ namespace persistenceLayer.Data.Migrations
                             Id = 75,
                             AcademicYearId = 5,
                             Amount = 300m,
-                            CreatedAt = new DateTime(2026, 5, 18, 17, 43, 27, 558, DateTimeKind.Local).AddTicks(4041),
+                            CreatedAt = new DateTime(2026, 5, 13, 4, 43, 23, 635, DateTimeKind.Local).AddTicks(482),
                             DepartmentId = 1004,
                             FeeType = "Activities",
                             IsDeleted = false
@@ -2185,9 +2188,6 @@ namespace persistenceLayer.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAllowableToLookDown")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
@@ -2849,27 +2849,6 @@ namespace persistenceLayer.Data.Migrations
                         },
                         new
                         {
-                            Id = 1045,
-                            ClaimType = "Permissions",
-                            ClaimValue = "Quiz:read",
-                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
-                        },
-                        new
-                        {
-                            Id = 1046,
-                            ClaimType = "Permissions",
-                            ClaimValue = "Quiz:addOrUpdate",
-                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
-                        },
-                        new
-                        {
-                            Id = 1047,
-                            ClaimType = "Permissions",
-                            ClaimValue = "Quiz:delete",
-                            RoleId = "71e40e16-7fe9-4f8b-807b-77c9da3f41a9"
-                        },
-                        new
-                        {
                             Id = 1051,
                             ClaimType = "Permissions",
                             ClaimValue = "Ass:read",
@@ -2998,89 +2977,68 @@ namespace persistenceLayer.Data.Migrations
                         {
                             Id = 1069,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:read",
+                            ClaimValue = "questions:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1070,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:addOrUpdate",
+                            ClaimValue = "questions:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1071,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:delete",
+                            ClaimValue = "questions:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1072,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "Lecture:create",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1073,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "Lecture:update",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1074,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "Lecture:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1075,
                             ClaimType = "Permissions",
-                            ClaimValue = "Lecture:create",
+                            ClaimValue = "Lecture:join",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1076,
                             ClaimType = "Permissions",
-                            ClaimValue = "Lecture:update",
+                            ClaimValue = "CheatingReport:read",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
                             Id = 1077,
                             ClaimType = "Permissions",
-                            ClaimValue = "Lecture:delete",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
-                        },
-                        new
-                        {
-                            Id = 1078,
-                            ClaimType = "Permissions",
-                            ClaimValue = "Lecture:join",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
-                        },
-                        new
-                        {
-                            Id = 1079,
-                            ClaimType = "Permissions",
-                            ClaimValue = "CheatingReport:read",
-                            RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
-                        },
-                        new
-                        {
-                            Id = 1080,
-                            ClaimType = "Permissions",
                             ClaimValue = "CheatingReport:add",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
                         },
                         new
                         {
-                            Id = 1081,
+                            Id = 1078,
                             ClaimType = "Permissions",
                             ClaimValue = "CheatingReport:delete",
                             RoleId = "92b75286-d8f8-4061-9995-e6e23ccdee94"
@@ -3173,89 +3131,68 @@ namespace persistenceLayer.Data.Migrations
                         {
                             Id = 1113,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:read",
+                            ClaimValue = "questions:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1114,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:addOrUpdate",
+                            ClaimValue = "questions:add",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1115,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:delete",
+                            ClaimValue = "questions:update",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1116,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "Lecture:create",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1117,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:add",
+                            ClaimValue = "Lecture:update",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1118,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:update",
+                            ClaimValue = "Lecture:delete",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1119,
                             ClaimType = "Permissions",
-                            ClaimValue = "Lecture:create",
+                            ClaimValue = "Lecture:join",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1120,
                             ClaimType = "Permissions",
-                            ClaimValue = "Lecture:update",
+                            ClaimValue = "CheatingReport:read",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
                             Id = 1121,
                             ClaimType = "Permissions",
-                            ClaimValue = "Lecture:delete",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
-                        },
-                        new
-                        {
-                            Id = 1122,
-                            ClaimType = "Permissions",
-                            ClaimValue = "Lecture:join",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
-                        },
-                        new
-                        {
-                            Id = 1123,
-                            ClaimType = "Permissions",
-                            ClaimValue = "CheatingReport:read",
-                            RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
-                        },
-                        new
-                        {
-                            Id = 1124,
-                            ClaimType = "Permissions",
                             ClaimValue = "CheatingReport:add",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
                         },
                         new
                         {
-                            Id = 1125,
+                            Id = 1122,
                             ClaimType = "Permissions",
                             ClaimValue = "CheatingReport:delete",
                             RoleId = "7e07bb31-26ad-47ac-880c-c5fdfa0516d3"
@@ -3320,33 +3257,26 @@ namespace persistenceLayer.Data.Migrations
                         {
                             Id = 1159,
                             ClaimType = "Permissions",
-                            ClaimValue = "Quiz:read",
+                            ClaimValue = "questions:read",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
                             Id = 1160,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:read",
+                            ClaimValue = "questions:solve",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
                             Id = 1161,
                             ClaimType = "Permissions",
-                            ClaimValue = "questions:solve",
-                            RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
-                        },
-                        new
-                        {
-                            Id = 1162,
-                            ClaimType = "Permissions",
                             ClaimValue = "Lecture:join",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"
                         },
                         new
                         {
-                            Id = 1163,
+                            Id = 1162,
                             ClaimType = "Permissions",
                             ClaimValue = "CheatingReport:add",
                             RoleId = "9eaa03df-8e4f-4161-85de-0f6e5e30bfd4"

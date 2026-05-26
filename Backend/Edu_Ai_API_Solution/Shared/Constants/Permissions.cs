@@ -67,6 +67,10 @@ namespace Shared.Constants
 		public const string GetCheatingReport = "CheatingReport:read";
 		public const string AddCheatingReport = "CheatingReport:add";
 		public const string DeleteCheatingReport = "CheatingReport:delete";
+		// Quiz Permissions
+		public const string GetQuizzes = "Quiz:read";
+		public const string AddOrUpdateQuiz = "Quiz:addOrUpdate";
+		public const string DeleteQuiz = "Quiz:delete";
 
 		public static IList<string?> GetAllPermissions() =>
 			typeof(Permissions).GetFields().Select(x => x.GetValue(x) as string).ToList();

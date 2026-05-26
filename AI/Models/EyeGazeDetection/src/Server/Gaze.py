@@ -7,7 +7,7 @@ import time
 FACE_LANDMARKER_MODEL_PATH     = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "..",
-    "face_landmarker",
+    "face_landmarker", 
     "face_landmarker.task"
 )
 LANDMARKS_CACHE_EXPIRE_SECONDS = 1.5
@@ -37,29 +37,25 @@ def _calculate_eye_ratio(landmarks, eye_points):
     eye_h = max(1, p_bottom[1] - p_top[1])
 
     h_ratio = (p_iris[0] - p_left[0]) / eye_w
-    v_ratio = 1.0 - (p_bottom[1] - p_iris[1]) / eye_h
+    v_ratio = 1.0- (p_bottom[1] - p_iris[1]) / eye_h
 
-    return _amplify_nonlinear(h_ratio, 2.0), _amplify_nonlinear(v_ratio, 1.5)
+    return _amplify_nonlinear(h_ratio, 2.5), _amplify_nonlinear(v_ratio, 2.5)
 
 class GazeDetector:
-    """
-    Stateless gaze detector — runs on Modal.
-    Each instance loads MediaPipe once (via @modal.enter) and is reused
-    across requests within the same container.
-    Returns only 3 values: h_ratio, v_ratio, face_present.
-    All calibration and state logic lives in localMain.py on the desktop.
-    """
 
     def __init__(self):
         self._last_landmarks      = None
         self._last_landmarks_time = None
         self._last_pitch_deg      = 0.0
         self._last_yaw_deg        = 0.0
-        self._last_timestamp_ms   = 0
+        self._last_timestamp_ms = 0
 
         self._landmarker     = None
         self._use_landmarker = False
         self._init_landmarker()
+
+        self.last_pitch_deg: float = 0.0
+        self.last_yaw_deg:   float = 0.0
 
     def _init_landmarker(self):
         if not os.path.isfile(FACE_LANDMARKER_MODEL_PATH):
@@ -67,10 +63,12 @@ class GazeDetector:
                 f"[GazeDetector] WARNING: model file '{FACE_LANDMARKER_MODEL_PATH}' not found."
             )
             return
-
+        
+        #Read the model file into memory as raw bytes
         with open(FACE_LANDMARKER_MODEL_PATH, "rb") as f:
             model_data = f.read()
 
+        #
         options = mp.tasks.vision.FaceLandmarkerOptions(
             base_options=mp.tasks.BaseOptions(model_asset_buffer=model_data),
             running_mode=mp.tasks.vision.RunningMode.VIDEO,
@@ -85,16 +83,7 @@ class GazeDetector:
         self._use_landmarker = True
         print("[GazeDetector] FaceLandmarker ready.")
 
-    def get_gaze_ratio(self, frame) -> tuple[float, float, bool]:
-        """
-        Process a single BGR frame.
-
-        Returns
-        -------
-        h_ratio      : float  0.0 (far left) → 1.0 (far right)
-        v_ratio      : float  0.0 (far down) → 1.0 (far up)
-        face_present : bool
-        """
+    def get_gaze_ratio(self, frame):
         if not self._use_landmarker:
             return 0.0, 0.0, False
 
@@ -107,18 +96,18 @@ class GazeDetector:
         result       = self._landmarker.detect_for_video(mp_img, timestamp_ms)
 
         if result.face_landmarks:
-            face1     = result.face_landmarks[0]
+            face1 = result.face_landmarks[0]
             mp_points = np.array([
                 [int(p.x * w), int(p.y * h)]
                 for p in face1
             ])
-            self._last_landmarks      = mp_points
+            self._last_landmarks = mp_points
             self._last_landmarks_time = time.time()
             face_detect = True
         elif (
-            self._last_landmarks is not None
-            and self._last_landmarks_time is not None
-            and (time.time() - self._last_landmarks_time) < LANDMARKS_CACHE_EXPIRE_SECONDS
+            self._last_landmarks is not None and
+            self._last_landmarks_time is not None and
+            (time.time() - self._last_landmarks_time) < LANDMARKS_CACHE_EXPIRE_SECONDS
         ):
             mp_points   = self._last_landmarks
             face_detect = True
@@ -127,13 +116,16 @@ class GazeDetector:
             return 0.0, 0.0, False
 
         if result.facial_transformation_matrixes:
-            mat                  = np.array(result.facial_transformation_matrixes[0])
+            mat = np.array(result.facial_transformation_matrixes[0])
             pitch_deg, yaw_deg   = _rotation_matrix_to_pitch_yaw(mat[:3, :3])
             self._last_pitch_deg = pitch_deg
             self._last_yaw_deg   = yaw_deg
         else:
             pitch_deg = self._last_pitch_deg
             yaw_deg   = self._last_yaw_deg
+
+        self.last_pitch_deg = pitch_deg
+        self.last_yaw_deg   = yaw_deg
 
         left_idx  = [33,  133, 159, 145, 468]
         right_idx = [362, 263, 386, 374, 473]
@@ -144,8 +136,12 @@ class GazeDetector:
         avg_h = (h_l + h_r) / 2
         avg_v = (v_l + v_r) / 2
 
-        avg_h += (yaw_deg / 90.0) * 0.15
+        # Yaw compensation: head turning shifts iris geometrically.
+        # Subtract the yaw-induced shift so only true eye movement triggers.
+        # Factor 0.15 ≈ correction per 90° of head turn — tune up if
+        # head movement still triggers, tune down if real gaze is suppressed.
+        avg_h -= (yaw_deg / 90.0) * 0.30
         avg_h  = float(np.clip(avg_h, 0.0, 1.0))
         avg_v  = float(np.clip(avg_v, 0.0, 1.0))
 
-        return avg_h, avg_v, face_detect
+        return avg_h, 1-avg_v, face_detect
