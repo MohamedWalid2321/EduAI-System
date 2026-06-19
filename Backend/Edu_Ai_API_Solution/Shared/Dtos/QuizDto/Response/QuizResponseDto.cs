@@ -13,6 +13,9 @@ namespace Shared.Dtos.QuizDto.Response
         public string Title { get; set; }
 		public DateTime ScheduledDate { get; set; }
 		public TimeSpan Duration { get; set; } // duration of the quiz
-        
-    }
+		public string Description { get; set; }
+		public string QuizCode { get; set; } = null!; // a unique code for the quiz that students can use to access it (New) ##
+
+
+	}
 }

@@ -1,4 +1,4 @@
-﻿using Shared.Dtos.QuizDto.Request;
+using Shared.Dtos.QuizDto.Request;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,8 @@ namespace PresentationLayer.Controllers
         [Cache(300)]
         public async Task<IActionResult> GetAllQuizzesByCourseId(int courseId, CancellationToken cancellationToken)
         {
-            var quizzes = await serviceManager.QuizService.GetAllQuizzesForCourse(courseId, cancellationToken);
+            var onlyActive = User.HasClaim("Roles", DefaultRoles.Student);
+            var quizzes = await serviceManager.QuizService.GetAllQuizzesForCourse(courseId, onlyActive, cancellationToken);
             return Ok(quizzes);
         }
 
@@ -42,6 +43,15 @@ namespace PresentationLayer.Controllers
             await serviceManager.QuizService.DeleteQuizAsync(id, cancellationToken);
             await cacheService.RemoveByPatternAsync(QuizzesPattern);
             return Ok("Done");
+        }
+
+        [HttpPatch("{id}/toggle-active")]
+        [HasPermission(Permissions.AddOrUpdateQuiz)]
+        public async Task<IActionResult> ToggleQuizActive(int id, CancellationToken cancellationToken)
+        {
+            var newIsActive = await serviceManager.QuizService.ToggleQuizActiveAsync(id, cancellationToken);
+            await cacheService.RemoveByPatternAsync(QuizzesPattern);
+            return Ok(new { IsActive = newIsActive });
         }
     }
 }
