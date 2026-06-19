@@ -1,4 +1,4 @@
-﻿namespace ServiceLayer.Services
+namespace ServiceLayer.Services
 {
 	public class QuizService(IUnitOfWork unitOfWork) : IQuizService
 	{
@@ -84,10 +84,12 @@ public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizReq
             return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
 		}
 
-		public async Task<IEnumerable<QuizResponseDto>> GetAllQuizzesForCourse(int CourseId, CancellationToken cancellationToken = default)
+		public async Task<IEnumerable<QuizResponseDto>> GetAllQuizzesForCourse(int CourseId, bool onlyActive, CancellationToken cancellationToken = default)
 		{
 			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
-			var quizSpec = new QuizByCourseIdSpecification(CourseId);
+			var quizSpec = onlyActive
+				? new QuizByCourseIdSpecification(CourseId, onlyActive: true)
+				: new QuizByCourseIdSpecification(CourseId);
 			var quizEntities = await quizRepository.GetAllAsync(quizSpec, cancellationToken);
 			if (quizEntities is null || !quizEntities.Any())
 			{
@@ -106,6 +108,22 @@ public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizReq
 				throw new QuizNotFoundException(quizId);
 			}
 			return quizEntity.Adapt<QuizResponseInDetailsDto>();
+		}
+
+		public async Task<bool> ToggleQuizActiveAsync(int quizId, CancellationToken cancellationToken = default)
+		{
+			var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
+			var quizEntity = await quizRepository.GetByIdAsync(quizId, cancellationToken);
+			if (quizEntity is null)
+			{
+				throw new QuizNotFoundException(quizId);
+			}
+
+			quizEntity.IsActive = !quizEntity.IsActive;
+			quizRepository.Update(quizEntity);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+			return quizEntity.IsActive; // returns the new state
 		}
 	}
 }
