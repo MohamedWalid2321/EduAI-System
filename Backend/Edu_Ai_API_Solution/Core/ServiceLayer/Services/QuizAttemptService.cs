@@ -1,4 +1,4 @@
-﻿using DomainLayer.Exceptions.AttemptQuiz;
+using DomainLayer.Exceptions.AttemptQuiz;
 using DomainLayer.Exceptions.Question;
 using DomainLayer.Models;
 using Mapster;
@@ -301,6 +301,91 @@ namespace ServiceLayer.Services
             }).ToList();
 
             return result;
+        }
+
+        public async Task<List<QuizAttemptDetailsDto>> GetAttemptsByQuizIdAsync(int quizId, CancellationToken cancellationToken = default)
+        {
+            var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
+
+            var spec = new QuizAttemptsByQuizWithDetailsSpecification(quizId);
+
+            var attempts = await attemptRepository.GetAllAsync(spec, cancellationToken);
+
+            var result = attempts.Select(a => new QuizAttemptDetailsDto
+            {
+                AttemptId    = a.Id,
+                StudentId    = a.StudentId,
+                StudentFullName = BuildFullName(a.User),
+                Score        = a.Score,
+                SubmittedAt  = a.SubmittedAt,
+                StudentAnswers = a.StudentAnswers.Select(sa =>
+                {
+                    var correctChoice = sa.QuizQuestion?.QuestionChoices
+                        .FirstOrDefault(c => c.IsCorrect);
+
+                    return new AttemptAnswerDto
+                    {
+                        QuestionText  = sa.QuizQuestion?.QuestionText,
+                        StudentChoice = sa.QuestionChoice?.ChoiceText,
+                        CorrectChoice = correctChoice?.ChoiceText,
+                        IsCorrect     = sa.IsCorrect
+                    };
+                }).ToList()
+            }).ToList();
+
+            return result;
+        }
+
+        public async Task<QuizAttemptDetailsDto> GetAttemptDetailsByIdAsync(int attemptId, CancellationToken cancellationToken = default)
+        {
+            var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
+
+            var spec = new QuizAttemptByIdWithDetailsSpecification(attemptId);
+
+            var attempt = await attemptRepository.GetFirstOrDefaultAsync(spec, cancellationToken);
+
+            if (attempt is null)
+                throw new QuizAttemptNotFoundException(attemptId.ToString());
+
+            return new QuizAttemptDetailsDto
+            {
+                AttemptId       = attempt.Id,
+                StudentId       = attempt.StudentId,
+                StudentFullName = BuildFullName(attempt.User),
+                Score           = attempt.Score,
+                SubmittedAt     = attempt.SubmittedAt,
+                StudentAnswers  = attempt.StudentAnswers.Select(sa =>
+                {
+                    var correctChoice = sa.QuizQuestion?.QuestionChoices
+                        .FirstOrDefault(c => c.IsCorrect);
+
+                    return new AttemptAnswerDto
+                    {
+                        QuestionText  = sa.QuizQuestion?.QuestionText,
+                        StudentChoice = sa.QuestionChoice?.ChoiceText,
+                        CorrectChoice = correctChoice?.ChoiceText,
+                        IsCorrect     = sa.IsCorrect
+                    };
+                }).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Builds the student's display name.
+        /// Falls back to UserName (email) when FirstName and LastName are both empty,
+        /// because ApplicationUser defaults them to string.Empty.
+        /// </summary>
+        private static string BuildFullName(ApplicationUser? user)
+        {
+            if (user is null)
+                return string.Empty;
+
+            var fullName = $"{user.FirstName} {user.LastName}".Trim();
+
+            // If both name fields are empty (default), fall back to the account's UserName
+            return string.IsNullOrWhiteSpace(fullName)
+                ? user.UserName ?? string.Empty
+                : fullName;
         }
     }
 }
