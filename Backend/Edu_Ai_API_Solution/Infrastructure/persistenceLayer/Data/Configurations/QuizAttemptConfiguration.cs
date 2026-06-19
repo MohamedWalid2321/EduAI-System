@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +32,11 @@ namespace persistenceLayer.Data.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             
+            builder.HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasIndex(a => new { a.StudentId, a.QuizId })
                 .IsUnique();
         }

@@ -8,6 +8,11 @@ namespace PresentationLayer.Controllers
 {
     public class CheatingReportController(ICheatingReportService _cheatingReportService) : ApiControllerBase
     {
+        /// <summary>
+        /// GET /api/cheating-reports/attempt/{attemptId}
+        /// Returns the cheating report for a specific quiz attempt,
+        /// including all violations and the student's identity.
+        /// </summary>
         [HttpGet("attempt/{attemptId:int}")]
         [Authorize(Policy = Permissions.GetCheatingReport)]
         public async Task<IActionResult> GetByAttempt(int attemptId, CancellationToken cancellationToken)
@@ -54,6 +59,19 @@ namespace PresentationLayer.Controllers
         {
             await _cheatingReportService.DeleteViolationAsync(violationId, cancellationToken);
             return NoContent();
+        }
+
+        /// <summary>
+        /// GET /api/cheating-reports/{reportId}/risk-assessment
+        /// Returns the full RiskAssessmentResult for a CheatingReport,
+        /// including the per-question risk score breakdown (StudentRiskScore vs CohortAvgRiskScore).
+        /// </summary>
+        [HttpGet("{reportId:int}/risk-assessment")]
+        [Authorize(Policy = Permissions.GetCheatingReport)]
+        public async Task<IActionResult> GetRiskAssessmentByReport(int reportId, CancellationToken cancellationToken)
+        {
+            var result = await _cheatingReportService.GetRiskAssessmentByCheatingReportAsync(reportId, cancellationToken);
+            return Ok(result);
         }
     }
 }

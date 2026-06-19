@@ -1,4 +1,4 @@
-﻿using DomainLayer.Models;
+using DomainLayer.Models;
 using Mapster;
 using ServiceLayer.Specifications.AttemptedQuizSpecification;
 using ServiceLayer.Specifications.CheatingReportSpecifications;
@@ -48,7 +48,7 @@ namespace ServiceLayer.Services
             {
                 QuizAttemptId = attemptId,
                 StudentId = attempt.StudentId,
-                Student = attempt.User   // ← carry the loaded user so MapToResponse has it
+                Student = attempt.User   // carry the loaded user so MapToResponse has it
             };
 
             await repo.AddAsync(report, cancellationToken);
@@ -96,6 +96,30 @@ namespace ServiceLayer.Services
 
             repo.Delete(report);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<RiskAssessmentResultResponse> GetRiskAssessmentByCheatingReportAsync(int cheatingReportId, CancellationToken cancellationToken = default)
+        {
+            var repo = _unitOfWork.GetRepository<RiskAssessmentResult, int>();
+            var spec = new RiskAssessmentResultByCheatingReportSpecification(cheatingReportId);
+            var result = await repo.GetFirstOrDefaultAsync(spec, cancellationToken)
+                ?? throw new KeyNotFoundException($"No risk assessment result found for cheating report {cheatingReportId}");
+
+            return new RiskAssessmentResultResponse
+            {
+                Id                      = result.Id,
+                StudentId               = result.StudentId,
+                AttemptId               = result.AttemptId,
+                CheatingReportId        = result.CheatingReportId,
+                SessionViolationRate    = result.SessionViolationRate,
+                OverallSessionRiskScore = result.OverallSessionRiskScore,
+                Questions = result.Questions.Select(q => new RiskQuestionResultDto
+                {
+                    QuestionId         = q.QuestionId,
+                    StudentRiskScore   = q.StudentRiskScore,
+                    CohortAvgRiskScore = q.CohortAvgRiskScore
+                }).ToList()
+            };
         }
 
         private static CheatingReportResponse MapToResponse(CheatingReport report) => new()
