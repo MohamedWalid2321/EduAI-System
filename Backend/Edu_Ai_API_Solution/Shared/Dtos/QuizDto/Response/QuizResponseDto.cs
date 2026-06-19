@@ -15,6 +15,7 @@ namespace Shared.Dtos.QuizDto.Response
 		public TimeSpan Duration { get; set; } // duration of the quiz
 		public string Description { get; set; }
 		public string QuizCode { get; set; } = null!; // a unique code for the quiz that students can use to access it (New) ##
+		public bool IsActive { get; set; }            // indicates if the quiz is currently active
 
 
 	}
