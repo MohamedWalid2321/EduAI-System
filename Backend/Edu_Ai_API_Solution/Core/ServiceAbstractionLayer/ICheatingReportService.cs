@@ -22,5 +22,11 @@ namespace ServiceAbstractionLayer
 
         // Delete the full report
         Task DeleteReportAsync(int reportId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Returns the full RiskAssessmentResult (including per-question breakdown)
+        /// for a given CheatingReport ID.
+        /// </summary>
+        Task<RiskAssessmentResultResponse> GetRiskAssessmentByCheatingReportAsync(int cheatingReportId, CancellationToken cancellationToken = default);
     }
 }
