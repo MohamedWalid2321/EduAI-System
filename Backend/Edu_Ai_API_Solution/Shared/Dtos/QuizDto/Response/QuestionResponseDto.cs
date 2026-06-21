@@ -13,6 +13,7 @@ namespace Shared.Dtos.QuizDto.Response
         public string QuestionText { get; set; }
         public string QuestionType { get; set; } // e.g. "MultipleChoice" or "TrueFalse"
         public bool IsAllowableToLookDown { get; set; }
-        public List<QuestionChoiceResponseDto> QuestionChoices { get; set; }
+		public double Marks { get; set; } // marks or points allocated for the question
+		public List<QuestionChoiceResponseDto> QuestionChoices { get; set; }
     }
 }

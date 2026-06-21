@@ -48,25 +48,19 @@ namespace PresentationLayer.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// GET /api/quiz-attempts/quizzes/{quizId}/attempts
-        /// Returns all submitted attempts for a specific quiz with full student details and per-question answers.
-        /// Accessible by instructors / admins.
-        /// </summary>
+     
         [HttpGet("quizzes/{quizId:int}/attempts")]
-        public async Task<IActionResult> GetAttemptsByQuiz(int quizId, CancellationToken cancellationToken)
+		[HasPermission(Permissions.AddOrUpdateQuiz)]
+		public async Task<IActionResult> GetAttemptsByQuiz(int quizId, CancellationToken cancellationToken)
         {
             var result = await _serviceManager.QuizAttemptService.GetAttemptsByQuizIdAsync(quizId, cancellationToken);
             return Ok(result);
         }
 
-        /// <summary>
-        /// GET /api/quiz-attempts/attempts/{attemptId}/details
-        /// Returns the full details of a single attempt (student name, score, per-question answers).
-        /// Accessible by instructors / admins.
-        /// </summary>
+        
         [HttpGet("attempts/{attemptId:int}/details")]
-        public async Task<IActionResult> GetAttemptDetails(int attemptId, CancellationToken cancellationToken)
+		[HasPermission(Permissions.AddOrUpdateQuiz)]
+		public async Task<IActionResult> GetAttemptDetails(int attemptId, CancellationToken cancellationToken)
         {
             var result = await _serviceManager.QuizAttemptService.GetAttemptDetailsByIdAsync(attemptId, cancellationToken);
             return Ok(result);

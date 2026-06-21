@@ -23,6 +23,7 @@ namespace Shared.Dtos.AttemptQuiz.Response
         public string StudentFullName { get; set; }
         public string StudentId { get; set; }
         public int Score { get; set; }
+        public double QuizTotalMarks { get; set; }
         public DateTime SubmittedAt { get; set; }
         public List<AttemptAnswerDto> StudentAnswers { get; set; }
     }

@@ -16,6 +16,10 @@ namespace ServiceLayer.Specifications.AttemptedQuizSpecification
         public QuizAttemptsByQuizWithDetailsSpecification(int quizId)
             : base(q => q.QuizId == quizId && q.IsSubmitted)
         {
+            // Load the quiz (to access TotalMarks)
+            AddInclude_2(query => query
+                .Include(a => a.Quiz));
+
             // Load the student user
             AddInclude_2(query => query
                 .Include(a => a.User));
