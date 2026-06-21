@@ -313,11 +313,12 @@ namespace ServiceLayer.Services
 
             var result = attempts.Select(a => new QuizAttemptDetailsDto
             {
-                AttemptId    = a.Id,
-                StudentId    = a.StudentId,
+                AttemptId       = a.Id,
+                StudentId       = a.StudentId,
                 StudentFullName = BuildFullName(a.User),
-                Score        = a.Score,
-                SubmittedAt  = a.SubmittedAt,
+                Score           = a.Score,
+                QuizTotalMarks  = a.Quiz.TotalMarks,
+                SubmittedAt     = a.SubmittedAt,
                 StudentAnswers = a.StudentAnswers.Select(sa =>
                 {
                     var correctChoice = sa.QuizQuestion?.QuestionChoices
@@ -353,6 +354,7 @@ namespace ServiceLayer.Services
                 StudentId       = attempt.StudentId,
                 StudentFullName = BuildFullName(attempt.User),
                 Score           = attempt.Score,
+                QuizTotalMarks  = attempt.Quiz.TotalMarks,
                 SubmittedAt     = attempt.SubmittedAt,
                 StudentAnswers  = attempt.StudentAnswers.Select(sa =>
                 {
