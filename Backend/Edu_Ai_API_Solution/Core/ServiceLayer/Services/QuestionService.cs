@@ -95,6 +95,7 @@ namespace ServiceLayer.Services
         {
             var quizRepository = _unitOfWork.GetRepository<Quiz, int>();
             var QuestionRepository = _unitOfWork.GetRepository<QuizQuestion, int>();
+            var ChoicesRepository = _unitOfWork.GetRepository<QuestionChoices, int>();
 
             // Verify quiz exists
             var quizEntity = await quizRepository.GetByIdAsync(quizId, cancellationToken);
@@ -104,7 +105,7 @@ namespace ServiceLayer.Services
                 throw new QuizNotFoundException(quizId);
             }
 
-            // Verify question exists
+            // Verify question exists (and eagerly load its choices)
             var questionSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.Id);
 
             var questionEntity = await QuestionRepository.GetByIdAsync(questionSpecifications, cancellationToken);
@@ -114,8 +115,9 @@ namespace ServiceLayer.Services
                 throw new QuestionNotFoundException(questionRequest.Id);
             }
 
-            var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText);
-            //check the duplicate of question in the same quiz
+            // Bug fix 1: exclude the current question from the duplicate-text check so that
+            // keeping the same QuestionText doesn't trigger a false QuestionAlreadyExistsException.
+            var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText, questionRequest.Id);
             var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications, cancellationToken);
             if (count > 0)
             {
@@ -149,7 +151,16 @@ namespace ServiceLayer.Services
             questionEntity.Marks = questionRequest.Marks;
             questionEntity.IsAllowableToLookDown = questionRequest.IsAllowableToLookDown;
 
+            // Bug fix 2: explicitly remove the old choices from the DB instead of just calling
+            // .Clear() on the in-memory collection. Merely clearing the collection tells EF Core
+            // to detach the children but does NOT issue DELETE statements, so SaveChanges then
+            // INSERTs the new choices on top — producing duplicates.
+            foreach (var oldChoice in questionEntity.QuestionChoices.ToList())
+            {
+                ChoicesRepository.Delete(oldChoice);
+            }
             questionEntity.QuestionChoices.Clear();
+
             questionEntity.QuestionChoices = questionRequest.QuestionChoices
                 .Select((choiceText, index) => new DomainLayer.Models.QuestionChoices
                 {
@@ -160,9 +171,6 @@ namespace ServiceLayer.Services
             QuestionRepository.Update(questionEntity);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return questionEntity.Adapt<QuestionResponseDto>();
-
-
-
         }
     }
 }

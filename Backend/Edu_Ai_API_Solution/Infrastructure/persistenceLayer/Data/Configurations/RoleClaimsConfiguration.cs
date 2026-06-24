@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Shared.Constants;
 
 namespace persistenceLayer.Data.Configurations;
@@ -54,6 +54,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.CreateLecture, Permissions.UpdateLecture, Permissions.DeleteLecture, Permissions.JoinLecture,
             // Cheating Report — admin can read, add and delete
             Permissions.GetCheatingReport, Permissions.AddCheatingReport, Permissions.DeleteCheatingReport,
+            // Quiz Attempt Score — admin can update score unlimited times
+            Permissions.UpdateAttemptScore,
         };
 
         for (var i = 0; i < adminPermissions.Length; i++)
@@ -87,6 +89,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.CreateLecture, Permissions.UpdateLecture, Permissions.DeleteLecture, Permissions.JoinLecture,
             // Cheating Report — instructor can read, add and delete
             Permissions.GetCheatingReport, Permissions.AddCheatingReport, Permissions.DeleteCheatingReport,
+            // Quiz Attempt Score — instructor can finalize a score one time only
+            Permissions.FinalizeAttemptScore,
         };
 
         for (var i = 0; i < instructorPermissions.Length; i++)

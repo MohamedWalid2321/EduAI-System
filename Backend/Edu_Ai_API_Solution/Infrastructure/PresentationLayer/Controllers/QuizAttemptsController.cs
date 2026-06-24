@@ -65,5 +65,27 @@ namespace PresentationLayer.Controllers
             var result = await _serviceManager.QuizAttemptService.GetAttemptDetailsByIdAsync(attemptId, cancellationToken);
             return Ok(result);
         }
+        [HttpPatch("attempts/{attemptId:int}/score/finalize")]
+        [HasPermission(Permissions.FinalizeAttemptScore)]
+        public async Task<IActionResult> FinalizeAttemptScore(
+            int attemptId,
+            [FromBody] UpdateAttemptScoreRequestDto request,
+            CancellationToken cancellationToken)
+        {
+            var result = await _serviceManager.QuizAttemptService
+                .FinalizeAttemptScoreAsync(attemptId, request.Score, cancellationToken);
+            return Ok(result);
+        }
+        [HttpPatch("attempts/{attemptId:int}/score")]
+        [HasPermission(Permissions.UpdateAttemptScore)]
+        public async Task<IActionResult> UpdateAttemptScore(
+            int attemptId,
+            [FromBody] UpdateAttemptScoreRequestDto request,
+            CancellationToken cancellationToken)
+        {
+            var result = await _serviceManager.QuizAttemptService
+                .UpdateAttemptScoreAsync(attemptId, request.Score, cancellationToken);
+            return Ok(result);
+        }
     }
 }

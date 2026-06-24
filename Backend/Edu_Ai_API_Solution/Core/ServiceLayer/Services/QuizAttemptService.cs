@@ -389,5 +389,83 @@ namespace ServiceLayer.Services
                 ? user.UserName ?? string.Empty
                 : fullName;
         }
+        public async Task<QuizAttemptDetailsDto> FinalizeAttemptScoreAsync(
+            int attemptId,
+            int newScore,
+            CancellationToken cancellationToken = default)
+        {
+            var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
+
+            var attempt = await GetAttemptForScoreUpdateAsync(attemptRepository, attemptId, cancellationToken);
+
+            if (attempt.IsScoreFinalized)
+                throw new AttemptScoreAlreadyFinalizedException(attemptId);
+
+            attempt.Score = newScore;
+            attempt.IsScoreFinalized = true;  // lock — no further one-time updates allowed
+
+            attemptRepository.Update(attempt);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return MapToDetailsDto(attempt);
+        }
+        public async Task<QuizAttemptDetailsDto> UpdateAttemptScoreAsync(
+            int attemptId,
+            int newScore,
+            CancellationToken cancellationToken = default)
+        {
+            var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
+
+            var attempt = await GetAttemptForScoreUpdateAsync(attemptRepository, attemptId, cancellationToken);
+
+            attempt.Score = newScore;
+
+            attemptRepository.Update(attempt);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return MapToDetailsDto(attempt);
+        }
+
+        // ── private helpers ──────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Fetches the attempt with its full detail includes and verifies it exists.
+        /// </summary>
+        private static async Task<QuizAttempt> GetAttemptForScoreUpdateAsync(
+            IGenericRepository<QuizAttempt, int> repo,
+            int attemptId,
+            CancellationToken cancellationToken)
+        {
+            var spec = new QuizAttemptByIdWithDetailsSpecification(attemptId);
+            var attempt = await repo.GetFirstOrDefaultAsync(spec, cancellationToken);
+
+            if (attempt is null)
+                throw new QuizAttemptNotFoundException(attemptId.ToString());
+
+            return attempt;
+        }
+        private static QuizAttemptDetailsDto MapToDetailsDto(QuizAttempt attempt) =>
+            new()
+            {
+                AttemptId       = attempt.Id,
+                StudentId       = attempt.StudentId,
+                StudentFullName = BuildFullName(attempt.User),
+                Score           = attempt.Score,
+                QuizTotalMarks  = attempt.Quiz.TotalMarks,
+                SubmittedAt     = attempt.SubmittedAt,
+                StudentAnswers  = attempt.StudentAnswers.Select(sa =>
+                {
+                    var correctChoice = sa.QuizQuestion?.QuestionChoices
+                        .FirstOrDefault(c => c.IsCorrect);
+
+                    return new AttemptAnswerDto
+                    {
+                        QuestionText  = sa.QuizQuestion?.QuestionText,
+                        StudentChoice = sa.QuestionChoice?.ChoiceText,
+                        CorrectChoice = correctChoice?.ChoiceText,
+                        IsCorrect     = sa.IsCorrect
+                    };
+                }).ToList()
+            };
     }
 }

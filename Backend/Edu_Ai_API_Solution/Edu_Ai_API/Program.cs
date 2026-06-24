@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using persistenceLayer;
+using Microsoft.EntityFrameworkCore;
 using persistenceLayer.Data;
 using PresentationLayer.Authorization;
 using Serilog;
@@ -20,7 +21,7 @@ namespace Edu_Ai_API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -110,6 +111,15 @@ namespace Edu_Ai_API
             });
 
             var app = builder.Build();
+
+            // Auto-apply any pending EF Core migrations on startup.
+            // This keeps the production (cloud) database in sync automatically
+            // every time a new version is published — no manual SQL scripts needed.
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<LmsDBContext>();
+                await db.Database.MigrateAsync();
+            }
 
             // CORS must be first to handle preflight requests
             app.UseCors("AllowAngular");

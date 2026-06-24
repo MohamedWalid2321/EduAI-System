@@ -1,3 +1,6 @@
+# Documentation (local only)
+Docs/
+
 *.dat
 *.jpg
 *.pyc
