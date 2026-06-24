@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +32,17 @@ namespace ServiceLayer.Specifications.QuestionSpecifications
             AddInclude_2(query => query
                         .Include(q => q.QuestionChoices));
 
+        }
+
+        /// <summary>
+        /// Used during updates: finds questions in a quiz matching the given text
+        /// but excludes the question currently being updated (to avoid false duplicate detection).
+        /// </summary>
+        public QuestionInQuizSpecifications(int? quizId, string? questionContent, int excludeQuestionId)
+            : base(p => (!quizId.HasValue || p.QuizId == quizId.Value)
+                        && (string.IsNullOrEmpty(questionContent) || p.QuestionText == questionContent)
+                        && p.Id != excludeQuestionId)
+        {
         }
     }
 }

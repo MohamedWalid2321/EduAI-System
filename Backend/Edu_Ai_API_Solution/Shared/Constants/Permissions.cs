@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,6 +71,12 @@ namespace Shared.Constants
 		public const string GetQuizzes = "Quiz:read";
 		public const string AddOrUpdateQuiz = "Quiz:addOrUpdate";
 		public const string DeleteQuiz = "Quiz:delete";
+
+		// Quiz Attempt Score Permissions
+		/// <summary>Instructor-only: update a specific attempt score exactly once (then locked).</summary>
+		public const string FinalizeAttemptScore = "AttemptScore:finalize";
+		/// <summary>Admin / SuperAdmin: update a specific attempt score an unlimited number of times.</summary>
+		public const string UpdateAttemptScore = "AttemptScore:update";
 
 		public static IList<string?> GetAllPermissions() =>
 			typeof(Permissions).GetFields().Select(x => x.GetValue(x) as string).ToList();
