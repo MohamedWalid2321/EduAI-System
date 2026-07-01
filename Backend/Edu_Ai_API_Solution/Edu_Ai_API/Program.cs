@@ -91,12 +91,7 @@ namespace Edu_Ai_API
             {
                 options.AddPolicy("AllowAngular", corsBuilder =>
                 {
-                    corsBuilder.WithOrigins(
-                        "http://localhost:4200",
-                        "https://localhost:4200",
-                        "http://localhost:4201",
-                        "https://localhost:4201"
-                    )
+                    corsBuilder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
