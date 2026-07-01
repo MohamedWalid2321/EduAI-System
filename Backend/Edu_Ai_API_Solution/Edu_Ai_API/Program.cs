@@ -91,8 +91,14 @@ namespace Edu_Ai_API
             {
                 options.AddPolicy("AllowAngular", corsBuilder =>
                 {
-                    corsBuilder.AllowAnyOrigin()
-                    .AllowAnyMethod()
+                    corsBuilder.WithOrigins(
+                        "https://lms-project-lake-two.vercel.app",
+						"http://localhost:4200",
+						"https://localhost:4200",
+						"http://localhost:4201",
+						"https://localhost:4201"
+					)
+					.AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
                 });
