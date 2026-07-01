@@ -115,8 +115,6 @@ namespace ServiceLayer.Services
                 throw new QuestionNotFoundException(questionRequest.Id);
             }
 
-            // Bug fix 1: exclude the current question from the duplicate-text check so that
-            // keeping the same QuestionText doesn't trigger a false QuestionAlreadyExistsException.
             var questionInQuizSpecifications = new QuestionInQuizSpecifications(quizId, questionRequest.QuestionText, questionRequest.Id);
             var count = await QuestionRepository.GetCountAsync(questionInQuizSpecifications, cancellationToken);
             if (count > 0)
@@ -151,10 +149,6 @@ namespace ServiceLayer.Services
             questionEntity.Marks = questionRequest.Marks;
             questionEntity.IsAllowableToLookDown = questionRequest.IsAllowableToLookDown;
 
-            // Bug fix 2: explicitly remove the old choices from the DB instead of just calling
-            // .Clear() on the in-memory collection. Merely clearing the collection tells EF Core
-            // to detach the children but does NOT issue DELETE statements, so SaveChanges then
-            // INSERTs the new choices on top — producing duplicates.
             foreach (var oldChoice in questionEntity.QuestionChoices.ToList())
             {
                 ChoicesRepository.Delete(oldChoice);

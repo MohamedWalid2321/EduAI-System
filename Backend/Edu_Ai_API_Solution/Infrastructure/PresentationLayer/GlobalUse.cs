@@ -24,4 +24,5 @@ global using Shared.Constants;
 global using Microsoft.Extensions.Options;
 global using System.Security.Claims;
 global using Shared.Dtos.RiskAnalysisDto.Request;
-global using Shared.Dtos.RiskAnalysisDto.Response;
+global using Shared.Dtos.RiskAnalysisDto.Response;
+global using Shared.Dtos.ContactDto;

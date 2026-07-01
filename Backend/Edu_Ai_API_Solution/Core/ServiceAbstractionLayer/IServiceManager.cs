@@ -1,4 +1,4 @@
-﻿using ServiceAbstractionLayer;
+using ServiceAbstractionLayer;
 
 namespace ServiceAbstractionLayer
 {
@@ -21,5 +21,6 @@ namespace ServiceAbstractionLayer
 		IAuthunticationService AuthunticationService { get; }
 		ILectureService LectureService { get; }
 		INotificationService NotificationService { get; }
+		IContactService ContactService { get; }
 	}
 }

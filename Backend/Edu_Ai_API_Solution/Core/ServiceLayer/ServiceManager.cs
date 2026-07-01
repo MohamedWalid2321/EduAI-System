@@ -114,5 +114,11 @@ namespace ServiceLayer
 			new Lazy<INotificationService>(() => new Services.NotificationService(_unitOfWork));
 		public INotificationService NotificationService => _notificationService.Value;
 		#endregion
+
+		#region Contact
+		private readonly Lazy<IContactService> _contactService =
+			new Lazy<IContactService>(() => new Services.ContactService(_emailSender, _emailBodyBuilder, _configuration));
+		public IContactService ContactService => _contactService.Value;
+		#endregion
 	}
 }
