@@ -48,6 +48,9 @@ namespace ServiceLayer
 			services.AddScoped<IRiskAnalysisService, RiskAnalysisService>();
 			services.AddScoped<RiskScoreCalculationJob>();
 
+			// Contact Us
+			services.AddScoped<IContactService, Services.ContactService>();
+
 			return services;
 		}
 
