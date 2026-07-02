@@ -77,6 +77,8 @@ namespace Shared.Constants
 		public const string FinalizeAttemptScore = "AttemptScore:finalize";
 		/// <summary>Admin / SuperAdmin: update a specific attempt score an unlimited number of times.</summary>
 		public const string UpdateAttemptScore = "AttemptScore:update";
+		/// <summary>Student / SuperAdmin: view a student's grades across all quizzes in a course.</summary>
+		public const string GetStudentCourseGrades = "AttemptScore:readByCourse";
 
 		public static IList<string?> GetAllPermissions() =>
 			typeof(Permissions).GetFields().Select(x => x.GetValue(x) as string).ToList();

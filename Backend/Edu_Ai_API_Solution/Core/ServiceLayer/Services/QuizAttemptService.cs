@@ -426,6 +426,28 @@ namespace ServiceLayer.Services
             return MapToDetailsDto(attempt);
         }
 
+        public async Task<List<StudentCourseGradeDto>> GetStudentGradesByCourseAsync(
+            int courseId,
+            string studentId,
+            CancellationToken cancellationToken = default)
+        {
+            var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
+
+            var spec = new StudentQuizAttemptsByCourseSpecification(courseId, studentId);
+
+            var attempts = await attemptRepository.GetAllAsync(spec, cancellationToken);
+
+            return attempts.Select(a => new StudentCourseGradeDto
+            {
+                AttemptId  = a.Id,
+                QuizTitle  = a.Quiz.Title,
+                QuizCode   = a.Quiz.QuizCode,
+                Score      = a.Score,
+                TotalMarks = a.Quiz.TotalMarks,
+                SubmittedAt = a.SubmittedAt
+            }).ToList();
+        }
+
         // ── private helpers ──────────────────────────────────────────────────────
 
         /// <summary>

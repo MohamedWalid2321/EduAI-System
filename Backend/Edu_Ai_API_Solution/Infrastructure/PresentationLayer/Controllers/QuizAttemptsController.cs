@@ -87,5 +87,17 @@ namespace PresentationLayer.Controllers
                 .UpdateAttemptScoreAsync(attemptId, request.Score, cancellationToken);
             return Ok(result);
         }
+
+        [HttpGet("courses/{courseId:int}/students/{userId}/grades")]
+        [HasPermission(Permissions.GetStudentCourseGrades)]
+        public async Task<IActionResult> GetStudentCourseGrades(
+            int courseId,
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            var result = await _serviceManager.QuizAttemptService
+                .GetStudentGradesByCourseAsync(courseId, userId, cancellationToken);
+            return Ok(result);
+        }
     }
 }
