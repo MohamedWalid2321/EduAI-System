@@ -25,5 +25,6 @@ namespace ServiceAbstractionLayer
         Task<QuizAttemptDetailsDto> GetAttemptDetailsByIdAsync(int attemptId, CancellationToken cancellationToken = default);
         Task<QuizAttemptDetailsDto> FinalizeAttemptScoreAsync(int attemptId, int newScore, CancellationToken cancellationToken = default);
         Task<QuizAttemptDetailsDto> UpdateAttemptScoreAsync(int attemptId, int newScore, CancellationToken cancellationToken = default);
+        Task<List<StudentCourseGradeDto>> GetStudentGradesByCourseAsync(int courseId, string studentId, CancellationToken cancellationToken = default);
     }
 }

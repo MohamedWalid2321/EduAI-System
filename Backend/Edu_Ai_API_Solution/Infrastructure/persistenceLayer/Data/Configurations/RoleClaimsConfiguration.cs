@@ -125,6 +125,8 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.JoinLecture,
             // Cheating Report — student can only add (submit evidence during exam)
             Permissions.AddCheatingReport,
+            // Quiz Grades — student can view their own grades per course
+            Permissions.GetStudentCourseGrades,
         };
 
         for (var i = 0; i < studentPermissions.Length; i++)
