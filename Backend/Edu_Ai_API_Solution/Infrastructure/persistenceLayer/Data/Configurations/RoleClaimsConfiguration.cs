@@ -10,15 +10,17 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
     // Admin      : 1051 – 1100
     // Instructor : 1101 – 1150
     // Student    : 1151 – 1200
+    // Extended   : 1301 +   ← new permissions added after initial seeding
     // ────────────────────────────────────────────────────────
 
     public void Configure(EntityTypeBuilder<IdentityRoleClaim<string>> builder)
     {
         var claims = new List<IdentityRoleClaim<string>>();
 
-        // ── SuperAdmin — all permissions except Course:read ─────────────────
+        // ── SuperAdmin — all permissions except Course:read and GetStudentCourseGrades
+        //    (GetStudentCourseGrades is seeded separately at ID 1301 to avoid collision)
         var superAdminPermissions = Permissions.GetAllPermissions()
-            .Where(p => p != Permissions.GetCourse)
+            .Where(p => p != Permissions.GetCourse && p != Permissions.GetStudentCourseGrades)
             .ToArray();
 
         var superAdminStartId = 1001;
@@ -125,8 +127,6 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
             Permissions.JoinLecture,
             // Cheating Report — student can only add (submit evidence during exam)
             Permissions.AddCheatingReport,
-            // Quiz Grades — student can view their own grades per course
-            Permissions.GetStudentCourseGrades,
         };
 
         for (var i = 0; i < studentPermissions.Length; i++)
@@ -139,6 +139,25 @@ public class RoleClaimsConfiguration : IEntityTypeConfiguration<IdentityRoleClai
                 ClaimValue = studentPermissions[i]
             });
         }
+
+        // ── Extended block (1301+) — permissions added after initial seeding ─
+        // SuperAdmin: GetStudentCourseGrades
+        claims.Add(new IdentityRoleClaim<string>
+        {
+            Id = 1301,
+            RoleId = DefaultRoles.SuperAdminRoleId,
+            ClaimType = Permissions.Type,
+            ClaimValue = Permissions.GetStudentCourseGrades
+        });
+
+        // Student: GetStudentCourseGrades
+        claims.Add(new IdentityRoleClaim<string>
+        {
+            Id = 1302,
+            RoleId = DefaultRoles.StudentRoleId,
+            ClaimType = Permissions.Type,
+            ClaimValue = Permissions.GetStudentCourseGrades
+        });
 
         builder.HasData(claims);
     }
