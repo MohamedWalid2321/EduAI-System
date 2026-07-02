@@ -448,11 +448,6 @@ namespace ServiceLayer.Services
             }).ToList();
         }
 
-        // ── private helpers ──────────────────────────────────────────────────────
-
-        /// <summary>
-        /// Fetches the attempt with its full detail includes and verifies it exists.
-        /// </summary>
         private static async Task<QuizAttempt> GetAttemptForScoreUpdateAsync(
             IGenericRepository<QuizAttempt, int> repo,
             int attemptId,

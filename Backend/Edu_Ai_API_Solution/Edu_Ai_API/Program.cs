@@ -93,6 +93,7 @@ namespace Edu_Ai_API
                 {
                     corsBuilder.WithOrigins(
                         "https://lms-project-lake-two.vercel.app",
+                        "https://lumina-lms-site.vercel.app",
 						"http://localhost:4200",
 						"https://localhost:4200",
 						"http://localhost:4201",
