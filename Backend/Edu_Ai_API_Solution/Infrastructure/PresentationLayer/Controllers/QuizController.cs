@@ -14,10 +14,23 @@ namespace PresentationLayer.Controllers
         [Cache(300)]
         public async Task<IActionResult> GetAllQuizzesByCourseId(int courseId, CancellationToken cancellationToken)
         {
-            var onlyActive = User.HasClaim("Roles", DefaultRoles.Student);
-            var quizzes = await serviceManager.QuizService.GetAllQuizzesForCourse(courseId, onlyActive, cancellationToken);
+            var isStudent = User.HasClaim("Roles", DefaultRoles.Student);
+
+            if (isStudent)
+            {
+                var studentId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                             ?? User.FindFirst("sub")?.Value;
+
+                var studentQuizzes = await serviceManager.QuizService
+                    .GetAllQuizzesForCourseAsStudentAsync(courseId, studentId!, cancellationToken);
+
+                return Ok(studentQuizzes);
+            }
+
+            var quizzes = await serviceManager.QuizService.GetAllQuizzesForCourse(courseId, onlyActive: false, cancellationToken);
             return Ok(quizzes);
         }
+
 
         [HttpGet("{id}")]
         [HasPermission(Permissions.GetQuestions)]

@@ -1,3 +1,6 @@
+using ServiceLayer.Specifications.AttemptedQuizSpecification;
+using Shared.Dtos.AttemptQuiz.Response;
+
 namespace ServiceLayer.Services
 {
 	public class QuizService(IUnitOfWork unitOfWork) : IQuizService
@@ -96,6 +99,51 @@ public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizReq
 				throw new QuizzesInCourseNotFoundException(CourseId);
             }
             return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
+		}
+
+		/// <summary>
+		/// Returns the quizzes for a course enriched with the student's submission data.
+		/// If the student has already submitted a quiz the response will include
+		/// <c>IsSubmitted = true</c>, their <c>Score</c> and the <c>SubmittedAt</c> timestamp.
+		/// </summary>
+		public async Task<IEnumerable<QuizForStudentResponseDto>> GetAllQuizzesForCourseAsStudentAsync(
+			int courseId,
+			string studentId,
+			CancellationToken cancellationToken = default)
+		{
+			// 1. Fetch active quizzes for the course
+			var quizRepository    = _unitOfWork.GetRepository<Quiz, int>();
+			var attemptRepository = _unitOfWork.GetRepository<QuizAttempt, int>();
+
+			var quizSpec    = new QuizByCourseIdSpecification(courseId, onlyActive: true);
+			var quizEntities = await quizRepository.GetAllAsync(quizSpec, cancellationToken);
+
+			if (quizEntities is null || !quizEntities.Any())
+				throw new QuizzesInCourseNotFoundException(courseId);
+
+			// 2. Fetch all submitted attempts for this student in this course
+			var attemptSpec = new StudentQuizAttemptsByCourseSpecification(courseId, studentId);
+			var attempts    = await attemptRepository.GetAllAsync(attemptSpec, cancellationToken);
+
+			// Key: QuizId → attempt (there should be at most one submitted attempt per quiz)
+			var attemptByQuizId = attempts.ToDictionary(a => a.QuizId);
+
+			// 3. Merge
+			var result = quizEntities.Select(q =>
+			{
+				var dto = q.Adapt<QuizForStudentResponseDto>();
+
+				if (attemptByQuizId.TryGetValue(q.Id, out var attempt))
+				{
+					dto.IsSubmitted = true;
+					dto.Score       = attempt.Score;
+					dto.SubmittedAt = attempt.SubmittedAt;
+				}
+
+				return dto;
+			});
+
+			return result;
 		}
 
 		public async Task<QuizResponseInDetailsDto> GetQuizByIdAsync(int quizId, CancellationToken cancellationToken = default)
