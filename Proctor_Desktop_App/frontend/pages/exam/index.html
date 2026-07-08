@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self' data:; media-src 'self' blob:;" />
+  <title>Exam — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/design-tokens.css" />
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <link rel="stylesheet" href="./exam.css" />
+  <script defer src="./DashboardController.js"></script>
+  <script defer src="./clip-recorder.js"></script>
+  <script defer src="./exam.js"></script>
+</head>
+<body>
+
+  <!-- Loading skeleton overlay (visible until IPC resolves) -->
+  <div class="skeleton-overlay" id="skeletonOverlay">
+    <div class="skeleton-spinner"></div>
+  </div>
+
+  <!-- Fixed header -->
+  <header class="exam-header" id="examHeader">
+    <h1 class="exam-title" id="examTitle">Loading…</h1>
+    <div class="timer-chip" id="timerChip">
+      <span id="timerDisplay">--:--:--</span>
+    </div>
+    <button class="btn btn-submit-exam" id="submitExamBtn" type="button">Submit Exam</button>
+  </header>
+
+  <!-- Main content layout -->
+  <main class="exam-layout">
+
+    <!-- Question panel -->
+    <section class="question-panel">
+      <div class="question-badge" id="questionBadge">Question 1 of —</div>
+      <p class="question-text" id="questionText"></p>
+      <ul class="choices-list" id="choicesList" role="radiogroup" aria-label="Answer choices"></ul>
+      <button class="flag-btn" id="flagBtn" type="button" aria-label="Flag this question for review">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 2v12M3 2h8l-2 3 2 3H3" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Flag for review
+      </button>
+    </section>
+
+    <!-- Proctoring aside panel -->
+    <aside class="proctoring-panel" id="proctoringPanel" aria-label="Proctoring panel">
+      <div class="webcam-section">
+        <video class="webcam-feed" id="webcamFeed" autoplay muted playsinline
+               aria-label="Live webcam feed"></video>
+        <span class="live-badge" aria-label="Live feed indicator">LIVE FEED</span>
+        <div class="camera-unavailable hidden" id="cameraUnavailable" aria-live="polite">
+          Camera unavailable
+        </div>
+      </div>
+
+      <div class="ai-status-rows" aria-label="AI monitoring status">
+        <div class="status-row" data-service="face-recognition">
+          <span class="status-label">Face Recognition</span>
+          <span class="status-indicator inactive">Inactive</span>
+        </div>
+        <div class="status-row" data-service="eye-gaze">
+          <span class="status-label">Eye Tracking</span>
+          <span class="status-indicator inactive">Inactive</span>
+        </div>
+        <div class="status-row" data-service="object-detection">
+          <span class="status-label">Object Detection</span>
+          <span class="status-indicator inactive">Inactive</span>
+        </div>
+        <div class="status-row" data-service="speech-detection">
+          <span class="status-label">Speech Detection</span>
+          <span class="status-indicator inactive">Inactive</span>
+        </div>
+      </div>
+
+      <!-- Risk Gauge -->
+      <div class="risk-gauge-container">
+        <svg viewBox="0 0 100 55" class="risk-gauge">
+          <path class="gauge-track" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e0e0e0" stroke-width="8" stroke-linecap="round" />
+          <path id="gaugeNeedle" class="gauge-fill" d="M 10 50 A 40 40 0 0 1 10 50" fill="none" stroke="var(--color-primary)" stroke-width="8" stroke-linecap="round" />
+        </svg>
+        <div class="risk-value" id="riskValue">0</div>
+        <div class="risk-label">Risk Score</div>
+      </div>
+
+      <!-- Alert Feed -->
+      <div class="alert-feed-container">
+        <h4 class="feed-title">Proctoring Alerts</h4>
+        <div class="alert-feed" id="alertFeed">
+          <div class="alert-placeholder">No alerts in this session</div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Bottom navigator bar -->
+  <nav class="exam-navigator" id="examNavigator" aria-label="Question navigator">
+    <button id="prevBtn" class="btn btn-nav" type="button" aria-label="Previous question">
+      ← Previous
+    </button>
+    <div class="pills-container" id="pillsContainer" role="list" aria-label="Question list"></div>
+    <div class="jump-to-group">
+      <label for="jumpInput">Jump to</label>
+      <input type="number" id="jumpInput" min="1" class="jump-input" aria-label="Jump to question number" />
+    </div>
+    <button id="nextBtn" class="btn btn-nav" type="button" aria-label="Next question">
+      Next Question →
+    </button>
+  </nav>
+
+  <!-- Confirmation modal -->
+  <div class="modal-backdrop hidden" id="modalBackdrop" role="dialog" aria-modal="true"
+       aria-labelledby="modalTitle" aria-describedby="modalMessage">
+    <div class="modal-glass">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-message" id="modalMessage"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modalCancelBtn" type="button">Cancel</button>
+        <button class="btn btn-primary" id="modalConfirmBtn" type="button">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error banner -->
+  <div class="error-banner hidden" id="errorBanner" role="alert" aria-live="assertive">
+    <span id="errorBannerText"></span>
+    <button class="btn btn-retry" id="retryBtn" type="button">Retry</button>
+  </div>
+
+  <!-- Lockdown: VM / remote-desktop violation modal (spec 013) -->
+  <div class="modal-backdrop hidden" id="lockdown-vm-modal"
+       role="alertdialog" aria-modal="true" aria-labelledby="lockdownVmTitle">
+    <div class="modal-glass">
+      <h2 class="modal-title" id="lockdownVmTitle">Security Violation Detected</h2>
+      <p class="modal-message">This exam cannot be taken inside a virtual machine or with remote desktop software active.</p>
+      <p class="modal-message modal-reason" id="lockdown-vm-reason"></p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="lockdown-vm-dismiss" type="button">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lockdown: screen-capture application violation modal (spec 013) -->
+  <div class="modal-backdrop hidden" id="lockdown-capture-modal"
+       role="alertdialog" aria-modal="true" aria-labelledby="lockdownCaptureTitle">
+    <div class="modal-glass">
+      <h2 class="modal-title" id="lockdownCaptureTitle">Screen Recording Detected</h2>
+      <p class="modal-message">A screen recording or capture application was detected. Please close it before continuing.</p>
+      <p class="modal-message modal-reason" id="lockdown-capture-reason"></p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="lockdown-capture-dismiss" type="button">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

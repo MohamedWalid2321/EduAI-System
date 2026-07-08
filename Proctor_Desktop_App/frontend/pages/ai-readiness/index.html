@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self' data:;" />
+  <title>AI Readiness — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <link rel="stylesheet" href="../../assets/step-progress.css" />
+  <link rel="stylesheet" href="ai-readiness.css" />
+</head>
+<body class="exam-page">
+  <main class="readiness-wrap">
+    <section class="readiness-card">
+      <!-- Step progress — step 4 of 5 -->
+      <nav class="step-progress"
+           role="progressbar"
+           aria-label="Step 4 of 5: AI Readiness"
+           aria-valuenow="4"
+           aria-valuemin="1"
+           aria-valuemax="5">
+        <span class="step-pill step-pill--done"  title="Step 1: Login"></span>
+        <span class="step-pill step-pill--done"  title="Step 2: Exam Code"></span>
+        <span class="step-pill step-pill--done"  title="Step 3: Identity Verification"></span>
+        <span class="step-pill step-pill--active" title="Step 4: AI Readiness"></span>
+        <span class="step-pill" title="Step 5: Exam Instructions"></span>
+      </nav>
+      <h1>Preparing Proctoring</h1>
+      <p class="subtitle">Calibrating local models before your exam starts.</p>
+
+      <div class="video-shell">
+        <video id="webcamFeed" autoplay muted playsinline></video>
+        <div id="cameraUnavailable" class="camera-unavailable hidden">Camera unavailable</div>
+      </div>
+
+      <div class="checks">
+        <div class="check-row">
+          <span>Eye Gaze</span>
+          <span id="eyeStatus" class="pill pending">Waiting</span>
+        </div>
+        <div class="check-row">
+          <span>Speech Detection</span>
+          <span id="speechStatus" class="pill pending">Checking</span>
+        </div>
+      </div>
+
+      <p id="hintText" class="hint">Press <strong>Start Calibration</strong> when you are ready, then look at the screen and keep your face visible.</p>
+
+      <div class="actions">
+        <!-- Start Calibration: shown before calibration; hidden once started -->
+        <button id="startCalibBtn" class="btn-secondary">Start Calibration</button>
+        <!-- Recalibrate: hidden until at least one calibration cycle has run -->
+        <button id="recalibrateBtn" class="btn-secondary hidden">Recalibrate</button>
+        <button id="continueBtn"   class="btn-primary" disabled>Continue to Exam</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="ai-readiness.js" defer></script>
+</body>
+</html>

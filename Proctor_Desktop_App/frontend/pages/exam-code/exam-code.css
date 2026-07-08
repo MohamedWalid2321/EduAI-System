@@ -1,0 +1,365 @@
+/* ==========================================================================
+   exam-code.css — Exam Access page styles for Lumina AI
+   All values are CSS custom property references — no hardcoded hex values.
+   Requires design-tokens.css (loaded via components.css @import chain).
+   ========================================================================== */
+
+/* ==========================================================================
+   Page Layout
+   ========================================================================== */
+
+.exam-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    160deg,
+    var(--color-primary-fixed) 0%,
+    var(--color-surface-container-low) 55%,
+    var(--color-surface-container-lowest) 100%
+  );
+}
+
+.page-background {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.exam-card {
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-ambient);
+  padding: 3rem 2.5rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Icon container
+   ========================================================================== */
+
+.icon-container {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-primary-fixed);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+/* ==========================================================================
+   Text hierarchy
+   ========================================================================== */
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  letter-spacing: var(--letter-spacing-display);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   Student identity bar
+   ========================================================================== */
+
+.student-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-default);
+  margin-bottom: 1.5rem;
+}
+
+.student-name {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-on-surface);
+}
+
+.logout-btn {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Form
+   ========================================================================== */
+
+.input-group {
+  margin-bottom: 0.25rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 0.75rem;
+}
+
+/* ==========================================================================
+   Single code field — unified input that takes characters one by one.
+   Matches the reference design: one rounded field, centred spaced text,
+   key icon on the right.
+   ========================================================================== */
+
+.code-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.code-field {
+  width: 100%;
+  padding: 1rem 3rem 1rem 1.25rem;  /* right padding leaves room for icon */
+  background: var(--color-surface-container-low);
+  border: 1.5px solid var(--color-outline-variant);
+  border-radius: var(--radius-button);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-on-surface);
+  outline: none;
+  caret-color: var(--color-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.code-field::placeholder {
+  color: var(--color-outline-variant);
+  letter-spacing: 0.15em;
+  font-weight: 400;
+}
+
+.code-field:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.code-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Key icon badge positioned at the right edge of the field */
+.code-field-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-outline-variant);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-outline-variant);
+  pointer-events: none;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  background: var(--color-surface-container-low);
+  border: none;
+  border-radius: var(--radius-default);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-on-surface);
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  transition: outline-color 0.15s ease;
+}
+
+.input-wrapper input:focus {
+  outline-color: var(--color-primary);
+}
+
+.input-wrapper input::placeholder {
+  color: var(--color-outline-variant);
+}
+
+.input-wrapper input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--color-error);
+  text-align: left;
+  margin-top: 0.375rem;
+  min-height: 1.25rem;
+  line-height: 1.25rem;
+}
+
+/* ==========================================================================
+   Submit button
+   ========================================================================== */
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: var(--radius-button);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-top: 1.25rem;
+  transition: opacity 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Button spinner
+   Matches login page pattern (hidden attribute + animation).
+   Uses color-mix() to produce the semi-transparent ring without hardcoded hex.
+   ========================================================================== */
+
+.btn-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--color-on-primary) 40%, transparent);
+  border-top-color: var(--color-on-primary);
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* CSP-safe way to hide the spinner on initial load.
+   Using a class instead of the `hidden` attribute because style-src 'self'
+   blocks inline style overrides, causing the spinner to show on page load. */
+.btn-spinner--hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Status chips
+   ========================================================================== */
+
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-chip);
+  background: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.footer-text {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-on-surface-variant);
+  margin-top: 1rem;
+}
+
+.footer-text a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}

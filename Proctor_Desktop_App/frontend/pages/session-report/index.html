@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self' data:;" />
+  <title>Session Report — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/design-tokens.css" />
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <link rel="stylesheet" href="./report.css" />
+  <script defer src="./report.js"></script>
+</head>
+<body class="report-page">
+
+  <header class="report-header no-print">
+    <div class="header-content">
+      <button class="btn btn-back" id="backBtn" type="button">← Back to Results</button>
+      <h1 class="report-title">Proctoring Session Report</h1>
+      <button class="btn btn-primary" id="exportPdfBtn" type="button">Export PDF</button>
+    </div>
+  </header>
+
+  <main class="report-container">
+    
+    <!-- Summary Section -->
+    <section class="report-section summary-card">
+      <div class="summary-header">
+        <h2 id="examTitle">Exam Title</h2>
+        <span class="session-badge" id="sessionIdDisplay">Session: ---</span>
+      </div>
+      
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <label>Peak Risk Score</label>
+          <div class="stat-value" id="peakRiskScore">0</div>
+        </div>
+        <div class="summary-stat">
+          <label>Total Alerts</label>
+          <div class="stat-value" id="totalAlerts">0</div>
+        </div>
+        <div class="summary-stat">
+          <label>Duration</label>
+          <div class="stat-value" id="sessionDuration">--:--</div>
+        </div>
+      </div>
+
+      <div class="violation-summary">
+        <h3>Violation Breakdown</h3>
+        <div class="violation-tags" id="violationSummary">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="report-section timeline-container">
+      <div class="section-header">
+        <h2>Session Timeline</h2>
+        <div class="timeline-filters no-print">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="alert">Alerts Only</button>
+        </div>
+      </div>
+      
+      <div class="timeline" id="eventTimeline">
+        <div class="loading-state">Loading proctoring log...</div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast hidden">Report saved successfully!</div>
+
+</body>
+</html>

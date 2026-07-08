@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self' data:;" />
+  <title>Unable to Start — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: var(--color-surface);
+    }
+
+    .error-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+    }
+
+    .error-icon {
+      width: 3rem;
+      height: 3rem;
+      color: var(--color-tertiary);
+    }
+
+    .error-headline {
+      font-family: var(--font-display);
+      font-size: var(--font-size-headline-md);
+      font-weight: 700;
+      letter-spacing: var(--letter-spacing-display);
+      color: var(--color-on-surface);
+    }
+
+    .error-body {
+      font-family: var(--font-body);
+      font-size: var(--font-size-body-lg);
+      color: var(--color-on-surface-variant);
+      line-height: 1.6;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card error-card" role="main">
+    <!-- Shield icon (inline SVG — no external resources, no 1px strokes) -->
+    <svg class="error-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 2L3 6v6c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V6L12 2Z"
+        fill="currentColor"
+        opacity="0.18"
+      />
+      <path
+        d="M12 2L3 6v6c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V6L12 2Z"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linejoin="round"
+      />
+      <line x1="12" y1="8" x2="12" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <circle cx="12" cy="16" r="1" fill="currentColor" />
+    </svg>
+
+    <!-- Headline -->
+    <h1 class="error-headline">Unable to Start</h1>
+
+    <!-- Error code chip -->
+    <span class="status-chip status-chip--error" id="error-code-chip" aria-live="polite">
+      ERROR
+    </span>
+
+    <!-- Dynamic error message -->
+    <p class="error-body" id="error-message-body" aria-live="polite">
+      An unexpected error occurred while starting Lumina AI.
+    </p>
+
+    <!-- Actions -->
+    <div class="error-actions">
+      <button class="btn btn-secondary" onclick="window.location.reload()">
+        Try Again
+      </button>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    /**
+     * Populate the error details from either:
+     *   (a) URL search params:   error.html?code=BRIDGE_FAILED&message=...
+     *   (b) bridge:status event: received if this page is loaded while alive
+     *
+     * Priority: URL params first (persists across reloads), then live events.
+     */
+    function applyError(code, message) {
+      const chipEl = document.getElementById('error-code-chip');
+      const msgEl  = document.getElementById('error-message-body');
+
+      if (code)    chipEl.textContent = code;
+      if (message) msgEl.textContent = message;
+    }
+
+    // Check URL params (set by navigation from loading.html)
+    const params = new URLSearchParams(window.location.search);
+    const urlCode    = params.get('code');
+    const urlMessage = params.get('message');
+    if (urlCode || urlMessage) {
+      applyError(urlCode, urlMessage);
+    }
+
+    // Also subscribe to live bridge:status events in case this page is
+    // shown while the main process is still running
+    if (window.bridge) {
+      const unsubscribe = window.bridge.onBridgeStatus((payload) => {
+        if (payload.type !== 'ready') {
+          applyError(payload.code, payload.message);
+          unsubscribe();
+        }
+      });
+    }
+  </script>
+</body>
+</html>

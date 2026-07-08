@@ -1,0 +1,34 @@
+{
+  "name": "lumina-ai-proctoring",
+  "version": "1.0.0",
+  "description": "Lumina AI Proctoring Desktop Application",
+  "main": "frontend/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^33.0.0",
+    "keytar": "^7.0.0",
+    "@fontsource/manrope": "^5.0.0",
+    "@fontsource/inter": "^5.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.lumina.proctoring",
+    "productName": "Lumina AI Proctoring",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      {
+        "from": "config.json",
+        "to": "config.json"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

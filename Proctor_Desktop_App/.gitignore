@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+*.egg-info/
+
+# Python
+python_bridge/__pycache__/
+python_bridge/*.pyc
+python_bridge/*.pyo
+python_bridge/*.bin
+__pycache__/
+*.pyc
+*.cpython
+*.cpython-312
+*.cpython-310
+
+#Directories
+sessions/*.jsonl
+sessions/*.json
+python_bridge/modal_raw.ndjson
+debug_frames/
+# Runtime config (never commit real credentials or URLs)
+config.json
+.env*
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

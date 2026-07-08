@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumina — Connection Lost</title>
+  <link rel="stylesheet" href="../../assets/design-tokens.css" />
+  <link rel="stylesheet" href="offline.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+  
+  <!-- Visual Background Enhancements -->
+  <div class="bg-enhancements" aria-hidden="true">
+    <div class="bg-blob blob-top-left"></div>
+    <div class="bg-blob blob-bottom-right"></div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="material-symbols-outlined header-icon" style="font-variation-settings: 'FILL' 1;">security</span>
+      <span class="header-title">Lumina AI Proctoring System</span>
+    </div>
+    <div class="header-right">
+      <button class="support-btn">
+        <span class="material-symbols-outlined">help</span>
+        <span class="support-text">Support</span>
+      </button>
+      <div class="header-divider"></div>
+      <div class="student-info">
+        <span class="material-symbols-outlined">account_circle</span>
+        <span class="student-text">Student ID: 88421</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Offline Page (shown when connectivity is lost) -->
+  <main id="offline-page" class="offline-page offline--neutral" aria-live="polite">
+    <div class="glass-panel main-card">
+      <div class="card-blob blob-card-top"></div>
+      <div class="card-blob blob-card-bottom"></div>
+      
+      <div class="card-content">
+        <!-- Warning Icon -->
+        <div class="icon-wrapper">
+          <span class="material-symbols-outlined state-icon" id="offline-icon" style="font-variation-settings: 'FILL' 0;">signal_disconnected</span>
+        </div>
+        
+        <!-- Main Text -->
+        <h1 class="card-heading" id="offline-heading">Connection Lost</h1>
+        <p class="card-subtext" id="offline-subtext">
+          Your exam has been paused. Please reconnect to your internet network to continue.
+        </p>
+
+        <!-- Stats Row: Bento Grid Style -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Time Remaining</span>
+            <span class="stat-value text-primary" id="budget-countdown">--:--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Answered</span>
+            <span class="stat-value" id="answered-count">--/--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Attempts</span>
+            <span class="stat-value text-tertiary" id="disconnection-count">--/--</span>
+          </div>
+        </div>
+
+        <!-- Footer Note -->
+        <div class="card-footer">
+          <div class="save-status">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+            <span>Your progress is saved and will not be lost.</span>
+          </div>
+          <!-- Pulse Loader for reconnection attempts -->
+          <div class="reconnect-status">
+            <div class="pulse-loader">
+              <span class="pulse-ring"></span>
+              <span class="pulse-dot"></span>
+            </div>
+            <span class="reconnect-text">Searching for connection...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contextual Help / Status -->
+    <div class="context-help">
+      <div class="help-item">
+        <span class="material-symbols-outlined">router</span>
+        <span>Check Router</span>
+      </div>
+      <div class="help-item">
+        <span class="material-symbols-outlined">wifi_tethering</span>
+        <span>Check Hotspot</span>
+      </div>
+      <div class="help-item">
+        <span class="material-symbols-outlined">verified_user</span>
+        <span>AI Secure Mode</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Lock Screen (shown when budget exhausted or disconnection limit exceeded) -->
+  <main id="lock-screen" class="lock-screen hidden" aria-live="assertive">
+    <div class="glass-panel main-card lock-theme">
+      <div class="card-blob blob-card-top blob-error"></div>
+      <div class="card-blob blob-card-bottom blob-error"></div>
+      
+      <div class="card-content">
+        <!-- Lock Icon -->
+        <div class="icon-wrapper error-bg">
+          <span class="material-symbols-outlined state-icon text-error" style="font-variation-settings: 'FILL' 1;">lock</span>
+        </div>
+        
+        <!-- Main Text -->
+        <h1 class="card-heading text-error">Exam Locked</h1>
+        <p class="card-subtext" id="lock-reason-text">
+          Your exam has been locked due to extended offline time.
+        </p>
+
+        <!-- Instruction -->
+        <div class="stats-grid single-col">
+          <div class="stat-card p-large">
+            <span class="stat-label">Instruction</span>
+            <span class="stat-subtext">Please reconnect to the internet. Your answered questions will be submitted automatically once your connection is restored.</span>
+          </div>
+        </div>
+
+        <!-- Reconnect Status -->
+        <div class="card-footer">
+          <div class="reconnect-status">
+            <div class="pulse-loader pulse-error">
+              <span class="pulse-ring"></span>
+              <span class="pulse-dot"></span>
+            </div>
+            <span class="reconnect-text text-error" id="reconnect-label">Waiting for connection...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer Copyright -->
+  <footer class="app-footer">
+    © 2024 Lumina AI Education Technologies. All rights reserved.
+  </footer>
+
+  <script src="offline.js"></script>
+</body>
+</html>

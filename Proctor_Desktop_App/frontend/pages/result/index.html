@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self' data:;" />
+  <title>Result — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <link rel="stylesheet" href="result.css" />
+</head>
+<body>
+  <!-- =====================================================================
+       Page Header — sticky nav
+       ===================================================================== -->
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="8" fill="var(--color-primary)" />
+          <path d="M7 21L14 7L21 21" stroke="var(--color-on-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M9.5 16.5H18.5" stroke="var(--color-on-primary)" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+        <span class="header-brand">Lumina AI</span>
+      </div>
+      <nav class="header-nav" aria-label="Page navigation">
+        <a id="back-btn" href="#" class="nav-link nav-link--ghost">&#8592; Back to Home</a>
+        <span class="nav-link nav-link--active" aria-current="page">Exam Results</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       Page Main
+       ===================================================================== -->
+  <main class="page-main">
+
+    <!-- Page title block -->
+    <div class="page-title-block">
+      <p class="eyebrow">ACADEMIC ASSESSMENT</p>
+      <h2 class="page-title">Exam Results</h2>
+    </div>
+
+    <!-- Hero card: exam info + score ring -->
+    <section class="hero-card" id="hero-card" aria-label="Score summary">
+      <div class="hero-left">
+        <span id="exam-code-chip" class="category-chip"></span>
+        <h3 id="exam-title"></h3>
+        <p class="proctoring-status">AI Proctoring Status: <span id="aiStatusText">Clean</span></p>
+      </div>
+      <div class="hero-right">
+        <div class="score-ring-wrap">
+          <svg id="progress-ring" viewBox="0 0 192 192" aria-hidden="true">
+            <defs>
+              <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color: var(--color-primary);" />
+                <stop offset="100%" style="stop-color: var(--color-primary-container);" />
+              </linearGradient>
+            </defs>
+            <circle class="ring-track" cx="96" cy="96" r="88" fill="none" stroke-width="12" />
+            <circle class="progress-circle" cx="96" cy="96" r="88" fill="none"
+                    stroke="url(#ring-gradient)" stroke-width="12" stroke-linecap="round" />
+          </svg>
+          <div class="ring-overlay">
+            <p id="percentage-text"></p>
+            <p id="score-text"></p>
+          </div>
+        </div>
+        <span id="pass-fail-chip" class="pass-fail-chip"></span>
+      </div>
+    </section>
+
+    <!-- Question breakdown + filter tabs -->
+    <section class="breakdown-section" aria-label="Question breakdown">
+      <div class="breakdown-header">
+        <h3 class="breakdown-title">Question Breakdown</h3>
+        <div class="filter-tabs" role="group" aria-label="Filter questions">
+          <button class="filter-tab active" data-filter="all" type="button">
+            All <span id="count-all"></span>
+          </button>
+          <button class="filter-tab" data-filter="correct" type="button">
+            Correct <span id="count-correct"></span>
+          </button>
+          <button class="filter-tab" data-filter="incorrect" type="button">
+            Incorrect <span id="count-incorrect"></span>
+          </button>
+        </div>
+      </div>
+      <ul id="breakdown-list" aria-label="Question list"></ul>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       Page Footer
+       ===================================================================== -->
+  <footer class="page-footer">
+    <span>Lumina AI Proctoring Platform</span>
+    <span>Secure &middot; Automated &middot; Intelligent</span>
+  </footer>
+
+  <script src="result.js"></script>
+</body>
+</html>
