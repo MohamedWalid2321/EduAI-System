@@ -1,0 +1,732 @@
+/* exam.css — Exam Page Styles — spec 004 */
+
+/* ==========================================================================
+   Exam-page scoped tokens (not present in design-tokens.css)
+   ========================================================================== */
+
+:root {
+  --color-surface-container-high:  #E9EAEB;
+  --color-scrim:                   rgba(0, 0, 0, 0.40);
+  --color-status-active:           #1A7A1A;
+  --color-status-active-bg:        rgba(0, 128, 0, 0.10);
+  --color-error-container:         #FDE6E6;
+  --color-on-error-container:      #B00020;
+  --color-pill-focus-shadow:       rgba(0, 102, 135, 0.25);
+  --color-border-subtle:           rgba(0, 0, 0, 0.06);
+}
+
+/* ==========================================================================
+   T010 — Layout, skeleton, header, grid, panels, bottom navigator
+   ========================================================================== */
+
+/* Base reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+/* Skeleton overlay */
+.skeleton-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skeleton-overlay.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.skeleton-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-surface-container-high);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Fixed header */
+.exam-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--color-surface-container-lowest);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 100;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.exam-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin: 0;
+  max-width: 360px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Main layout grid */
+.exam-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  margin-top: 64px;
+  padding: 24px;
+  min-height: calc(100vh - 64px - 72px);
+}
+
+/* Question panel */
+.question-panel {
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 20%, transparent);
+}
+
+/* Proctoring aside */
+.proctoring-panel {
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 20%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-self: start;
+  position: sticky;
+  top: 80px;
+}
+
+/* Bottom navigator bar */
+.exam-navigator {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: var(--color-surface-container-lowest);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  border-top: 1px solid var(--color-border-subtle);
+  z-index: 100;
+}
+
+.pills-container {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1;
+  padding: 4px 0;
+  scrollbar-width: thin;
+}
+
+.jump-to-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.jump-input {
+  width: 56px;
+  padding: 6px 8px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-chip);
+  font-size: 13px;
+  text-align: center;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  outline: none;
+}
+
+.jump-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* Nav buttons */
+.btn-nav {
+  background: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 40%, transparent);
+  border-radius: var(--radius-button);
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-nav:hover:not(:disabled) {
+  background: var(--color-surface-container-high);
+}
+
+.btn-nav:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   T011 — Question badge, text, choices, flag button
+   ========================================================================== */
+
+.question-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  color: var(--color-primary);
+  border-radius: var(--radius-chip);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+}
+
+.question-text {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+.choices-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-surface-container-lowest);
+  border: 1.5px solid var(--color-outline-variant);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.choice-item:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-container-low);
+}
+
+.choice-item.is-selected {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  background: var(--color-surface-container-low);
+}
+
+.choice-letter {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.choice-item.is-selected .choice-letter {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.choice-text {
+  font-size: 15px;
+  color: var(--color-on-surface);
+  line-height: 1.4;
+}
+
+.flag-btn {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  padding: 8px;
+  border-radius: var(--radius-chip);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  transition: color 0.15s;
+}
+
+.flag-btn:hover {
+  color: var(--color-tertiary);
+}
+
+.flag-btn.is-flagged {
+  color: var(--color-tertiary);
+}
+
+/* ==========================================================================
+   T016 — Navigator pill states
+   ========================================================================== */
+
+.nav-pill {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.nav-pill:hover {
+  background: var(--color-outline-variant);
+}
+
+.nav-pill.is-answered {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.nav-pill.is-current {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 0 0 3px var(--color-pill-focus-shadow);
+}
+
+.nav-pill.is-flagged {
+  background: var(--color-tertiary);
+  color: var(--color-on-primary);
+}
+
+/* ==========================================================================
+   T020 — Submit exam button, confirmation modal, error banner, loading state
+   ========================================================================== */
+
+/* Submit Exam header button */
+.btn-submit-exam {
+  padding: 8px 20px;
+  border-radius: var(--radius-chip);
+  border: none;
+  background: linear-gradient(135deg, var(--color-error), var(--color-tertiary));
+  color: var(--color-on-primary);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-submit-exam:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.btn-submit-exam:disabled {
+  opacity: 0.50;
+  cursor: not-allowed;
+}
+
+/* Confirmation modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--color-scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-backdrop.hidden {
+  display: none;
+}
+
+.modal-reason {
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+/* Glass modal card */
+.modal-glass {
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 90%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 15%, transparent);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: var(--shadow-ambient);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-headline-md);
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin: 0 0 12px;
+}
+
+.modal-message {
+  font-size: var(--font-size-body-lg);
+  color: var(--color-on-surface-variant);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* Error banner */
+.error-banner {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
+  border-radius: var(--radius-chip);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  z-index: 150;
+  white-space: nowrap;
+}
+
+.error-banner.hidden {
+  display: none;
+}
+
+.btn-retry {
+  padding: 6px 14px;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-chip);
+  background: none;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+/* Page-wide loading / disabled state */
+.exam-page-loading .btn-submit-exam,
+.exam-page-loading .btn-nav,
+.exam-page-loading .choice-item,
+.exam-page-loading .nav-pill,
+.exam-page-loading .flag-btn,
+.exam-page-loading #jumpInput {
+  pointer-events: none;
+  opacity: 0.50;
+}
+
+.exam-page-loading .exam-header {
+  cursor: wait;
+}
+
+/* ==========================================================================
+   T026 — Timer chip
+   ========================================================================== */
+
+.timer-chip {
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-chip);
+  padding: 8px 16px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+  min-width: 110px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.timer-chip.is-warning {
+  color: var(--color-error);
+}
+
+/* ==========================================================================
+   T030 — Proctoring panel, webcam, AI status rows
+   ========================================================================== */
+
+.webcam-section {
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--color-surface-container-high);
+  aspect-ratio: 4 / 3;
+}
+
+.webcam-feed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.webcam-feed.hidden {
+  display: none;
+}
+
+.live-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--color-error);
+  color: var(--color-on-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+}
+
+.camera-unavailable {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+  font-size: 13px;
+}
+
+.camera-unavailable.hidden {
+  display: none;
+}
+
+.ai-status-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.status-row {
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-card);
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.status-label {
+  color: var(--color-on-surface-variant);
+}
+
+.status-indicator {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
+
+.status-indicator.active {
+  background: var(--color-status-active-bg);
+  color: var(--color-status-active);
+}
+
+.status-indicator.inactive {
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+}
+
+.status-indicator.error {
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
+}
+
+/* Risk Gauge */
+.risk-gauge-container {
+  text-align: center;
+  padding: 16px 0;
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-card);
+  position: relative;
+}
+
+.risk-gauge {
+  width: 160px;
+  height: auto;
+}
+
+.gauge-fill {
+  transition: stroke-dasharray 0.5s ease, stroke 0.5s ease;
+}
+
+.risk-value {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-on-surface);
+}
+
+.risk-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-on-surface-variant);
+  font-weight: 600;
+  margin-top: -8px;
+}
+
+/* Alert Feed */
+.alert-feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.feed-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-on-surface-variant);
+  margin: 0;
+}
+
+.alert-feed {
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-card);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: 240px;
+  scrollbar-width: thin;
+}
+
+.alert-placeholder {
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+.alert-card {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--color-surface);
+  border-left: 4px solid var(--color-outline-variant);
+  font-size: 12px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-card.severity-high {
+  border-left-color: var(--color-error);
+  background: var(--color-error-container);
+}
+
+.alert-card.severity-medium {
+  border-left-color: var(--color-tertiary);
+  background: color-mix(in srgb, var(--color-tertiary) 10%, var(--color-surface));
+}
+
+.alert-card.severity-low {
+  border-left-color: var(--color-primary);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--color-on-surface);
+}
+
+.alert-time {
+  font-weight: 400;
+  color: var(--color-on-surface-variant);
+  font-size: 10px;
+}
+
+.alert-msg {
+  color: var(--color-on-surface-variant);
+  line-height: 1.4;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+.exam-error-overlay {
+  font-family: monospace;
+  padding: 2rem;
+  color: #c00;
+  max-width: 80vw;
+  word-break: break-all;
+}

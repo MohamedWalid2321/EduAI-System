@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self' data:;" />
+  <title>Starting Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: var(--color-surface);
+    }
+
+    .loading-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .loading-headline {
+      font-family: var(--font-display);
+      font-size: var(--font-size-headline-md);
+      font-weight: 700;
+      letter-spacing: var(--letter-spacing-display);
+      color: var(--color-on-surface);
+    }
+
+    .loading-body {
+      font-family: var(--font-body);
+      font-size: var(--font-size-body-lg);
+      color: var(--color-on-surface-variant);
+      line-height: 1.6;
+    }
+
+    /* Error state — hidden until a failure event arrives */
+    .error-detail {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .error-detail.visible {
+      display: flex;
+    }
+
+    .error-message {
+      font-family: var(--font-body);
+      font-size: var(--font-size-body-lg);
+      color: var(--color-tertiary);
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="card loading-card">
+    <!-- Spinner -->
+    <div class="spinner spinner--lg" id="spinner" aria-label="Loading"></div>
+
+    <!-- Headline -->
+    <h1 class="loading-headline" id="headline">Starting Lumina AI…</h1>
+
+    <!-- Body copy -->
+    <p class="loading-body" id="body-copy">
+      Connecting to the proctoring bridge, please wait.
+    </p>
+
+    <!-- Error state (revealed on bridge failure) -->
+    <div class="error-detail" id="error-detail" role="alert" aria-live="assertive">
+      <span class="status-chip status-chip--error" id="error-code">ERROR</span>
+      <p class="error-message" id="error-message"></p>
+      <button class="btn btn-secondary" onclick="window.location.reload()">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    /**
+     * Handle bridge status events sent from the main process via preload.js.
+     * On 'ready': navigate to the login page (main.js loadFile handles this,
+     *             but we listen here in case the page is still active).
+     * On failure: reveal the error detail block with the specific reason.
+     */
+    const unsubscribe = window.bridge.onBridgeStatus((payload) => {
+      if (payload.type === 'ready') {
+        // Main process navigates the window — nothing further needed here.
+        return;
+      }
+
+      // Any non-ready state = show error
+      const spinner = document.getElementById('spinner');
+      const headline = document.getElementById('headline');
+      const bodyText = document.getElementById('body-copy');
+      const errorDetail = document.getElementById('error-detail');
+      const errorCode = document.getElementById('error-code');
+      const errorMsg = document.getElementById('error-message');
+
+      spinner.style.display = 'none';
+      headline.textContent = 'Unable to Start';
+      bodyText.style.display = 'none';
+
+      errorCode.textContent = payload.code || 'ERROR';
+      errorMsg.textContent = payload.message || 'An unexpected error occurred.';
+      errorDetail.classList.add('visible');
+
+      // Clean up listener — no longer needed once error is displayed
+      unsubscribe();
+    });
+  </script>
+</body>
+</html>

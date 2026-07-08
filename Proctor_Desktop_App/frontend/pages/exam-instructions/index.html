@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self' data:;" />
+  <title>Exam Instructions — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/design-tokens.css" />
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <link rel="stylesheet" href="../../assets/step-progress.css" />
+  <link rel="stylesheet" href="exam-instructions.css" />
+</head>
+<body class="ei-body">
+
+  <!-- ── Header ────────────────────────────────────────────────────────── -->
+  <header class="ei-header">
+    <nav class="ei-nav">
+      <span class="ei-logo">Lumina AI Proctoring System</span>
+    </nav>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────────────────────────── -->
+  <main class="ei-main">
+    <div class="ei-container">
+
+      <!-- Hero section -->
+      <section class="ei-hero">
+        <!-- Step progress — step 5 of 5 -->
+        <nav class="step-progress"
+             role="progressbar"
+             aria-label="Step 5 of 5: Exam Instructions"
+             aria-valuenow="5"
+             aria-valuemin="1"
+             aria-valuemax="5">
+          <span class="step-pill step-pill--done"  title="Step 1: Login"></span>
+          <span class="step-pill step-pill--done"  title="Step 2: Exam Code"></span>
+          <span class="step-pill step-pill--done"  title="Step 3: Identity Verification"></span>
+          <span class="step-pill step-pill--done"  title="Step 4: AI Readiness"></span>
+          <span class="step-pill step-pill--active" title="Step 5: Exam Instructions"></span>
+        </nav>
+        <h1 class="ei-hero-title">Exam Instructions &amp; Rules of Conduct</h1>
+        <p class="ei-hero-subtitle">Please read and acknowledge the following mandatory rules before proceeding.</p>
+      </section>
+
+      <!-- Rules bento grid -->
+      <div class="ei-grid">
+
+        <!-- Rule 1: Quiet Environment -->
+        <div class="ei-card">
+          <div class="ei-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <line x1="23" y1="9" x2="17" y2="15"/>
+              <line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+          </div>
+          <h3 class="ei-card-title">Quiet Environment</h3>
+          <p class="ei-card-body">Ensure you are in a completely quiet, distraction-free location. External noises or conversations may be flagged by the system.</p>
+        </div>
+
+        <!-- Rule 2: Full-Screen Mode -->
+        <div class="ei-card">
+          <div class="ei-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+          </div>
+          <h3 class="ei-card-title">Full-Screen Mode</h3>
+          <p class="ei-card-body">Do not exit full-screen mode at any time during the assessment. Switching tabs or windows is considered a serious violation.</p>
+        </div>
+
+        <!-- Rule 3: No Unauthorized Devices (full-width, horizontal) -->
+        <div class="ei-card ei-card--wide ei-card--horizontal">
+          <div class="ei-icon-box ei-icon-box--lg ei-icon-box--tertiary" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="ei-card-title">No Unauthorized Devices</h3>
+            <p class="ei-card-body">The use of mobile phones, earphones, smartwatches, or any other technological aids for cheating is strictly prohibited. Your workspace must remain clear of all electronics.</p>
+          </div>
+        </div>
+
+        <!-- Rule 4: Room Privacy -->
+        <div class="ei-card">
+          <div class="ei-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="7" r="4"/>
+              <path d="M2 21c0-3.87 3.13-7 7-7"/>
+              <line x1="17" y1="9" x2="22" y2="14"/>
+              <line x1="22" y1="9" x2="17" y2="14"/>
+            </svg>
+          </div>
+          <h3 class="ei-card-title">Room Privacy</h3>
+          <p class="ei-card-body">Ensure you are completely alone. No other individuals are allowed to enter the room while the exam is in progress.</p>
+        </div>
+
+        <!-- Rule 5: Final Preparations -->
+        <div class="ei-card">
+          <div class="ei-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18"/>
+              <path d="M9 21V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14"/>
+              <circle cx="14.5" cy="13" r="0.75" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <h3 class="ei-card-title">Final Preparations</h3>
+          <p class="ei-card-body">Complete all personal tasks before starting. You are not permitted to leave your seat once the exam begins.</p>
+        </div>
+
+        <!-- Rule 6: Screen Focus (full-width, glass panel) -->
+        <div class="ei-card ei-card--wide ei-card--glass">
+          <div class="ei-ai-badge">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+            </svg>
+            AI Monitoring Active
+          </div>
+          <h3 class="ei-card-title ei-card-title--lg">Screen Focus</h3>
+          <p class="ei-card-body ei-card-body--lg">Keep your eyes focused on the screen at all times. The proctoring system continuously monitors and records suspicious head or eye movements to detect cheating behaviors.</p>
+          <div class="ei-deco-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="300" height="300" fill="none"
+                 stroke="currentColor" stroke-width="0.4">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Rule 7: No Virtual Machines -->
+        <div class="ei-card">
+          <div class="ei-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <rect x="6" y="7" width="12" height="7" rx="1"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+          <h3 class="ei-card-title">No Virtual Machines (VM)</h3>
+          <p class="ei-card-body">The exam must be taken on a physical native operating system. Running the exam within a Virtual Machine is strictly forbidden.</p>
+        </div>
+
+        <!-- Rule 8: No Unauthorized Keystrokes -->
+        <div class="ei-card">
+          <div class="ei-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="13" rx="2"/>
+              <path d="M6 11h.01M10 11h.01M14 11h.01M18 11h.01M8 15h8"/>
+            </svg>
+          </div>
+          <h3 class="ei-card-title">No Unauthorized Keystrokes</h3>
+          <p class="ei-card-body">The use of automated keystrokes, macros, or unauthorized shortcuts is not allowed and will be flagged immediately.</p>
+        </div>
+
+      </div><!-- /.ei-grid -->
+
+      <!-- Acknowledgment section -->
+      <div class="ei-ack">
+        <label class="ei-agree-label">
+          <input type="checkbox" id="agreeCheckbox" class="ei-checkbox" />
+          <span>I have read and agree to follow all instructions</span>
+        </label>
+        <button id="startBtn" class="btn-primary ei-start-btn" disabled>
+          <span id="btnText">Start Exam</span>
+          <span id="btnSpinner" class="spinner" hidden aria-hidden="true"></span>
+        </button>
+        <p class="ei-consent-note">By clicking Start Exam, you consent to secure biometric monitoring for the duration of the exam.</p>
+      </div>
+
+    </div><!-- /.ei-container -->
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────────────────── -->
+  <footer class="ei-footer">
+    <div class="ei-footer-inner">
+      <span class="ei-footer-brand">Lumina</span>
+      <div class="ei-footer-links">
+        <a href="#" class="ei-footer-link">Privacy Policy</a>
+        <a href="#" class="ei-footer-link">Terms of Service</a>
+        <a href="#" class="ei-footer-link">Accessibility</a>
+        <a href="#" class="ei-footer-link">Contact Support</a>
+      </div>
+      <span class="ei-footer-copy">&copy; 2024 Lumina AI Proctoring. Secured Digital Sanctuary.</span>
+    </div>
+  </footer>
+
+  <script src="exam-instructions.js"></script>
+</body>
+</html>

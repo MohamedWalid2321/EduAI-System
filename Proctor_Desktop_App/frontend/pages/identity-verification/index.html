@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self' data:;" />
+  <title>Identity Verification — Lumina AI</title>
+  <link rel="stylesheet" href="../../assets/components.css" />
+  <link rel="stylesheet" href="../../assets/step-progress.css" />
+  <link rel="stylesheet" href="identity-verification.css" />
+</head>
+<body class="iv-page">
+
+  <header class="iv-header">
+    <span class="iv-logo">Lumina AI</span>
+    <span class="iv-secure-badge">
+      <svg class="iv-shield-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2L4 6v5.5C4 15.64 7.5 19.35 12 21c4.5-1.65 8-5.36 8-9.5V6l-8-4z"
+              fill="currentColor" opacity="0.15"/>
+        <path d="M12 2L4 6v5.5C4 15.64 7.5 19.35 12 21c4.5-1.65 8-5.36 8-9.5V6l-8-4z"
+              stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Secure Environment
+    </span>
+  </header>
+
+  <main class="iv-wrap">
+    <section class="iv-card">
+
+      <!-- Icon + headline -->
+      <div class="iv-card-header">
+        <!-- Step progress — step 3 of 5 -->
+        <nav class="step-progress"
+             role="progressbar"
+             aria-label="Step 3 of 5: Identity Verification"
+             aria-valuenow="3"
+             aria-valuemin="1"
+             aria-valuemax="5">
+          <span class="step-pill step-pill--done"  title="Step 1: Login"></span>
+          <span class="step-pill step-pill--done"  title="Step 2: Exam Code"></span>
+          <span class="step-pill step-pill--active" title="Step 3: Identity Verification"></span>
+          <span class="step-pill" title="Step 4: AI Readiness"></span>
+          <span class="step-pill" title="Step 5: Exam Instructions"></span>
+        </nav>
+        <div class="iv-avatar">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" fill="currentColor" opacity="0.25"/>
+            <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="currentColor"
+                  stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <h1 class="iv-title">Verify Identity</h1>
+        <p class="iv-subtitle">Ensure your face is clearly visible and well-lit to proceed with your examination.</p>
+      </div>
+
+      <!-- Camera preview -->
+      <div class="iv-camera-shell" id="cameraShell">
+
+        <!-- Live video feed -->
+        <video id="webcamFeed" autoplay muted playsinline></video>
+
+        <!-- Frozen capture preview (hidden until capture) -->
+        <img id="capturePreview" class="iv-capture-preview hidden" alt="Captured photo" />
+
+        <!-- Face-outline overlay with corner accents -->
+        <div class="iv-face-frame" id="faceFrame" aria-hidden="true">
+          <span class="iv-corner iv-corner--tl"></span>
+          <span class="iv-corner iv-corner--tr"></span>
+          <span class="iv-corner iv-corner--bl"></span>
+          <span class="iv-corner iv-corner--br"></span>
+        </div>
+
+        <!-- Live stream pill -->
+        <div class="iv-live-pill" id="livePill">
+          <span class="iv-live-dot"></span>
+          <span>Live Stream</span>
+        </div>
+
+        <!-- Camera denied message -->
+        <div id="cameraDenied" class="iv-camera-denied hidden">
+          <p>Camera access denied — please allow camera access and reload.</p>
+        </div>
+      </div>
+
+      <!-- Offscreen capture canvas (never shown) -->
+      <canvas id="captureCanvas" width="640" height="480" style="display:none;" aria-hidden="true"></canvas>
+
+      <!-- Error / status pill -->
+      <div id="errorPill" class="iv-error-pill hidden" role="alert" aria-live="assertive"></div>
+
+      <!-- Verifying spinner -->
+      <div id="verifySpinner" class="iv-spinner-row hidden" aria-live="polite">
+        <span class="iv-spinner" aria-hidden="true"></span>
+        <span>Verifying identity&hellip;</span>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="iv-actions">
+        <button id="captureBtn" class="btn-primary iv-btn-capture iv-btn-full" type="button">
+          <svg class="iv-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 3H7a4 4 0 0 0-4 4v1M15 3h2a4 4 0 0 1 4 4v1M3 15v2a4 4 0 0 0 4 4h1M21 15v2a4 4 0 0 1-4 4h-1"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Capture Photo
+        </button>
+
+        <button id="retakeBtn" class="iv-btn-retake hidden" type="button">
+          <svg class="iv-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 4v5h.582M20 20v-5h-.581M4.582 9A10 10 0 0 1 19.419 15"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Retake Photo
+        </button>
+
+        <button id="confirmBtn" class="btn-primary iv-btn-confirm iv-btn-full hidden" type="button">
+          Confirm &amp; Continue
+        </button>
+      </div>
+
+      <!-- Quality indicators -->
+      <div class="iv-indicators" id="qualityIndicators">
+        <div class="iv-indicator" id="lightingIndicator">
+          <svg class="iv-indicator-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="iv-indicator-label">Lighting</span>
+          <span class="iv-indicator-value" id="lightingValue">Checking</span>
+        </div>
+
+        <div class="iv-indicator iv-indicator--mid" id="focusIndicator">
+          <svg class="iv-indicator-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M3 9V6a3 3 0 0 1 3-3h3M15 3h3a3 3 0 0 1 3 3v3M3 15v3a3 3 0 0 0 3 3h3M21 15v3a3 3 0 0 1-3 3h-3"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="iv-indicator-label">Focus</span>
+          <span class="iv-indicator-value" id="focusValue">Checking</span>
+        </div>
+
+        <div class="iv-indicator" id="faceIndicator">
+          <svg class="iv-indicator-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 10c0-2.21 1.79-4 4-4M8.5 15c-.5.5-1 1.5-1 2.5C7.5 19.5 9.5 21 12 21s4.5-1.5 4.5-3.5c0-1-.5-2-1-2.5"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="iv-indicator-label">Face</span>
+          <span class="iv-indicator-value" id="faceValue">Checking</span>
+        </div>
+      </div>
+
+      <p class="iv-privacy-note">
+        Encrypted session. Your biometric data is processed securely and deleted post-verification.
+      </p>
+
+    </section>
+  </main>
+
+  <footer class="iv-footer">
+    <span class="iv-footer-logo">Lumina AI</span>
+    <nav class="iv-footer-nav" aria-label="Footer">
+      <a href="#" class="iv-footer-link">Privacy Policy</a>
+      <a href="#" class="iv-footer-link">Terms of Service</a>
+      <a href="#" class="iv-footer-link">Support</a>
+    </nav>
+    <p class="iv-footer-copy">&copy; 2024 Lumina AI Proctoring</p>
+  </footer>
+
+  <script src="identity-verification.js" defer></script>
+</body>
+</html>

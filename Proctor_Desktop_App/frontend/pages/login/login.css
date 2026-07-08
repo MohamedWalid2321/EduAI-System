@@ -1,0 +1,457 @@
+/* ==========================================================================
+   login.css — Login page-specific styles for Lumina AI
+   All values are CSS custom property references — no hardcoded hex values.
+   Requires design-tokens.css (loaded via components.css @import chain).
+   ========================================================================== */
+
+/* ==========================================================================
+   Page Layout
+   ========================================================================== */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    160deg,
+    var(--color-primary-fixed) 0%,
+    var(--color-surface-container-low) 55%,
+    var(--color-surface-container-lowest) 100%
+  );
+}
+
+/* ==========================================================================
+   Navigation Bar
+   ========================================================================== */
+
+.login-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 3.5rem;
+  background-color: var(--color-surface-container-lowest);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-outline-variant) 30%, transparent);
+  flex-shrink: 0;
+}
+
+.login-nav__wordmark {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+
+.login-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.login-nav__label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-lg);
+  color: var(--color-on-surface);
+  margin-right: 0.5rem;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--color-outline-variant);
+  background: transparent;
+  color: var(--color-on-surface);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  line-height: 1;
+  padding: 0;
+  text-decoration: none;
+}
+
+.icon-btn:hover {
+  background-color: var(--color-surface-container-low);
+  border-color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Main Content Area
+   ========================================================================== */
+
+.login-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem 2rem;
+  gap: 1.5rem;
+}
+
+/* ==========================================================================
+   Login Card
+   ========================================================================== */
+
+.login-card {
+  background-color: var(--color-surface-container-lowest);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-ambient);
+  width: 100%;
+  max-width: 27rem;
+  padding: 2.5rem 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Shield icon circle */
+.login-card__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: var(--color-primary-fixed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.login-card__headline {
+  font-family: var(--font-display);
+  font-size: var(--font-size-headline-md);
+  font-weight: 700;
+  color: var(--color-on-surface);
+  text-align: center;
+  margin-bottom: 0.375rem;
+  letter-spacing: -0.01em;
+}
+
+.login-card__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-lg);
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  margin-bottom: 1.875rem;
+}
+
+/* ==========================================================================
+   Login Form
+   ========================================================================== */
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-md);
+  font-weight: 600;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 0.5rem;
+}
+
+/* Row with label left and forgot-password link right */
+.form-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.form-label-row .form-label {
+  margin-bottom: 0;
+}
+
+.forgot-link {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-lg);
+  color: var(--color-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   Password Visibility Toggle
+   ========================================================================== */
+
+/* Wrapper makes the button position relative to the input */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Hides whichever eye icon is not currently active.
+   Uses a class (not an inline style) so it is CSP-compliant under style-src 'self'. */
+.pw-icon--hidden {
+  display: none;
+}
+
+.password-wrapper .input-field {
+  /* Reserve space for the toggle button so text never slides under it */
+  padding-right: 2.75rem;
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  background: transparent;
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  border-radius: var(--radius-sm, 4px);
+  padding: 0;
+  transition: color 0.15s ease, opacity 0.15s ease;
+  /* Sits above the input visually */
+  z-index: 1;
+}
+
+.password-toggle:hover {
+  color: var(--color-primary);
+}
+
+.password-toggle:active {
+  opacity: 0.7;
+}
+
+/* Keep focus outline accessible but unobtrusive */
+.password-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Inline Error Message
+   ========================================================================== */
+
+.form-error {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-error);
+  min-height: 1.25em;
+  margin-bottom: 0.875rem;
+  text-align: center;
+  line-height: 1.4;
+  /* Only take up space when there is content */
+  display: block;
+}
+
+.form-error:empty {
+  min-height: 0;
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Remember Device Checkbox
+   ========================================================================== */
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-lg);
+  color: var(--color-on-surface);
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  user-select: none;
+}
+
+.remember-label input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Login Button (full-width override of .btn.btn-primary)
+   ========================================================================== */
+
+.login-btn {
+  width: 100%;
+  padding: 0.9375rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  position: relative;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+.login-btn .spinner {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-width: 2px;
+  border-color: color-mix(in srgb, var(--color-on-primary) 25%, transparent);
+  border-top-color: var(--color-on-primary);
+}
+
+/* ==========================================================================
+   Card Divider + Authorisation Note
+   ========================================================================== */
+
+.login-card__divider {
+  width: 100%;
+  height: 1px;
+  background-color: color-mix(
+    in srgb,
+    var(--color-outline-variant) 40%,
+    transparent
+  );
+  margin: 1.5rem 0 1.125rem;
+}
+
+.login-card__access-note {
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-md);
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.login-card__access-note a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+
+.login-card__access-note a:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   Progress Pills (step indicator, below card)
+   ========================================================================== */
+
+.progress-pills {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.progress-pill {
+  height: 0.25rem;
+  width: 3rem;
+  border-radius: var(--radius-chip);
+  background-color: color-mix(
+    in srgb,
+    var(--color-outline-variant) 50%,
+    transparent
+  );
+  transition: background-color 0.2s ease, width 0.2s ease;
+}
+
+.progress-pill.active {
+  background-color: var(--color-primary);
+  width: 4rem;
+}
+
+/* ==========================================================================
+   FAB (Information button, fixed bottom-right)
+   ========================================================================== */
+
+.fab {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
+  border: none;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-ambient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.15s ease, transform 0.15s ease;
+  z-index: 100;
+  line-height: 1;
+}
+
+.fab:hover {
+  filter: brightness(1.08);
+  transform: scale(1.05);
+}
+
+.fab:active {
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.login-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-md);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-outline-variant) 30%, transparent);
+  background-color: var(--color-surface-container-lowest);
+  flex-shrink: 0;
+}
+
+.login-footer__links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.login-footer__links a {
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.login-footer__links a:hover {
+  color: var(--color-primary);
+}

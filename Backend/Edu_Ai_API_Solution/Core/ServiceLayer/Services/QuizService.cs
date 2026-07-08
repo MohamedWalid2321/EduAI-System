@@ -100,12 +100,6 @@ public async Task<QuizResponseDto> CreateOrUpdateQuizAsync(int CourseId, QuizReq
             }
             return quizEntities.Adapt<IEnumerable<QuizResponseDto>>();
 		}
-
-		/// <summary>
-		/// Returns the quizzes for a course enriched with the student's submission data.
-		/// If the student has already submitted a quiz the response will include
-		/// <c>IsSubmitted = true</c>, their <c>Score</c> and the <c>SubmittedAt</c> timestamp.
-		/// </summary>
 		public async Task<IEnumerable<QuizForStudentResponseDto>> GetAllQuizzesForCourseAsStudentAsync(
 			int courseId,
 			string studentId,
