@@ -12,7 +12,7 @@ Lumina is a full-stack LMS made up of two repositories that work together as one
 > The frontend is wired into the backend repo as the git submodule `Lumina_Web_Platform`.
 
 - **LMS product name:** **Lumina**
-- **Proctoring product name:** **Lumina AI Proctoring** (a.k.a. **Lumina Proctor**)
+- **Proctoring product name:** **Lumina AI Proctoring**
 - **Live demo:** [lumina-lms-site.vercel.app](https://lumina-lms-site.vercel.app/)
 
 ---
