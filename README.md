@@ -101,8 +101,6 @@ Suggested areas to document as the project grows:
 - `frontend/` web app directories (JavaScript/HTML/CSS)
 - `scripts/` automation and setup scripts (PowerShell)
 
-If your current folder names differ, replace this section with the exact tree.
-
 ---
 
 ## ⚙️ Getting Started
