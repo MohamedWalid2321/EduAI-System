@@ -12,7 +12,7 @@ Lumina is a full-stack LMS made up of two repositories that work together as one
 > The frontend is wired into the backend repo as the git submodule `Lumina_Web_Platform`.
 
 - **LMS product name:** **Lumina**
-- **Proctoring product name:** **Lumina AI Proctoring** (a.k.a. **Lumina Proctor**)
+- **Proctoring product name:** **Lumina AI Proctoring**
 - **Live demo:** [lumina-lms-site.vercel.app](https://lumina-lms-site.vercel.app/)
 
 ---
@@ -36,20 +36,20 @@ The system is split into four cooperating services:
                                     ▼
                      ┌────────────────────────────┐
                      │      Lumina API (.NET 8)   │  courses, quizzes, users,
-                     │  Onion / Clean Architecture │  payments, notifications,
+                     │  Onion / Clean Architecture│  payments, notifications,
                      └───────┬─────────┬──────────┘  cheating reports, risk scores
                              │         │
                  SQL Server  │         │  Redis (cache / Hangfire jobs)
                              ▼         ▼
                      ┌────────────────────────────┐
-                     │   Lumina AI Proctoring      │  gaze · objects · faces
-                     │   (Python / FastAPI/Modal)  │  speech · anti-spoofing
+                     │   Lumina AI Proctoring     │  gaze · objects · faces
+                     │   (Python / FastAPI/Modal) │  speech · anti-spoofing
                      └──────────────▲─────────────┘
                                     │ HTTPS
                      ┌──────────────┴─────────────┐
-                     │ Lumina Proctoring Desktop   │  Electron shell + local
-                     │ App (Electron + Python      │  Python bridge (port 5050),
-                     │ bridge)                     │  exam lockdown, risk feed
+                     │ Lumina Proctoring Desktop  │  Electron shell + local
+                     │ App (Electron + Python     │  Python bridge (port 5050),
+                     │ bridge)                    │  exam lockdown, risk feed
                      └────────────────────────────┘
 ```
 
