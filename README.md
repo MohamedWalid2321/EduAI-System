@@ -1,284 +1,325 @@
-# EduAI System
+# Lumina — EduAI System
 
-EduAI System is an AI-powered educational platform that combines a full Learning Management System (LMS) with intelligent exam proctoring and analytics.
+**An AI-powered Learning Management System with integrated exam proctoring.**
 
-- **LMS Name:** **Lumina**
-- **Proctoring Product Name:** **Lumina Proctor**
+Lumina is a full-stack LMS made up of two repositories that work together as one product:
 
----
+| Part | Repository | Stack |
+|---|---|---|
+| **API / Backend** + **AI services** + **Proctoring desktop app** | [`EduAI-System`](https://github.com/MohamedWalid2321/EduAI-System) | .NET 8, Python (FastAPI), Electron |
+| **Web frontend (Lumina)** | [`LMS-Project`](https://github.com/youssefabobaker/LMS-Project) | Angular 17 |
 
-## ✨ Overview
+> The frontend is wired into the backend repo as the git submodule `Lumina_Web_Platform`.
 
-EduAI System is designed to support modern digital learning by integrating:
-
-1. **Course and content management** for institutions and instructors.
-2. **Student learning workflows** through a clean, accessible LMS interface.
-3. **AI-assisted proctoring** to preserve exam integrity.
-4. **Cross-service architecture** powered by C#, Python, and JavaScript components.
-
-The platform targets schools, universities, and training providers that need a scalable, secure, and intelligent e-learning ecosystem.
+- **LMS product name:** **Lumina**
+- **Proctoring product name:** **Lumina AI Proctoring** (a.k.a. **Lumina Proctor**)
+- **Live demo:** [lumina-lms-site.vercel.app](https://lumina-lms-site.vercel.app/)
 
 ---
 
-## 🧩 Core Products
+## 1. What this project does
 
-### 1) Lumina (LMS)
+Lumina lets institutions run courses, assignments, and quizzes online, and lets students take **proctored exams** monitored by AI models that watch for gaze-away behavior, unauthorized objects, multiple faces, voice/speech activity, and identity mismatches — flagging suspicious activity for instructor review instead of relying on a human watching a webcam feed.
 
-**Lumina** is the primary LMS experience for admins, instructors, and students.
+The system is split into four cooperating services:
 
-Typical LMS capabilities include:
-- Course creation and organization
-- Lessons, modules, and resources management
-- Assignment and quiz workflows
-- Gradebook and performance tracking
-- Role-based access for administrators, instructors, and learners
-- Notifications and announcements
+1. **Lumina Web (frontend)** – Angular SPA used by admins, instructors, and students.
+2. **Lumina API (backend)** – .NET 8 Web API that owns all academic data, auth, payments, and business rules.
+3. **AI Proctoring service** – a Python/FastAPI service (deployable on [Modal](https://modal.com) with GPU) that runs the actual computer-vision / audio models.
+4. **Lumina AI Proctoring desktop app** – an Electron app students install to take exams in a locked-down window, which talks to a local Python bridge and forwards video/audio events to the AI service.
 
-### 2) Lumina Proctor
-
-**Lumina Proctor** is the AI-enabled exam integrity module.
-
-Typical proctoring capabilities include:
-- Candidate identity verification workflows
-- Live or recorded monitoring support
-- Browser/session behavior checks
-- Suspicious activity flagging
-- Incident reporting and review tools
-- Proctoring analytics for exam audits
-
----
-
-## 🏗️ System Architecture
-
-EduAI System appears to follow a multi-language architecture where each technology contributes to a specific responsibility:
-
-- **C# (.NET)**: Core backend/business logic and API services
-- **Python**: AI/ML, proctoring intelligence, and analytics pipelines
-- **JavaScript/HTML/CSS**: Web UI, client-side behavior, and dashboards
-- **PowerShell**: Automation/devops utility scripts
-
-### High-level flow
-
-1. Users interact with **Lumina** via web interfaces.
-2. LMS backend services manage academic data and workflows.
-3. During assessments, **Lumina Proctor** services process monitoring events.
-4. AI services evaluate events and generate risk indicators.
-5. Admins/instructors review outcomes through reporting dashboards.
+```
+                     ┌────────────────────────────┐
+                     │      Lumina Web (Angular)  │  admins / instructors / students
+                     └──────────────┬─────────────┘
+                                    │ REST / JWT
+                                    ▼
+                     ┌────────────────────────────┐
+                     │      Lumina API (.NET 8)   │  courses, quizzes, users,
+                     │  Onion / Clean Architecture │  payments, notifications,
+                     └───────┬─────────┬──────────┘  cheating reports, risk scores
+                             │         │
+                 SQL Server  │         │  Redis (cache / Hangfire jobs)
+                             ▼         ▼
+                     ┌────────────────────────────┐
+                     │   Lumina AI Proctoring      │  gaze · objects · faces
+                     │   (Python / FastAPI/Modal)  │  speech · anti-spoofing
+                     └──────────────▲─────────────┘
+                                    │ HTTPS
+                     ┌──────────────┴─────────────┐
+                     │ Lumina Proctoring Desktop   │  Electron shell + local
+                     │ App (Electron + Python      │  Python bridge (port 5050),
+                     │ bridge)                     │  exam lockdown, risk feed
+                     └────────────────────────────┘
+```
 
 ---
 
-## 🚀 Key Features
+## 2. Repository layout
 
-- Unified LMS and proctoring ecosystem
-- AI-assisted exam monitoring and risk detection
-- Modular architecture across backend, AI, and frontend stacks
-- Role-based workflows for students, instructors, and administrators
-- Reporting and analytics for learning progress and exam integrity
-- Extensible foundation for future educational AI features
+### `EduAI-System` (backend + AI)
+
+```
+EduAI-System/
+├── AI/                          # Cloud/GPU proctoring service (FastAPI + Modal)
+│   ├── Models/
+│   │   ├── EyeGazeDetection/     # Gaze tracking (MediaPipe face landmarker)
+│   │   ├── FaceDetection/        # SCRFD face detector
+│   │   ├── FaceAntiSpoofing/     # MiniFASNet liveness check
+│   │   ├── Face_Recognition_Service/  # ArcFace ONNX + Redis-cached enrollment
+│   │   ├── objectDetectionYolo/  # YOLO-based object/phone detection
+│   │   ├── objectDetectionOWL_VIT/    # Open-vocabulary object detection
+│   │   └── SpeechDetection/      # Voice-activity / speech detection
+│   ├── routes/                   # face, gaze, object, speech route modules
+│   ├── schemas/
+│   └── main.py                   # FastAPI app + Modal deployment entrypoint
+│
+├── Backend/Edu_Ai_API_Solution/  # Lumina API — .NET 8, Onion/Clean Architecture
+│   ├── Core/
+│   │   ├── DomainLayer/          # Entities, enums, domain exceptions
+│   │   ├── ServiceAbstractionLayer/  # Service interfaces
+│   │   └── ServiceLayer/         # Business logic implementation
+│   ├── Infrastructure/
+│   │   ├── persistenceLayer/     # EF Core, repositories, unit of work
+│   │   └── PresentationLayer/    # Cross-cutting presentation concerns
+│   ├── Shared/                   # DTOs, error models, constants
+│   └── Edu_Ai_API/               # ASP.NET Core Web API host, Controllers, middleware
+│
+├── Proctor_Desktop_App/          # Lumina AI Proctoring — Electron desktop client
+│   ├── frontend/                 # Electron renderer (exam, login, ID-verification,
+│   │                              #   AI-readiness check, results, session report pages)
+│   ├── python_bridge/            # Local Python service (port 5050) that
+│   │                              #   orchestrates the exam session, lockdown,
+│   │                              #   and calls into the cloud AI service
+│   └── AI/                       # Bundled copy of the AI models used offline/locally
+│
+└── Lumina_Web_Platform/          # git submodule → LMS-Project (frontend)
+```
+
+### `LMS-Project` (frontend)
+
+```
+LMS-Project/
+├── src/app/
+│   ├── core/                     # guards, interceptors, core services
+│   ├── features/
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── department-management/
+│   │   ├── role-management/
+│   │   ├── user-management/
+│   │   ├── user-profile/
+│   │   ├── course-management/
+│   │   ├── content/
+│   │   ├── lectures/
+│   │   ├── assignments/
+│   │   ├── quizzes/
+│   │   ├── payment/
+│   │   ├── notification/
+│   │   ├── desktop-guide/        # onboarding into the Proctoring desktop app
+│   │   └── landing/
+│   ├── models/
+│   └── shared/components/
+└── specs/                        # spec-driven feature specs (spec-kit style)
+```
 
 ---
 
-## 🧪 Technology Stack
+## 3. Features
 
-Based on repository language composition:
+### Lumina (LMS)
 
-- **C#** — 64.3%
-- **Python** — 21.2%
-- **JavaScript** — 7.8%
-- **HTML** — 3.5%
-- **CSS** — 3.1%
-- **PowerShell** — 0.1%
+- **Auth & roles** — JWT-based authentication, role-based access (Admin / Instructor / Student) via `RolesController`, `AccountController`, `AuthunticationController`.
+- **Academic structure** — Departments, academic years, semesters (Fall/Spring/Summer) and course lifecycle (`Drafted → Published → Archived`).
+- **Course management** — course creation, enrollment (Active / Completed / Dropped), content and lecture management.
+- **Assignments** — creation, file attachments, student submissions, grading (`AssignmentController`, `AssignmentSubmissionController`).
+- **Quizzes** — multiple-choice and true/false questions, timed attempts, auto-scoring (`QuizController`, `QuestionController`, `QuizAttemptsController`).
+- **Payments** — tuition/book/activity fees via the **Paymob** gateway (`PaymentController`, `FeeController`).
+- **Notifications** — in-app/email notifications (`NotificationController`, MailKit + Hangfire background jobs).
+- **Contact / support** — `ContactController` for inbound inquiries.
+
+### Lumina AI Proctoring
+
+- **Identity verification** — face enrollment and recognition (SCRFD detector + ArcFace ONNX embeddings), with **anti-spoofing** (MiniFASNet) to reject photos/screens.
+- **Gaze tracking** — MediaPipe-based eye-gaze detection to flag looking away from the screen.
+- **Object detection** — YOLO and OWL-ViT models to detect phones, extra people, notes, etc. in the exam feed.
+- **Speech / voice-activity detection** — flags talking during a locked-down exam.
+- **Risk analysis** — signals from all models are aggregated into a per-session risk score (`RiskAnalysisController`, `python_bridge/risk_estimator.py`).
+- **Cheating reports** — instructors review flagged incidents (`CheatingReportController`).
+- **Exam lockdown desktop app** — students install **Lumina AI Proctoring** (Electron) which locks down the desktop, runs an AI-readiness check, verifies identity, and streams events to the cloud AI service during the exam, then produces a session report.
 
 ---
 
-## 📦 Repository Structure (Suggested Reading)
+## 4. Tech stack
 
-> The exact structure may evolve. Browse key folders to understand service boundaries.
-
-Suggested areas to document as the project grows:
-- `backend/` or API service directories (C#)
-- `ai/` or proctoring model/service directories (Python)
-- `frontend/` web app directories (JavaScript/HTML/CSS)
-- `scripts/` automation and setup scripts (PowerShell)
+| Layer | Technology |
+|---|---|
+| Frontend | Angular 17, Bootstrap 5, ng-bootstrap, SweetAlert2, `jwt-decode` |
+| Backend API | ASP.NET Core 8 Web API, Onion/Clean Architecture (Domain / ServiceAbstraction / Service / Persistence / Presentation) |
+| Data | Entity Framework Core 8, SQL Server |
+| Auth | ASP.NET Core Identity + JWT Bearer |
+| Caching / jobs | StackExchange.Redis, Hangfire (background jobs + dashboard) |
+| Mapping / logging | Mapster, Serilog (compact JSON formatting) |
+| Email | MailKit + HTML email templates |
+| Payments | Paymob payment gateway |
+| API docs | Swashbuckle (Swagger) |
+| AI service | Python, FastAPI, deployable on Modal (GPU), Upstash Redis for face-enrollment cache |
+| CV / ML models | Ultralytics YOLO, OWL-ViT, MediaPipe, SCRFD, ArcFace (ONNX Runtime), MiniFASNet, PyTorch/TensorFlow |
+| Desktop app | Electron 33, Node.js, local Python bridge (Flask/FastAPI-style HTTP service) |
 
 ---
 
-## ⚙️ Getting Started
+## 5. Getting started
 
-> Since this is a multi-service system, setup usually involves running backend, frontend, and AI services together.
+You will generally run **four** things locally: the SQL database, the .NET API, the Angular app, and (optionally) the AI service / desktop app.
 
-### 1) Clone the repository
+### 5.1 Clone
 
 ```bash
-git clone https://github.com/MohamedWalid2321/EduAI-System.git
+git clone --recurse-submodules https://github.com/MohamedWalid2321/EduAI-System.git
 cd EduAI-System
+# if you forgot --recurse-submodules:
+git submodule update --init --recursive
 ```
 
-### 2) Configure environment variables
-
-Create environment files or system variables for items such as:
-- Database connection strings
-- JWT/auth secrets
-- AI service endpoints/keys
-- Storage and messaging configurations
-
-Example:
+The `LMS-Project` frontend can also be cloned standalone:
 
 ```bash
-cp .env.example .env
-# Update values as required
+git clone https://github.com/youssefabobaker/LMS-Project.git
 ```
 
-### 3) Install dependencies
-
-#### Backend (.NET)
+### 5.2 Backend — Lumina API (.NET 8)
 
 ```bash
-# from backend service directory
+cd Backend/Edu_Ai_API_Solution
 dotnet restore
-dotnet build
 ```
 
-#### AI services (Python)
+Configure `Edu_Ai_API/appsettings.json` (or `dotnet user-secrets`) with:
+- SQL Server connection string
+- JWT signing key / issuer / audience
+- Redis connection string
+- SMTP settings (MailKit)
+- Paymob API credentials
+
+Apply migrations and run:
 
 ```bash
-# from AI service directory
+dotnet ef database update --project Infrastructure/persistenceLayer --startup-project Edu_Ai_API
+dotnet run --project Edu_Ai_API
+```
+
+Swagger UI will be available at the host's `/swagger` endpoint once running.
+
+### 5.3 Frontend — Lumina Web (Angular 17)
+
+> A hosted build is live at **https://lumina-lms-site.vercel.app/** — useful for a quick look without running anything locally. Note it's wired to whichever backend/API instance the team has deployed, not your local API.
+
+```bash
+cd Lumina_Web_Platform   # or the standalone LMS-Project clone
+npm install
+ng serve
+```
+
+Visit `http://localhost:4200`. Point the app's API base URL (in `src/environments/`) at your running Lumina API instance.
+
+### 5.4 AI Proctoring service (Python / FastAPI)
+
+```bash
+cd AI
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# Linux/macOS
-source .venv/bin/activate
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-#### Frontend (Node.js)
+Set environment variables:
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` — face enrollment cache
+- `FACE_ENROLLMENT_TTL_SECONDS` (optional, default `10800`)
+
+Run locally:
 
 ```bash
-# from frontend directory
+uvicorn main:create_app --factory --reload --host 0.0.0.0 --port 8000
+```
+
+Or deploy to Modal (GPU-backed, models preloaded/warm):
+
+```bash
+modal secret create eduai-upstash-redis \
+    UPSTASH_REDIS_REST_URL=... \
+    UPSTASH_REDIS_REST_TOKEN=...
+python -m modal deploy main.py
+```
+
+### 5.5 Lumina AI Proctoring desktop app (Electron)
+
+```bash
+cd Proctor_Desktop_App
 npm install
-npm run dev
+pip install -r python_bridge/requirements.txt
+cp config.example.json config.json
+# edit config.json: set "baseUrl" to your Lumina API endpoint (must be https://)
+npm start
 ```
 
-### 4) Run services
-
-- Start backend API(s)
-- Start AI/proctoring service(s)
-- Start frontend app
-- Open the configured local URL in your browser
-
----
-
-## 🔐 Security & Privacy Considerations
-
-Because EduAI System may process student and exam-related data:
-
-- Enforce strong authentication and authorization
-- Encrypt data in transit and at rest
-- Apply least-privilege access controls
-- Maintain audit logs for proctoring actions
-- Define retention/deletion policies for monitoring artifacts
-- Ensure compliance with local privacy and education regulations
-
----
-
-## 📊 Proctoring & AI Governance
-
-For trustworthy AI usage in educational assessment:
-
-- Document model assumptions and known limitations
-- Provide human review workflows for flagged incidents
-- Track false-positive/false-negative behavior over time
-- Offer transparent incident reporting to authorized staff
-- Periodically evaluate fairness and performance metrics
-
----
-
-## 🛠️ Development Workflow
-
-### Branching
-
-A common strategy:
-- `main` → stable production-ready code
-- `develop` → integration branch
-- `feature/*` → feature work
-- `fix/*` → bug fixes
-
-### Commit style (recommended)
-
-- `feat: add course enrollment endpoint`
-- `fix: resolve quiz submission timeout`
-- `docs: update Lumina Proctor setup guide`
-- `refactor: improve proctoring event pipeline`
-
----
-
-## ✅ Testing (Template)
-
-Add and maintain tests across services:
-
-- **Backend:** unit/integration tests (e.g., xUnit/NUnit)
-- **Python AI:** unit tests and model validation checks
-- **Frontend:** component and end-to-end tests
-
-Example commands (adjust to your project):
+Verify the local Python bridge is up:
 
 ```bash
-# .NET
-dotnet test
-
-# Python
-pytest
-
-# Frontend
-npm test
+curl http://127.0.0.1:5050/ping
+# → {"status":"ok","version":"1.0.0","timestamp":"..."}
 ```
 
----
+**Troubleshooting**
 
-## 📈 Roadmap Ideas
-
-- Advanced adaptive learning recommendations in **Lumina**
-- Richer exam behavior analytics in **Lumina Proctor**
-- Real-time alerting dashboard for proctors
-- Institution-level analytics and benchmarking
-- Mobile-friendly learner and proctor interfaces
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repo
-2. Create a feature branch
-3. Commit your changes
-4. Push your branch
-5. Open a pull request
-
-Please include clear descriptions, tests, and relevant screenshots/logs where applicable.
+| Symptom | Cause | Fix |
+|---|---|---|
+| `BRIDGE_FAILED` on startup | Python not on PATH, or port 5050 in use | Check `python --version`; change `pythonPort` in `config.json` |
+| `CONFIG_ERROR` | Missing/malformed `config.json` | Re-copy from `config.example.json` |
+| `INSECURE_PROTOCOL` | `baseUrl` uses `http://` | Switch to `https://` |
+| Two app windows open | Single-instance lock failed | Close all Lumina processes and relaunch |
 
 ---
 
-## 📝 License
+## 6. API surface (Lumina API controllers)
 
-Add your license here (for example, MIT):
+| Controller | Responsibility |
+|---|---|
+| `AuthunticationController`, `AccountController` | Login, registration, tokens |
+| `RolesController`, `UsersController` | Role-based access, user management |
+| `DepartmentController`, `AcademicYearController` | Academic org structure |
+| `CourseController` | Course CRUD, publishing, enrollment |
+| `ContentController`, `LectureController` | Course content and lectures |
+| `AssignmentController`, `AssignmentSubmissionController` | Assignments and submissions/grading |
+| `QuizController`, `QuestionController`, `QuizAttemptsController` | Quiz authoring and attempts |
+| `FeeController`, `PaymentController` | Tuition/fees and Paymob payments |
+| `NotificationController` | Notifications/announcements |
+| `CheatingReportController`, `RiskAnalysisController` | Proctoring incident review and risk scoring |
+| `ContactController` | Contact/support messages |
 
-```text
-MIT License
-```
-
-If a license file already exists, reference it directly.
+Full request/response schemas are available via Swagger once the API is running.
 
 ---
 
-## 📬 Contact
+## 7. Security & privacy notes
 
-For collaboration, issues, or feature requests:
-- Open a GitHub Issue in this repository
-- Reach out to the repository owner: **@MohamedWalid2321**
+Because Lumina processes student identity data (face enrollment) and exam session recordings/events:
+
+- All exam-session traffic between the desktop app and the AI service must use HTTPS (`config.json` enforces this).
+- Face enrollment vectors are cached in Redis with a TTL (default 3 hours) rather than stored indefinitely.
+- Access to cheating reports and risk analysis should be restricted to authorized instructor/admin roles.
+- Treat JWT signing keys, Paymob credentials, SMTP credentials, and Upstash/Redis tokens as secrets — never commit them; use `dotnet user-secrets`, `.env` files, or Modal secrets.
 
 ---
 
-## 🙌 Acknowledgment
+## 8. Contributors
 
-Built with the vision of making education smarter, safer, and more accessible through **Lumina** and **Lumina Proctor**.
+- [@MohamedWalid2321](https://github.com/MohamedWalid2321)
+- [@youssefabobaker](https://github.com/youssefabobaker)
+- [@Honda1010](https://github.com/Honda1010)
+- [@youssif-mohamed1](https://github.com/youssif-mohamed1)
+- [@3La20300](https://github.com/3La20300)
+- [@Youssef-marawan](https://github.com/Youssef-marawan)
+
+## 9. License
+
+Add your chosen license here (e.g. MIT). If a `LICENSE` file already exists in either repository, reference it directly instead.
