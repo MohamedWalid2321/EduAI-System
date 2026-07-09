@@ -1,4 +1,4 @@
-# Lumina — EduAI System
+# Lumina — LUMINA Ecosystem
 
 **An AI-powered Learning Management System with integrated exam proctoring.**
 
@@ -6,13 +6,13 @@ Lumina is a full-stack LMS made up of two repositories that work together as one
 
 | Part | Repository | Stack |
 |---|---|---|
-| **API / Backend** + **AI services** + **Proctoring desktop app** | [`EduAI-System`](https://github.com/MohamedWalid2321/EduAI-System) | .NET 8, Python (FastAPI), Electron |
+| **API / Backend** + **AI services** + **Proctoring desktop app** | [`LUMINA-Ecosystem`](https://github.com/MohamedWalid2321/LUMINA-Ecosystem) | .NET 8, Python (FastAPI), Electron |
 | **Web frontend (Lumina)** | [`LMS-Project`](https://github.com/youssefabobaker/LMS-Project) | Angular 17 |
 
 > The frontend is wired into the backend repo as the git submodule `Lumina_Web_Platform`.
 
 - **LMS product name:** **Lumina**
-- **Proctoring product name:** **Lumina AI Proctoring**
+- **Proctoring product name:** **Lumina AI Proctoring** (a.k.a. **Lumina Proctor**)
 - **Live demo:** [lumina-lms-site.vercel.app](https://lumina-lms-site.vercel.app/)
 
 ---
@@ -57,10 +57,10 @@ The system is split into four cooperating services:
 
 ## 2. Repository layout
 
-### `EduAI-System` (backend + AI)
+### `LUMINA-Ecosystem` (backend + AI)
 
 ```
-EduAI-System/
+LUMINA-Ecosystem/
 ├── AI/                          # Cloud/GPU proctoring service (FastAPI + Modal)
 │   ├── Models/
 │   │   ├── EyeGazeDetection/     # Gaze tracking (MediaPipe face landmarker)
@@ -176,8 +176,8 @@ You will generally run **four** things locally: the SQL database, the .NET API, 
 ### 5.1 Clone
 
 ```bash
-git clone --recurse-submodules https://github.com/MohamedWalid2321/EduAI-System.git
-cd EduAI-System
+git clone --recurse-submodules https://github.com/MohamedWalid2321/LUMINA-Ecosystem.git
+cd LUMINA-Ecosystem
 # if you forgot --recurse-submodules:
 git submodule update --init --recursive
 ```
