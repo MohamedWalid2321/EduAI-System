@@ -6,7 +6,7 @@ Lumina is a full-stack LMS made up of two repositories that work together as one
 
 | Part | Repository | Stack |
 |---|---|---|
-| **API / Backend** + **AI services** + **Proctoring desktop app** | [`LUMINA-Ecosystem`](https://github.com/MohamedWalid2321/LUMINA-Ecosystem) | .NET 8, Python (FastAPI), Electron |
+| **API / Backend** + **AI services** + **Proctoring desktop app** | [`Lumina-EcoSystem`](https://github.com/MohamedWalid2321/Lumina-EcoSystem) | .NET 8, Python (FastAPI), Electron |
 | **Web frontend (Lumina)** | [`LMS-Project`](https://github.com/youssefabobaker/LMS-Project) | Angular 17 |
 
 > The frontend is wired into the backend repo as the git submodule `Lumina_Web_Platform`.
